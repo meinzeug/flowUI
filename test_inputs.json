@@ -6,7 +6,9 @@
   },
   {
     "id": 2,
+
     "description": "Run backend and frontend tests to reproduce DashboardLoader exception",
+
     "status": "done"
   }
 ]

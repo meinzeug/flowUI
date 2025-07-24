@@ -6,13 +6,24 @@ import { MCP_TOOLS } from './tools.js';
 
 const { Pool } = pkg;
 
+let pool;
+
+async function initPool() {
+  if (process.env.NODE_ENV === 'test') {
+    const { newDb } = await import('pg-mem');
+    const db = newDb();
+    const adapter = db.adapters.createPg();
+    pool = new adapter.Pool();
+  } else {
+    pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  }
+  await pool.query('CREATE TABLE IF NOT EXISTS sessions (id SERIAL PRIMARY KEY, name TEXT, data JSONB)');
+}
+
 const app = express();
+app.use(express.json());
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
 
 wss.on('connection', ws => {
   ws.on('message', data => {
@@ -43,7 +54,7 @@ wss.on('connection', ws => {
 
 app.get('/health', async (req, res) => {
   try {
-    if (process.env.DATABASE_URL) {
+    if (pool) {
       await pool.query('SELECT 1');
     }
     res.json({ status: 'ok' });
@@ -52,11 +63,14 @@ app.get('/health', async (req, res) => {
   }
 });
 
+
+
 app.get('/tools/list', (req, res) => {
   res.json(MCP_TOOLS);
 });
 
 export function startServer(port = process.env.PORT || 3008) {
+
   return server.listen(port, () => {
     console.log(`MCP server listening on ${port}`);
   });

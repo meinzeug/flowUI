@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Project, Workflow, ActivityLogEntry, WorkflowStep, HoDQueryContext } from '../../types';
 import { Card, Button, Modal } from '../UI';
 import { PlusIcon, TerminalIcon, XIcon, HeadOfDevIcon } from '../Icons';
+import FlowEditor, { GraphData } from '../FlowEditor';
 
 const CreateWorkflowModal: React.FC<{
     isOpen: boolean;
@@ -117,13 +118,41 @@ const WorkflowCard: React.FC<{
     )
 }
 
-const WorkflowsView: React.FC<{ 
-    project: Project; 
-    addLog: (message: string, type?: ActivityLogEntry['type']) => void; 
+const WorkflowsView: React.FC<{
+    project: Project;
+    addLog: (message: string, type?: ActivityLogEntry['type']) => void;
     onCreateWorkflow: (workflow: Omit<Workflow, 'id' | 'lastRun'>) => void;
     onQueryHoD: (context: HoDQueryContext) => void;
 }> = ({ project, addLog, onCreateWorkflow, onQueryHoD }) => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [graph, setGraph] = useState<GraphData | undefined>();
+    const [sessionId, setSessionId] = useState<number | null>(null);
+
+    const handleSaveGraph = async (g: GraphData) => {
+        const res = await fetch('/session/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: sessionId, name: 'workflow', data: g })
+        });
+        const data = await res.json();
+        setSessionId(data.id);
+        setGraph(g);
+        addLog('Session saved', 'success');
+    };
+
+    const handleLoadGraph = async () => {
+        if (!sessionId) return;
+        const res = await fetch('/session/load', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: sessionId })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            setGraph(data.data);
+            addLog('Session loaded', 'success');
+        }
+    };
 
     const handleRunWorkflow = (workflowId: string) => {
         const workflow = project.workflows.find(w => w.id === workflowId);
@@ -169,6 +198,14 @@ const WorkflowsView: React.FC<{
                 onClose={() => setIsCreateModalOpen(false)}
                 onCreate={onCreateWorkflow}
             />
+
+            <div className="pt-8">
+                <h3 className="text-xl font-bold text-white mb-2">Workflow Graph</h3>
+                <FlowEditor onSave={handleSaveGraph} initial={graph} />
+                <div className="mt-2 flex gap-2">
+                    <Button variant="secondary" onClick={handleLoadGraph} disabled={!sessionId}>Load</Button>
+                </div>
+            </div>
         </div>
     );
 };

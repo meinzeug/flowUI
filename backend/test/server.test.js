@@ -4,8 +4,9 @@ import { WebSocket } from 'ws';
 import { once } from 'node:events';
 import { startServer } from '../server.js';
 
+
 test('GET /health returns ok', async () => {
-  const server = startServer(0);
+  const server = await startServer(0);
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/health`);
   const data = await res.json();
@@ -13,6 +14,7 @@ test('GET /health returns ok', async () => {
   assert.strictEqual(res.status, 200);
   assert.deepStrictEqual(data, { status: 'ok' });
 });
+
 
 test('GET /tools/list returns tool catalog', async () => {
   const server = startServer(0);
@@ -48,4 +50,5 @@ test('WebSocket JSON-RPC methods work', async () => {
 
   ws.close();
   server.close();
+
 });

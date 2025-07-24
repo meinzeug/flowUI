@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   root: '.',
   test: {
-    include: ['WebSocketService.test.ts'],
+    include: ['**/*.test.ts?(x)'],
     environment: 'jsdom'
   }
 })

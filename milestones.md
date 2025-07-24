@@ -58,3 +58,9 @@ This file will be updated as milestones are completed.
 - [x] **Bugfix:** Configure Vitest to run only project tests. (@frontend-agent)
 - [x] **Test:** Ensure backend and frontend tests pass. (@qa-agent)
 - [ ] **Doc:** Document debugging process in bericht.html. (@frontend-agent)
+## Sprint Jul-24c-2025
+*Start:* 2025-07-24  \
+*End:* 2025-07-26  \
+*Lead:* Codex Team
+- [x] **Test:** Add DashboardView render test and update vitest config. (@frontend-agent)
+- [ ] **Doc:** Summarize progress in bericht.html. (@frontend-agent)

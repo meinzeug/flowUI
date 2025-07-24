@@ -4,6 +4,41 @@ Flow Weaver ist eine anspruchsvolle Hybrid-IDE für Claude-Flow. Sie verbindet s
 
 ## Installation auf Ubuntu
 
+### Schnelle Installation
+
+Stelle sicher, dass `curl` oder `wget` vorhanden ist:
+
+```bash
+sudo apt update
+sudo apt install -y curl   # alternativ: wget
+```
+
+Dann genügt ein einziger Befehl, um das Install-Skript direkt auszuführen.
+
+Mit **curl**
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh)"
+```
+
+oder mit **wget**
+
+```bash
+wget -qO- https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh | bash
+```
+
+Hinweis: Ersetze `main` im URL, falls dein Standard-Branch anders heißt (z. B. `master`). Über `-f` bzw. `-q` bricht der Befehl bei HTTP-Fehlern ab.
+
+Möchtest du das Skript zunächst prüfen, lade es lokal herunter:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh -o install.sh
+less install.sh
+bash install.sh
+```
+
+### Manuelle Installation
+
 1. Repository klonen und in das Verzeichnis wechseln:
    ```bash
    git clone https://github.com/meinzeug/flowUI.git

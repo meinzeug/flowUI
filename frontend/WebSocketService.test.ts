@@ -1,0 +1,45 @@
+import { describe, it, expect, vi, beforeAll } from 'vitest';
+
+class MockWebSocket {
+  url: string;
+  readyState = 1;
+  send = vi.fn();
+  listeners: Record<string, Function[]> = {};
+  constructor(url: string) {
+    this.url = url;
+  }
+  addEventListener(type: string, cb: Function) {
+    this.listeners[type] = this.listeners[type] || [];
+    this.listeners[type].push(cb);
+    if (type === 'open') cb();
+  }
+  dispatch(type: string, event: any) {
+    (this.listeners[type] || []).forEach(fn => fn(event));
+  }
+}
+
+(global as any).window = {
+  location: { hostname: 'localhost' },
+  setInterval,
+  clearInterval,
+};
+// @ts-ignore
+global.WebSocket = MockWebSocket;
+
+let WebSocketService: any;
+beforeAll(async () => {
+  WebSocketService = (await import('./WebSocketService')).default;
+});
+
+describe('WebSocketService', () => {
+  it('sends request and resolves with response', async () => {
+    const svc = new WebSocketService('ws://test');
+    const ws = (svc as any).ws as MockWebSocket;
+    const promise = svc.call('tools/list');
+    const sent = ws.send.mock.calls[0][0];
+    const { id } = JSON.parse(sent);
+    ws.dispatch('message', { data: JSON.stringify({ jsonrpc: '2.0', id, result: 'ok' }) });
+    const result = await promise;
+    expect(result).toBe('ok');
+  });
+});

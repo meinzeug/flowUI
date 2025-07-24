@@ -6,7 +6,7 @@ Flow Weaver ist eine anspruchsvolle Hybrid-IDE für Claude-Flow. Sie verbindet s
 
 1. Repository klonen und in das Verzeichnis wechseln:
    ```bash
-   git clone <REPO-URL>
+   git clone https://github.com/meinzeug/flowUI.git
    cd flowUI
    ```
 2. Installationsskript ausführbar machen und starten (Root-Rechte erforderlich):

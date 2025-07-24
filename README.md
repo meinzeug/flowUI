@@ -27,12 +27,10 @@ oder mit **wget**
 wget -qO- https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh | bash
 ```
 
-Das Skript klont das Repository in das Verzeichnis `flowUI` (falls es noch nicht
-existiert) und startet dort Docker Compose. Fehlt Docker, wird automatisch die
-rootlose Variante installiert. Bestehen trotz vorhandener Installation keine
-Rechte auf den Docker-Daemon, fügt das Skript den aktuellen Benutzer der Gruppe
-`docker` hinzu und beendet sich. Danach sollte man sich neu anmelden oder
-`newgrp docker` ausführen und das Skript erneut starten.
+Das Skript klont das Repository nach `/opt/flowUI`, installiert Docker sowie
+NGINX und startet anschließend die Container per `docker compose`. Es benötigt
+Root- bzw. **sudo**‑Rechte und schreibt ein Log nach
+`~/flowui-install.log`.
 
 Hinweis: Ersetze `main` im URL, falls dein Standard-Branch anders heißt (z. B. `master`). Über `-f` bzw. `-q` bricht der Befehl bei HTTP-Fehlern ab.
 
@@ -51,7 +49,7 @@ bash install.sh
    git clone https://github.com/meinzeug/flowUI.git
    cd flowUI
    ```
-2. Installationsskript ausführbar machen und starten (keine Root-Rechte nötig):
+2. Installationsskript ausführbar machen und starten (mit Root- oder sudo-Rechten):
    ```bash
    chmod +x install.sh
    ./install.sh

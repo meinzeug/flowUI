@@ -8,7 +8,7 @@ Konzept: idee.md
 
 CLI‑Specs: flowdoc.md
 
-Frontend‑Prototyp & Docs: /frontend/docs.md
+Frontend in: /frontend und die Dokumentation zum Frontend in  /frontend/docs.md
 
 Backend‑Architektur: backend.md
 

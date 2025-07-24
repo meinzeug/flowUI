@@ -27,6 +27,8 @@ oder mit **wget**
 wget -qO- https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh | bash
 ```
 
+Das Skript klont das Repository dabei nach `/opt/flowUI` und startet die Container von dort.
+
 Hinweis: Ersetze `main` im URL, falls dein Standard-Branch anders heißt (z. B. `master`). Über `-f` bzw. `-q` bricht der Befehl bei HTTP-Fehlern ab.
 
 Möchtest du das Skript zunächst prüfen, lade es lokal herunter:

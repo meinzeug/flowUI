@@ -22,7 +22,8 @@ echo -e "\n### Preparing clean system (optional)"
 read -rp "Strip packages leaving only SSH and base system? (y/n): " CLEAN_CONFIRM
 if [[ $CLEAN_CONFIRM =~ ^[Yy]$ ]]; then
   KEEP_PKGS="openssh-server openssh-client sudo curl wget ufw vim nano lsb-release gnupg iproute2 net-tools"
-  ESSENTIAL_PKGS=$(dpkg-query -Wf '${Package} ${Priority} ${Essential}\n' | awk '$2=="required" || $2=="important" || $3=="yes" {print $1}')
+  ESSENTIAL_PKGS=$(dpkg-query -W -f='${binary:Package} ${Priority} ${Essential}\n' \
+    | awk '$2=="required" || $2=="important" || $3=="yes" {print $1}')
   # retain apt and all of its dependencies with installed architecture suffixes
   APT_DEPS=$(apt-cache depends --recurse --installed apt 2>/dev/null | awk '/Depends:/{print $2}' | sort -u)
   APT_DEPS_ARCH=""

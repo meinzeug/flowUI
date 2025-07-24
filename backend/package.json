@@ -5,11 +5,13 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "NODE_ENV=test node --test"
+    "test": "NODE_ENV=test node --test",
+    "migrate": "npx knex --knexfile knexfile.cjs migrate:latest"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "ws": "^8.17.0",
-    "pg": "^8.11.5"
+    "knex": "^2.5.1",
+    "pg": "^8.11.5",
+    "ws": "^8.17.0"
   }
 }

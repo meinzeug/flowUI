@@ -4,6 +4,7 @@
 - Implement backend MCP API according to `backend.md`.
 - Add persistence layer and migrations for PostgreSQL. (in progress)
 - Extend React Flow canvas with save/load sessions.
+- Set up CI/CD pipeline for automated tests.
 
 ## Done
 - Added Docker infrastructure and install/update scripts.

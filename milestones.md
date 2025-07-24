@@ -51,6 +51,14 @@ This file will be updated as milestones are completed.
 - [ ] **Test:** Implement CI/CD pipeline running unit tests. (@qa-agent)
 - [ ] **Bugfix:** Finalize backend MCP API with database persistence. (@backend-agent)
 
+## Sprint Jul-30-2025
+*Start:* 2025-07-30  \
+*End:* 2025-08-01  \
+*Lead:* Codex Team
+- [ ] **Bugfix:** Investigate and resolve DashboardLoader error. (@frontend-agent)
+- [ ] **Doc:** Document debugging outcome in bericht.html. (@frontend-agent)
+- [ ] **Feature:** Prepare deployment scripts for CI/CD pipeline. (@backend-agent)
+
 ## Sprint Jul-24b-2025
 *Start:* 2025-07-24  \
 *End:* 2025-07-26  \

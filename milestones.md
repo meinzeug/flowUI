@@ -34,3 +34,11 @@
 - [ ] Dashboard for neural network training metrics.
 
 This file will be updated as milestones are completed.
+## Sprint Jul-24-2025
+*Start:* 2025-07-24  \
+*End:* 2025-07-26  \
+*Lead:* Codex Team
+- [ ] Implement backend MCP API according to `backend.md`. (@backend-agent)
+- [ ] Add persistence layer and migrations for PostgreSQL. (@backend-agent)
+- [ ] Write unit tests for frontend and backend. (@qa-agent)
+

@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
-import { MCP_TOOLS } from '../../constants';
+import useToolList from '../../hooks/useToolList';
 import { Card } from '../UI';
 import { ToolsIcon, ChevronDownIcon } from '../Icons';
 
 const MCPToolsView: React.FC = () => {
-    const [openCategory, setOpenCategory] = useState<string | null>(MCP_TOOLS[0].name);
+    const tools = useToolList();
+    const [openCategory, setOpenCategory] = useState<string | null>(null);
 
     return (
         <div className="animate-fade-in-up space-y-8">
@@ -15,9 +16,9 @@ const MCPToolsView: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-                {MCP_TOOLS.map(category => (
+                {tools.map(category => (
                     <div key={category.name}>
-                        <button 
+                        <button
                             className="w-full text-left bg-slate-800/50 p-4 rounded-lg flex justify-between items-center"
                             onClick={() => setOpenCategory(openCategory === category.name ? null : category.name)}
                         >

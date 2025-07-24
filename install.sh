@@ -23,15 +23,24 @@ read -rp "Strip packages leaving only SSH and base system? (y/n): " CLEAN_CONFIR
 if [[ $CLEAN_CONFIRM =~ ^[Yy]$ ]]; then
   KEEP_PKGS="openssh-server openssh-client sudo curl wget ufw vim nano lsb-release gnupg iproute2 net-tools"
   ESSENTIAL_PKGS=$(dpkg-query -Wf '${Package} ${Priority} ${Essential}\n' | awk '$2=="required" || $2=="important" || $3=="yes" {print $1}')
-  # retain apt and all of its dependencies to keep package management functional
+  # retain apt and all of its dependencies with installed architecture suffixes
   APT_DEPS=$(apt-cache depends --recurse --installed apt 2>/dev/null | awk '/Depends:/{print $2}' | sort -u)
-  KEEP_LIST="$KEEP_PKGS $ESSENTIAL_PKGS $APT_DEPS apt"
+  APT_DEPS_ARCH=""
+  for pkg in $APT_DEPS; do
+    arch_pkg=$(dpkg -l "$pkg" 2>/dev/null | awk '/^ii/{print $2}')
+    APT_DEPS_ARCH="$APT_DEPS_ARCH $arch_pkg"
+  done
+  KEEP_LIST="$KEEP_PKGS $ESSENTIAL_PKGS $APT_DEPS_ARCH apt"
   REMOVE_LIST=$(comm -23 <(dpkg --get-selections | awk '{print $1}' | sort) <(echo "$KEEP_LIST" | tr ' ' '\n' | sort))
   if [ -n "$REMOVE_LIST" ]; then
     echo "Removing packages: $REMOVE_LIST"
-    echo "$REMOVE_LIST" | xargs -r $SUDO apt-get purge -y
-    $SUDO apt-get autoremove -y
-    $SUDO apt-get clean
+    if echo "$REMOVE_LIST" | xargs -r $SUDO apt-get -s purge >/dev/null; then
+      echo "$REMOVE_LIST" | xargs -r $SUDO apt-get purge -y
+      $SUDO apt-get autoremove -y
+      $SUDO apt-get clean
+    else
+      echo "Package removal simulation failed. Skipping clean step." >&2
+    fi
   fi
 fi
 

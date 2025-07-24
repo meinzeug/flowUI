@@ -2,6 +2,8 @@ import express from 'express';
 import { WebSocketServer } from 'ws';
 import http from 'http';
 import pkg from 'pg';
+import knex from 'knex';
+import knexConfig from './knexfile.cjs';
 import { MCP_TOOLS } from './tools.js';
 
 const { Pool } = pkg;
@@ -14,10 +16,16 @@ async function initPool() {
     const db = newDb();
     const adapter = db.adapters.createPg();
     pool = new adapter.Pool();
+    await pool.query('CREATE TABLE IF NOT EXISTS sessions (id SERIAL PRIMARY KEY, name TEXT, data JSONB)');
   } else {
     pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const db = knex({
+      ...knexConfig,
+      connection: process.env.DATABASE_URL,
+    });
+    await db.migrate.latest();
+    await db.destroy();
   }
-  await pool.query('CREATE TABLE IF NOT EXISTS sessions (id SERIAL PRIMARY KEY, name TEXT, data JSONB)');
 }
 
 const app = express();

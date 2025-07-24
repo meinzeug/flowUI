@@ -27,6 +27,11 @@ async function initPool() {
       summary text not null,
       timestamp timestamp default now()
     )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS tool_calls (
+      id serial primary key,
+      name text not null,
+      timestamp timestamp default now()
+    )`);
   } else {
     pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const db = knex({
@@ -97,6 +102,18 @@ async function createServer() {
     res.status(404).json({ error: 'Not found' });
   });
 
+  app.post('/tools/call', async (req, res) => {
+    const { tool } = req.body;
+    if (!tool) return res.status(400).json({ error: 'tool required' });
+    try {
+      if (!pool) await initPool();
+      await pool.query('INSERT INTO tool_calls (name) VALUES ($1)', [tool]);
+      res.json({ tool, status: 'executed' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   app.post('/api/auth/login', (req, res) => {
     const { username, password } = req.body;
     const valid = username === 'admin' && password === 'password';
@@ -130,6 +147,16 @@ async function createServer() {
         return res.status(404).json({ error: 'Not found' });
       }
       res.json(rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.get('/session/list', async (req, res) => {
+    try {
+      if (!pool) await initPool();
+      const { rows } = await pool.query('SELECT id, name FROM sessions ORDER BY id');
+      res.json(rows);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

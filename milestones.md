@@ -1,0 +1,26 @@
+# Project Milestones
+
+## Milestone 1 - Environment Setup
+- [x] Create Docker based infrastructure with `docker-compose.yml` for frontend, backend and PostgreSQL.
+- [x] Provide installation script `install.sh` to configure Docker and NGINX with HTTPS.
+- [x] Add `update.sh` script to pull latest code and rebuild containers.
+
+## Milestone 2 - Backend Skeleton
+- [ ] Implement minimal Node based MCP server exposing WebSocket on port 3008.
+- [ ] Connect server to PostgreSQL using environment variable `DATABASE_URL`.
+- [ ] Add basic health check endpoint.
+
+## Milestone 3 - Frontend Integration
+- [ ] Containerize the React application for production.
+- [ ] Establish WebSocket connection from UI to backend MCP server.
+- [ ] Visualize tool list retrieved from `/tools/list` endpoint.
+
+## Milestone 4 - Persistent Sessions
+- [ ] Implement session storage in the backend.
+- [ ] Add load/save functionality in the React flow canvas.
+
+## Milestone 5 - Advanced Features
+- [ ] Live monitoring of hive activity via WebSocket events.
+- [ ] Dashboard for neural network training metrics.
+
+This file will be updated as milestones are completed.

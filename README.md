@@ -291,3 +291,21 @@ Die Entwicklung einer visuellen Drag-and-Drop-Oberfläche für Claude-Flow v2.0.
 Die Wahl von React, TypeScript und der React Flow (XyFlow)-Bibliothek bietet eine solide technologische Grundlage. Die konsequente Nutzung der tools/batch-Methode ist entscheidend, um die Leistungsprobleme des Backends zu umgehen und eine reaktionsschnelle Anwendung zu schaffen.
 
 Eine gut gestaltete visuelle Schnittstelle hat das Potenzial, das volle Potenzial einer komplexen Orchestrierungsplattform wie Claude-Flow zu erschließen. Sie kann die leistungsstarken Funktionen von Hive-Mind-Intelligenz, neuronalen Netzen und dem umfangreichen Werkzeugsatz einer breiteren Zielgruppe zugänglich machen. Indem sie die Komplexität der Kommandozeile hinter einer intuitiven, grafischen Metapher verbirgt, ermöglicht sie die Erstellung von noch komplexeren, innovativeren und leistungsfähigeren KI-gesteuerten Workflows.
+
+## Server Installation
+
+1. Clone this repository: `git clone <repo-url>`
+2. Run the setup script and follow the prompts:
+   ```bash
+   ./install.sh
+   ```
+   The script installs Docker, Docker Compose and configures NGINX with HTTPS.
+3. Access the UI via `https://<your-domain>` once the containers are running.
+
+### Updating the deployment
+
+To fetch the latest version and rebuild all containers execute:
+```bash
+./update.sh
+```
+

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, addEdge, ReactFlowProvider, Connection, Edge } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -17,6 +17,13 @@ const initialEdges: Edge[] = [{ id: 'e1-2', source: '1', target: '2' }];
 export const FlowEditor: React.FC<{ onSave: (data: GraphData) => void; initial?: GraphData }> = ({ onSave, initial }) => {
   const [nodes, setNodes] = useState(initial?.nodes || initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initial?.edges || initialEdges);
+
+  useEffect(() => {
+    if (initial) {
+      setNodes(initial.nodes);
+      setEdges(initial.edges);
+    }
+  }, [initial]);
 
   const onNodesChange = useCallback((nds: any) => setNodes(nds), []);
   const onEdgesChange = useCallback((eds: any) => setEdges(eds), []);

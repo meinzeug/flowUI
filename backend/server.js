@@ -69,8 +69,40 @@ app.get('/tools/list', (req, res) => {
   res.json(MCP_TOOLS);
 });
 
-export function startServer(port = process.env.PORT || 3008) {
+app.post('/session/save', async (req, res) => {
+  const { id, name, data } = req.body;
+  try {
+    if (!pool) await initPool();
+    if (id) {
+      await pool.query('UPDATE sessions SET name = $1, data = $2 WHERE id = $3', [name, data, id]);
+      res.json({ id });
+    } else {
+      const { rows } = await pool.query('INSERT INTO sessions (name, data) VALUES ($1, $2) RETURNING id', [name, data]);
+      res.json({ id: rows[0].id });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
+app.post('/session/load', async (req, res) => {
+  const { id } = req.body;
+  try {
+    if (!pool) await initPool();
+    const { rows } = await pool.query('SELECT id, name, data FROM sessions WHERE id = $1', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+export async function startServer(port = process.env.PORT || 3008) {
+  if (!pool) {
+    await initPool();
+  }
   return server.listen(port, () => {
     console.log(`MCP server listening on ${port}`);
   });

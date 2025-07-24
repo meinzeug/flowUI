@@ -42,7 +42,7 @@ Diese Schritte sind in `idee.md` im Abschnitt "Der integrierte Workflow" beschri
 Das Frontend basiert auf React, TypeScript und React Flow und setzt eine defensive Kommunikation zum Backend ein. Wichtige Merkmale sind:
 
 - **WebSocketService** mit Heartbeats und Auto-Reconnect, der die gesamte JSON-RPC-Kommunikation kapselt【F:idee.md†L46-L51】.
-- **Dynamische Werkzeugpalette**: Beim Start ruft die UI `tools/list` auf, um alle verfügbaren Tools samt Parametern zu laden【F:idee.md†L50-L51】.
+ - **Dynamische Werkzeugpalette**: Beim Start ruft die UI `tools/list` über die WebSocket-Schnittstelle auf, um alle verfügbaren Tools samt Parametern zu laden【F:idee.md†L50-L51】.
 - **Drag-and-Drop Canvas**, Werkzeugpalette, Inspektor-Panel und Protokollkonsole bilden die wesentlichen UI-Komponenten【F:idee.md†L52-L57】.
 - **Globales Zustandsmanagement** verwaltet Verbindungsstatus, Agenteninformationen und Workflow-Daten【F:idee.md†L58-L62】.
 - Die Kernlogik befindet sich in `App.tsx`, das den globalen Zustand und die Kommunikation mit den KI-Diensten koordiniert【F:frontend/docs.md†L11-L20】.

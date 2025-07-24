@@ -53,12 +53,24 @@ EOF
 
 echo "\n### Installing required packages..."
 $SUDO apt-get update
-# Remove containerd if present to avoid conflicts with Docker's containerd.io
+
+# Remove Ubuntu's containerd package if it exists to avoid conflicts with Docker's containerd.io
 if dpkg -s containerd >/dev/null 2>&1; then
   echo "Removing conflicting package 'containerd'..."
   $SUDO apt-get remove -y containerd
 fi
-$SUDO apt-get install -y curl git ufw docker.io docker-compose nginx certbot python3-certbot-nginx
+
+# Base packages
+$SUDO apt-get install -y curl git ufw nginx certbot python3-certbot-nginx ca-certificates gnupg lsb-release
+
+# Set up Docker repository and install official packages
+$SUDO install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | $SUDO gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+$SUDO chmod a+r /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | $SUDO tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+$SUDO apt-get update
+$SUDO apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 $SUDO systemctl enable --now docker
 
 echo "\n### Configuring firewall..."

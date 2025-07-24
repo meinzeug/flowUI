@@ -8,4 +8,6 @@
 FE-CTRL-S: 564bced 2025-07-24
 CI-WORKFLOW: 8d2a2b5 2025-07-24
 BE-AUTH: 963bda5 2025-07-24 login API
-2025-07-30: Documented DashboardLoader findings and updated milestones.
+
+FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
+

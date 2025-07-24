@@ -6,9 +6,9 @@
 - [x] Add `update.sh` script to pull latest code and rebuild containers.
 
 ## Milestone 2 - Backend Skeleton
-- [ ] Implement minimal Node based MCP server exposing WebSocket on port 3008.
-- [ ] Connect server to PostgreSQL using environment variable `DATABASE_URL`.
-- [ ] Add basic health check endpoint.
+- [x] Implement minimal Node based MCP server exposing WebSocket on port 3008.
+- [x] Connect server to PostgreSQL using environment variable `DATABASE_URL`.
+- [x] Add basic health check endpoint.
 
 ## Milestone 3 - Frontend Integration
 - [ ] Containerize the React application for production.

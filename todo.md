@@ -9,3 +9,4 @@
 ## Done
 - Added Docker infrastructure and install/update scripts.
 - Documented milestones and installation process.
+- Implemented database connection and health check in MCP server.

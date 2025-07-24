@@ -35,8 +35,8 @@ if [[ $CLEAN_CONFIRM =~ ^[Yy]$ ]]; then
   REMOVE_LIST=$(comm -23 <(dpkg --get-selections | awk '{print $1}' | sort) <(echo "$KEEP_LIST" | tr ' ' '\n' | sort))
   if [ -n "$REMOVE_LIST" ]; then
     echo "Removing packages: $REMOVE_LIST"
-    if echo "$REMOVE_LIST" | xargs -r $SUDO apt-get -s purge >/dev/null; then
-      echo "$REMOVE_LIST" | xargs -r $SUDO apt-get purge -y
+    if echo "$REMOVE_LIST" | xargs -r $SUDO apt-get -s purge --allow-remove-essential >/dev/null; then
+      echo "$REMOVE_LIST" | xargs -r $SUDO apt-get purge -y --allow-remove-essential
       $SUDO apt-get autoremove -y
       $SUDO apt-get clean
     else

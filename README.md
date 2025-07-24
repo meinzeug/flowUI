@@ -309,3 +309,7 @@ To fetch the latest version and rebuild all containers execute:
 ./update.sh
 ```
 
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

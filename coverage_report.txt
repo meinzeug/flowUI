@@ -1,6 +1,6 @@
 
-> claude-flow-backend@0.1.0 test
-> NODE_ENV=test node --test
+> claude-flow-backend@0.1.0 coverage
+> NODE_ENV=test node --test --experimental-test-coverage
 
 TAP version 13
 # MCP server listening on 0
@@ -8,50 +8,132 @@ TAP version 13
 # Subtest: GET /health returns ok
 ok 1 - GET /health returns ok
   ---
-  duration_ms: 146.324842
-  type: 'test'
+  duration_ms: 225.704186
   ...
 # MCP server listening on 0
 # Subtest: GET /tools/list returns tool catalog
 ok 2 - GET /tools/list returns tool catalog
   ---
-  duration_ms: 6.561872
-  type: 'test'
+  duration_ms: 6.697709
   ...
 # MCP server listening on 0
 # Subtest: GET /tools/info/:name returns tool details
 ok 3 - GET /tools/info/:name returns tool details
   ---
-  duration_ms: 4.295972
-  type: 'test'
+  duration_ms: 4.05044
+  ...
+# MCP server listening on 0
+# Subtest: POST /api/auth/login authenticates user
+ok 4 - POST /api/auth/login authenticates user
+  ---
+  duration_ms: 16.062181
   ...
 # MCP server listening on 0
 # Subtest: WebSocket JSON-RPC methods work
-ok 4 - WebSocket JSON-RPC methods work
+ok 5 - WebSocket JSON-RPC methods work
   ---
-  duration_ms: 8.663269
-  type: 'test'
+  duration_ms: 11.038186
   ...
 # MCP server listening on 0
 # Subtest: session save and load persist data
-ok 5 - session save and load persist data
+ok 6 - session save and load persist data
   ---
-  duration_ms: 26.011863
-  type: 'test'
+  duration_ms: 21.714058
   ...
+# MCP server listening on 0
 # Subtest: memory store and query
-ok 6 - memory store and query
+ok 7 - memory store and query
   ---
-  duration_ms: 13.166117
-  type: 'test'
+  duration_ms: 17.501908
   ...
-1..6
-# tests 6
+# MCP server listening on 0
+# Subtest: GET /session/list returns saved sessions
+ok 8 - GET /session/list returns saved sessions
+  ---
+  duration_ms: 14.371566
+  ...
+# Subtest: POST /tools/call logs execution
+ok 9 - POST /tools/call logs execution
+  ---
+  duration_ms: 6.406279
+  ...
+1..9
+# tests 9
 # suites 0
-# pass 6
+# pass 9
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 427.064158
-Backend and frontend tests passed; build failed.
+# duration_ms 750.710299
+# start of coverage report
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# file                | line % | branch % | funcs % | uncovered lines
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# knexfile.cjs        | 100.00 |   100.00 |  100.00 | 
+# server.js           |  81.36 |    47.92 |  100.00 | 36-43 59-61 75-76 87-88 102 113-114 130-131 137-138 147-148 151-152 161-162 168-169 179-180 194-198 201-202 219-220
+# test/server.test.js | 100.00 |   100.00 |  100.00 | 
+# tools.js            | 100.00 |   100.00 |  100.00 | 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# all files           |  91.80 |    64.79 |  100.00 |
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# end of coverage report
+
+> claude-flow-gui@0.0.0 coverage
+> vitest run --coverage
+
+
+ RUN  v3.2.4 /workspace/flowUI/frontend
+      Coverage enabled with v8
+
+ ✓ WebSocketService.test.ts (1 test) 41ms
+ ✓ components/FlowEditor.test.tsx (1 test) 82ms
+ ✓ components/views/DashboardView.test.tsx (1 test) 51ms
+
+ Test Files  3 passed (3)
+      Tests  3 passed (3)
+   Start at  21:44:51
+   Duration  1.78s (transform 251ms, setup 0ms, collect 817ms, tests 174ms, environment 1.22s, prepare 229ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |    6.58 |    60.27 |   35.78 |    6.58 |                   
+ frontend          |    3.33 |    73.33 |      75 |    3.33 |                   
+  App.tsx          |       0 |      100 |     100 |       0 | 3-1066            
+  ...ketService.ts |   78.84 |    72.72 |      80 |   78.84 | ...44,50-52,57-61 
+  constants.ts     |       0 |        0 |       0 |       0 | 1-477             
+  index.tsx        |       0 |      100 |     100 |       0 | 2-17              
+  types.ts         |     100 |      100 |     100 |     100 |                   
+ ...end/components |   13.91 |       65 |   21.15 |   13.91 |                   
+  Assistant.tsx    |       0 |        0 |       0 |       0 | 1-262             
+  ...ndPalette.tsx |       0 |      100 |     100 |       0 | 2-111             
+  FlowEditor.tsx   |     100 |     62.5 |     100 |     100 | 18-19,30          
+  Header.tsx       |       0 |      100 |     100 |       0 | 3-42              
+  ...ueryModal.tsx |       0 |        0 |       0 |       0 | 1-84              
+  Icons.tsx        |   23.66 |      100 |     2.7 |   23.66 | ...42-244,248-250 
+  Sidebar.tsx      |       0 |      100 |     100 |       0 | 5-158             
+  Toast.tsx        |       0 |      100 |     100 |       0 | 2-74              
+  UI.tsx           |   40.74 |       60 |      50 |   40.74 | 51-66,69-72,81-96 
+ ...mponents/views |    6.19 |    54.05 |      50 |    6.19 |                   
+  ...pmentView.tsx |       0 |        0 |       0 |       0 | 1-206             
+  ApiKeysView.tsx  |       0 |      100 |     100 |       0 | 2-114             
+  ...tingsView.tsx |       0 |        0 |       0 |       0 | 1-149             
+  DAAView.tsx      |       0 |      100 |     100 |       0 | 5-424             
+  ...boardView.tsx |   54.83 |    33.33 |   22.22 |   54.83 | ...94-326,330-361 
+  GitHubView.tsx   |       0 |      100 |     100 |       0 | 2-178             
+  ...jectModal.tsx |       0 |      100 |     100 |       0 | 2-242             
+  ...tionsView.tsx |       0 |      100 |     100 |       0 | 4-90              
+  MCPToolsView.tsx |       0 |      100 |     100 |       0 | 2-52              
+  MemoryView.tsx   |       0 |      100 |     100 |       0 | 2-319             
+  NeuralView.tsx   |       0 |      100 |     100 |       0 | 2-213             
+  NexusView.tsx    |       0 |        0 |       0 |       0 | 1-276             
+  ...tSelector.tsx |       0 |      100 |     100 |       0 | 2-113             
+  SettingsView.tsx |       0 |      100 |     100 |       0 | 2-121             
+  SystemView.tsx   |       0 |      100 |     100 |       0 | 4-104             
+  ...flowsView.tsx |       0 |      100 |     100 |       0 | 4-213             
+  ...spaceView.tsx |       0 |      100 |     100 |       0 | 2-124             
+ frontend/hooks    |       0 |        0 |       0 |       0 |                   
+  useToolList.ts   |       0 |        0 |       0 |       0 | 1-13              
+-------------------|---------|----------|---------|---------|-------------------

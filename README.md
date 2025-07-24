@@ -29,7 +29,10 @@ wget -qO- https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh | ba
 
 Das Skript klont das Repository in das Verzeichnis `flowUI` (falls es noch nicht
 existiert) und startet dort Docker Compose. Fehlt Docker, wird automatisch die
-rootlose Variante installiert.
+rootlose Variante installiert. Bestehen trotz vorhandener Installation keine
+Rechte auf den Docker-Daemon, fügt das Skript den aktuellen Benutzer der Gruppe
+`docker` hinzu und beendet sich. Danach sollte man sich neu anmelden oder
+`newgrp docker` ausführen und das Skript erneut starten.
 
 Hinweis: Ersetze `main` im URL, falls dein Standard-Branch anders heißt (z. B. `master`). Über `-f` bzw. `-q` bricht der Befehl bei HTTP-Fehlern ab.
 

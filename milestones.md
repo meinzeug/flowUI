@@ -42,3 +42,11 @@ This file will be updated as milestones are completed.
 - [ ] Add persistence layer and migrations for PostgreSQL. (@backend-agent)
 - [ ] Write unit tests for frontend and backend. (@qa-agent)
 
+## Sprint Jul-27-2025
+*Start:* 2025-07-27  \
+*End:* 2025-07-29  \
+*Lead:* Codex Team
+- [ ] Extend React Flow canvas with save/load sessions. (@frontend-agent)
+- [ ] Implement CI/CD pipeline running unit tests. (@qa-agent)
+- [ ] Finalize backend MCP API with database persistence. (@backend-agent)
+

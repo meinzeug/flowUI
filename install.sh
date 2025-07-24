@@ -6,6 +6,19 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+# Determine script location and ensure repository is present
+WORKDIR="/opt/flowUI"
+if [ ! -f docker-compose.yml ]; then
+  echo "docker-compose.yml not found. Cloning repository to $WORKDIR..."
+  apt-get update
+  apt-get install -y git
+  rm -rf "$WORKDIR"
+  git clone https://github.com/meinzeug/flowUI.git "$WORKDIR"
+  cd "$WORKDIR"
+else
+  WORKDIR="$(pwd)"
+fi
+
 read -p "Domain name for HTTPS: " DOMAIN
 read -p "Email for LetsEncrypt: " EMAIL
 read -p "Linux user for Docker: " USERNAME
@@ -103,3 +116,4 @@ certbot --nginx -d "$DOMAIN" -m "$EMAIL" --non-interactive --agree-tos
 echo "Frontend running on port $FRONTEND_PORT"
 echo "Backend running on port $BACKEND_PORT"
 echo "Installation complete. Access your instance at https://$DOMAIN"
+echo "Repository cloned to $WORKDIR"

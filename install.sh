@@ -17,7 +17,6 @@ if [ ! -f docker-compose.yml ]; then
     echo "Using existing directory $REPO_DIR" >&2
   fi
   cd "$REPO_DIR"
-  exec bash install.sh "$@"
 fi
 
 FRONTEND_PORT=8080

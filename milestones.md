@@ -38,15 +38,16 @@ This file will be updated as milestones are completed.
 *Start:* 2025-07-24  \
 *End:* 2025-07-26  \
 *Lead:* Codex Team
-- [ ] Implement backend MCP API according to `backend.md`. (@backend-agent)
-- [ ] Add persistence layer and migrations for PostgreSQL. (@backend-agent)
-- [ ] Write unit tests for frontend and backend. (@qa-agent)
+- [ ] **Feature:** Implement backend MCP API according to `backend.md`. (@backend-agent)
+- [ ] **Bugfix:** Add persistence layer and migrations for PostgreSQL. (@backend-agent)
+- [ ] **Test:** Write unit tests for frontend and backend. (@qa-agent)
+- [ ] **Doc:** Update README and API documentation. (@frontend-agent)
 
 ## Sprint Jul-27-2025
 *Start:* 2025-07-27  \
 *End:* 2025-07-29  \
 *Lead:* Codex Team
-- [ ] Extend React Flow canvas with save/load sessions. (@frontend-agent)
-- [ ] Implement CI/CD pipeline running unit tests. (@qa-agent)
-- [ ] Finalize backend MCP API with database persistence. (@backend-agent)
+- [ ] **Feature:** Extend React Flow canvas with save/load sessions. (@frontend-agent)
+- [ ] **Test:** Implement CI/CD pipeline running unit tests. (@qa-agent)
+- [ ] **Bugfix:** Finalize backend MCP API with database persistence. (@backend-agent)
 

@@ -3,3 +3,4 @@
 
 2025-07-27T19:29:40Z - Re-ran tests and searched codebase. DashboardLoader not found; no NullReferenceException observed.
 
+2025-07-30T20:36:00Z - Build failed: index.html not found

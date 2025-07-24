@@ -55,8 +55,8 @@ This file will be updated as milestones are completed.
 *Start:* 2025-07-30  \
 *End:* 2025-08-01  \
 *Lead:* Codex Team
-- [ ] **Bugfix:** Investigate and resolve DashboardLoader error. (@frontend-agent)
-- [ ] **Doc:** Document debugging outcome in bericht.html. (@frontend-agent)
+- [x] **Bugfix:** Investigate and resolve DashboardLoader error. (@frontend-agent)
+- [x] **Doc:** Document debugging outcome in bericht.html. (@frontend-agent)
 - [ ] **Feature:** Prepare deployment scripts for CI/CD pipeline. (@backend-agent)
 
 ## Sprint Jul-24b-2025

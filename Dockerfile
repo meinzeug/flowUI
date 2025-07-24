@@ -6,6 +6,7 @@ RUN npm install
 # Copy the frontend sources and Vite config
 COPY frontend ./frontend
 COPY vite.config.ts ./
+COPY index.html ./
 # Build the production bundle
 RUN npm run build
 

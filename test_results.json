@@ -11,9 +11,12 @@
   },
   {
     "id": 3,
-
     "result": "no DashboardLoader exception found",
-
+    "pass": true
+  },
+  {
+    "id": 4,
+    "result": "FlowEditor ctrl+s triggers save",
     "pass": true
   }
 ]

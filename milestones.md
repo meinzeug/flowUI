@@ -17,15 +17,15 @@
 ## Milestone 3 - Frontend Integration
 *Target:* 2025-02-15  \
 *Lead:* Carol
-- [ ] Containerize the React application for production.
-- [ ] Establish WebSocket connection from UI to backend MCP server.
-- [ ] Visualize tool list retrieved from `/tools/list` endpoint.
+- [x] Containerize the React application for production.
+- [x] Establish WebSocket connection from UI to backend MCP server.
+- [x] Visualize tool list retrieved from `/tools/list` endpoint.
 
 ## Milestone 4 - Persistent Sessions
 *Target:* 2025-03-10  \
 *Lead:* Dave
-- [ ] Implement session storage in the backend.
-- [ ] Add load/save functionality in the React flow canvas.
+- [x] Implement session storage in the backend.
+- [x] Add load/save functionality in the React flow canvas.
 
 ## Milestone 5 - Advanced Features
 *Target:* 2025-04-01  \

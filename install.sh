@@ -7,7 +7,9 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 if [ ! -f docker-compose.yml ]; then
+
   echo "docker-compose.yml not found. Please run this script from the project root." >&2
+
   exit 1
 fi
 
@@ -17,6 +19,7 @@ BACKEND_PORT=3008
 cat > .env <<EOF
 FRONTEND_PORT=$FRONTEND_PORT
 BACKEND_PORT=$BACKEND_PORT
+OPENROUTER_API_KEY=$OPENROUTER_API_KEY
 EOF
 
 if ! command -v docker >/dev/null; then

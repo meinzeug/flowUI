@@ -54,3 +54,4 @@ ok 6 - memory store and query
 # skipped 0
 # todo 0
 # duration_ms 427.064158
+Backend and frontend tests passed; build failed.

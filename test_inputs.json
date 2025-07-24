@@ -13,5 +13,10 @@
     "id": 3,
     "description": "Test FlowEditor Ctrl+S save",
     "status": "done"
+  },
+  {
+    "id": 4,
+    "description": "Attempt Vite build with root config",
+    "status": "fail"
   }
 ]

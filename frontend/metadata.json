@@ -4,5 +4,5 @@
   "requestFramePermissions": [
     "microphone"
   ],
-  "prompt": ""
+  "prompt": "You are Flow Weaver, the GUI for the Claude-Flow orchestration platform. Use this interface to manage swarm and hive-mind projects, memory, and agents."
 }

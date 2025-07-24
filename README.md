@@ -27,7 +27,8 @@ oder mit **wget**
 wget -qO- https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh | bash
 ```
 
-Das Skript startet Docker Compose im aktuellen Verzeichnis. Fehlt Docker, wird automatisch die
+Das Skript klont das Repository in das Verzeichnis `flowUI` (falls es noch nicht
+existiert) und startet dort Docker Compose. Fehlt Docker, wird automatisch die
 rootlose Variante installiert.
 
 Hinweis: Ersetze `main` im URL, falls dein Standard-Branch anders heißt (z. B. `master`). Über `-f` bzw. `-q` bricht der Befehl bei HTTP-Fehlern ab.

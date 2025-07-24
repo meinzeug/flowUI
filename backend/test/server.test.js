@@ -120,3 +120,33 @@ test('memory store and query', { concurrency: 1 }, async () => {
   await new Promise((r) => server.close(r));
   assert.ok(results.some((r) => r.id === stored.id));
 });
+
+test('GET /session/list returns saved sessions', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const graph = { nodes: [{ id: '1' }], edges: [] };
+  const saveRes = await fetch(`http://localhost:${port}/session/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'list-test', data: graph })
+  });
+  const saved = await saveRes.json();
+  const listRes = await fetch(`http://localhost:${port}/session/list`);
+  const list = await listRes.json();
+  await new Promise(r => server.close(r));
+  assert.ok(list.some((s) => s.id === saved.id));
+});
+
+test('POST /tools/call logs execution', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/tools/call`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tool: 'swarm_init' })
+  });
+  const data = await res.json();
+  await new Promise(r => server.close(r));
+  assert.strictEqual(data.tool, 'swarm_init');
+  assert.strictEqual(data.status, 'executed');
+});

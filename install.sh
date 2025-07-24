@@ -10,6 +10,17 @@ read -p "Domain name for HTTPS: " DOMAIN
 read -p "Email for LetsEncrypt: " EMAIL
 read -p "Linux user for Docker: " USERNAME
 
+# validate username
+if [[ "$USERNAME" =~ [[:space:]] ]]; then
+  echo "Invalid username: spaces are not allowed." >&2
+  exit 1
+fi
+
+if ! id -u "$USERNAME" >/dev/null 2>&1; then
+  echo "User '$USERNAME' does not exist. Please create it before running this script." >&2
+  exit 1
+fi
+
 FRONTEND_PORT=8080
 BACKEND_PORT=3008
 

@@ -15,15 +15,41 @@ else
   SUDO=""
 fi
 
-read -rp "Domain for the app (e.g. myapp.example.com): " DOMAIN
-while [ -z "$DOMAIN" ]; do
-  read -rp "Domain cannot be empty. Please enter domain: " DOMAIN
+CONFIG_FILE="$(dirname "$0")/install.json"
+
+if [ -f "$CONFIG_FILE" ]; then
+  DOMAIN=$(grep -oP '"domain"\s*:\s*"\K[^"]+' "$CONFIG_FILE" || true)
+  EMAIL=$(grep -oP '"email"\s*:\s*"\K[^"]+' "$CONFIG_FILE" || true)
+  NAME=$(grep -oP '"name"\s*:\s*"\K[^"]+' "$CONFIG_FILE" || true)
+  echo "Existing configuration found:"
+  echo "  Domain: $DOMAIN"
+  echo "  Email:  $EMAIL"
+  echo "  Name:   $NAME"
+  read -rp "Use these values? (y/n): " USE_OLD
+  if [[ ! $USE_OLD =~ ^[Yy]$ ]]; then
+    DOMAIN=""
+    EMAIL=""
+    NAME=""
+  fi
+fi
+
+while [ -z "${DOMAIN:-}" ]; do
+  read -rp "Domain for the app (e.g. myapp.example.com): " DOMAIN
 done
-read -rp "E-mail for Let's Encrypt: " EMAIL
-while [ -z "$EMAIL" ]; do
-  read -rp "E-mail cannot be empty. Please enter e-mail: " EMAIL
+while [ -z "${EMAIL:-}" ]; do
+  read -rp "E-mail for Let's Encrypt: " EMAIL
 done
-read -rp "Your name: " NAME
+while [ -z "${NAME:-}" ]; do
+  read -rp "Your name: " NAME
+done
+
+cat > "$CONFIG_FILE" <<EOF
+{
+  "domain": "$DOMAIN",
+  "email": "$EMAIL",
+  "name": "$NAME"
+}
+EOF
 
 echo "\n### Installing required packages..."
 $SUDO apt-get update

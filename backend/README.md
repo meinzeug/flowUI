@@ -25,3 +25,11 @@ npx knex --knexfile knexfile.cjs migrate:rollback
 
 The Docker setup automatically runs `knex migrate:latest` when the backend container starts.
 
+### Tables
+
+Current migrations create the following tables:
+
+- `memory_entries` - stores memory query results
+- `activity_log` - records system log messages
+- `sessions` - persists saved workflow graphs
+

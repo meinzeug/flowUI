@@ -40,6 +40,17 @@ if ! command -v docker >/dev/null; then
   exit 1
 fi
 
+# Docker command exists but might not be usable (e.g. permission denied)
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker installed but not accessible for the current user. Attempting rootless Docker..."
+  curl -fsSL https://get.docker.com/rootless | sh
+  export PATH="$HOME/bin:$PATH"
+  if ! docker info >/dev/null 2>&1; then
+    echo "Unable to access Docker. Please run this script with sudo or add your user to the docker group." >&2
+    exit 1
+  fi
+fi
+
 echo "Building Docker images..."
 docker compose build
 echo "Starting containers..."

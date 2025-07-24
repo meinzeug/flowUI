@@ -298,7 +298,7 @@ Die Anwendung kommuniziert mit der Gemini API über das `@google/genai` SDK. Die
 
 ## 4. Styles & Design Tokens
 
-Das Styling wird durch eine Kombination aus [Tailwind CSS](https://tailwindcss.com/) und einem globalen Stylesheet in `index.html` realisiert.
+Das Styling wird durch eine Kombination aus [Tailwind CSS](https://tailwindcss.com/) und einem globalen Stylesheet in `index.html` im Projektwurzelverzeichnis realisiert.
 
 ### 4.1. Farben
 

@@ -45,8 +45,16 @@ if ! docker info >/dev/null 2>&1; then
   echo "Docker installed but not accessible for the current user. Attempting rootless Docker..."
   curl -fsSL https://get.docker.com/rootless | sh
   export PATH="$HOME/bin:$PATH"
-  if ! docker info >/dev/null 2>&1; then
-    echo "Unable to access Docker. Please run this script with sudo or add your user to the docker group." >&2
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "Unable to access Docker. Adding '$USER' to the docker group (sudo required)..."
+  sudo groupadd -f docker
+  if sudo usermod -aG docker "$USER"; then
+    echo "User added to docker group. Please log out and log back in or run 'newgrp docker' and re-run this script."
+    exit 0
+  else
+    echo "Failed to add user to docker group." >&2
     exit 1
   fi
 fi

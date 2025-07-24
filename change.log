@@ -1,3 +1,4 @@
 2025-07-24: Initialized project.
 2025-07-25: Implemented tool info endpoint and added backend tests.
 2025-07-26: Added memory store/query endpoints and updated docs.
+2025-07-24: Configured Vitest to ignore node_modules and ran automated tests.

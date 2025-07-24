@@ -1,7 +1,4 @@
 [
-  {
-    "id": 1,
-    "result": "not implemented",
-    "pass": false
-  }
+  {"id": 1, "result": "backend tests pass", "pass": true},
+  {"id": 2, "result": "frontend WebSocketService test pass", "pass": true}
 ]

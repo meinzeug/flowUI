@@ -4,41 +4,41 @@ TAP version 13
 # Subtest: GET /health returns ok
 ok 1 - GET /health returns ok
   ---
-  duration_ms: 204.194322
+  duration_ms: 278.577139
   type: 'test'
   ...
 # MCP server listening on 0
 # Subtest: GET /tools/list returns tool catalog
 ok 2 - GET /tools/list returns tool catalog
   ---
-  duration_ms: 7.009647
+  duration_ms: 12.16504
   type: 'test'
   ...
 # MCP server listening on 0
 # Subtest: GET /tools/info/:name returns tool details
 ok 3 - GET /tools/info/:name returns tool details
   ---
-  duration_ms: 7.641886
+  duration_ms: 9.652743
   type: 'test'
   ...
 # MCP server listening on 0
 # Subtest: WebSocket JSON-RPC methods work
 ok 4 - WebSocket JSON-RPC methods work
   ---
-  duration_ms: 11.404236
+  duration_ms: 21.032081
   type: 'test'
   ...
 # MCP server listening on 0
 # Subtest: session save and load persist data
 ok 5 - session save and load persist data
   ---
-  duration_ms: 34.849244
+  duration_ms: 71.076031
   type: 'test'
   ...
 # Subtest: memory store and query
 ok 6 - memory store and query
   ---
-  duration_ms: 18.614502
+  duration_ms: 32.902826
   type: 'test'
   ...
 1..6
@@ -49,17 +49,4 @@ ok 6 - memory store and query
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 574.928142
-# start of coverage report
-# ---------------------------------------------------------------------------------------------------------------------------------------------------
-# file            | line % | branch % | funcs % | uncovered lines
-# ---------------------------------------------------------------------------------------------------------------------------------------------------
-# knexfile.cjs    | 100.00 |   100.00 |  100.00 | 
-# server.js       |  79.78 |    51.28 |  100.00 | 29-36 52-54 68-69 80-81 95 103-104 110-111 120-121 124-125 131-132 142-143 157-161 164-165 182-183
-# test            |        |          |         | 
-#  server.test.js | 100.00 |   100.00 |  100.00 | 
-# tools.js        | 100.00 |   100.00 |  100.00 | 
-# ---------------------------------------------------------------------------------------------------------------------------------------------------
-# all files       |  91.17 |    65.45 |  100.00 | 
-# ---------------------------------------------------------------------------------------------------------------------------------------------------
-# end of coverage report
+# duration_ms 876.278971

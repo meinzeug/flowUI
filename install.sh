@@ -27,6 +27,11 @@ read -rp "Your name: " NAME
 
 echo "\n### Installing required packages..."
 $SUDO apt-get update
+# Remove conflicting containerd package if Docker's containerd.io is present
+if dpkg -s containerd >/dev/null 2>&1 && dpkg -s containerd.io >/dev/null 2>&1; then
+  echo "Removing conflicting package 'containerd'..."
+  $SUDO apt-get remove -y containerd
+fi
 $SUDO apt-get install -y curl git ufw docker.io docker-compose nginx certbot python3-certbot-nginx
 $SUDO systemctl enable --now docker
 

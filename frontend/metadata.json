@@ -1,0 +1,8 @@
+{
+  "name": "Claude-Flow GUI",
+  "description": "A futuristic, dark-themed graphical user interface for the Claude-Flow v2 Alpha AI orchestration platform. It provides an intuitive way to manage projects, hives, memory, and agents without using the command line.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "prompt": ""
+}

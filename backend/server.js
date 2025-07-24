@@ -6,10 +6,12 @@ import knex from 'knex';
 import knexConfig from './knexfile.cjs';
 import { MCP_TOOLS } from './tools.js';
 import { randomUUID } from 'crypto';
+import jwt from 'jsonwebtoken';
 
 const { Pool } = pkg;
 
 let pool;
+const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 async function initPool() {
   if (process.env.NODE_ENV === 'test') {
@@ -93,6 +95,14 @@ async function createServer() {
       if (tool) return res.json(tool);
     }
     res.status(404).json({ error: 'Not found' });
+  });
+
+  app.post('/api/auth/login', (req, res) => {
+    const { username, password } = req.body;
+    const valid = username === 'admin' && password === 'password';
+    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+    const token = jwt.sign({ user: username }, JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
   });
 
   app.post('/session/save', async (req, res) => {

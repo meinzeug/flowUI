@@ -22,6 +22,30 @@ fi
 FRONTEND_PORT=8080
 BACKEND_PORT=3008
 
+read -p "Enter your domain for HTTPS (e.g. example.com): " DOMAIN
+
+if [ -n "$DOMAIN" ]; then
+  docker volume inspect letsencrypt >/dev/null 2>&1 || docker volume create letsencrypt
+  if docker run --rm -v letsencrypt:/etc/letsencrypt alpine sh -c "test -d /etc/letsencrypt/live/$DOMAIN"; then
+    read -p "Existing certificate found for $DOMAIN. Reuse it? [y/N]: " REUSE
+    if [ "$REUSE" != "y" ]; then
+      CERT_NEEDED=yes
+    fi
+  else
+    CERT_NEEDED=yes
+  fi
+
+  if [ "$CERT_NEEDED" = "yes" ]; then
+    read -p "Your name: " CERT_NAME
+    read -p "Email for Let's Encrypt: " CERT_EMAIL
+    docker run --rm -p 80:80 -v letsencrypt:/etc/letsencrypt certbot/certbot certonly --standalone -n --agree-tos -m "$CERT_EMAIL" -d "$DOMAIN"
+  fi
+
+  sed "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" nginx/default.conf.template > nginx/default.conf
+else
+  cp nginx/default.conf.template nginx/default.conf
+fi
+
 cat > .env <<EOF
 FRONTEND_PORT=$FRONTEND_PORT
 BACKEND_PORT=$BACKEND_PORT
@@ -65,4 +89,9 @@ docker compose up -d
 
 echo "Frontend running on port $FRONTEND_PORT"
 echo "Backend running on port $BACKEND_PORT"
+if [ -n "$DOMAIN" ]; then
+  echo "Application available at https://$DOMAIN"
+else
+  echo "Application available at http://localhost:$FRONTEND_PORT"
+fi
 echo "Installation complete."

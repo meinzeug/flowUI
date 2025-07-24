@@ -6,11 +6,18 @@ if [ "$EUID" -eq 0 ]; then
   exit 1
 fi
 
+REPO_URL=${REPO_URL:-https://github.com/meinzeug/flowUI.git}
+REPO_DIR=${REPO_DIR:-flowUI}
+
 if [ ! -f docker-compose.yml ]; then
-
-  echo "docker-compose.yml not found. Please run this script from the project root." >&2
-
-  exit 1
+  echo "docker-compose.yml not found. Cloning repository..."
+  if [ ! -d "$REPO_DIR" ]; then
+    git clone "$REPO_URL" "$REPO_DIR"
+  else
+    echo "Using existing directory $REPO_DIR" >&2
+  fi
+  cd "$REPO_DIR"
+  exec bash install.sh "$@"
 fi
 
 FRONTEND_PORT=8080

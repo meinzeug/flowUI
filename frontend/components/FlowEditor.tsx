@@ -25,6 +25,17 @@ export const FlowEditor: React.FC<{ onSave: (data: GraphData) => void; initial?:
     }
   }, [initial]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
   const onNodesChange = useCallback((nds: any) => setNodes(nds), []);
   const onEdgesChange = useCallback((eds: any) => setEdges(eds), []);
   const onConnect = useCallback((c: Connection) => setEdges((eds) => addEdge(c, eds)), []);

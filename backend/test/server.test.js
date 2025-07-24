@@ -5,29 +5,40 @@ import { once } from 'node:events';
 import { startServer } from '../server.js';
 
 
-test('GET /health returns ok', async () => {
+test('GET /health returns ok', { concurrency: 1 }, async () => {
   const server = await startServer(0);
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/health`);
   const data = await res.json();
-  server.close();
+  await new Promise((r) => server.close(r));
   assert.strictEqual(res.status, 200);
   assert.deepStrictEqual(data, { status: 'ok' });
 });
 
 
-test('GET /tools/list returns tool catalog', async () => {
+test('GET /tools/list returns tool catalog', { concurrency: 1 }, async () => {
   const server = await startServer(0);
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/tools/list`);
   const data = await res.json();
-  server.close();
+  await new Promise((r) => server.close(r));
   assert.strictEqual(res.status, 200);
   assert.ok(Array.isArray(data));
   assert.ok(data.length > 0);
 });
 
-test('WebSocket JSON-RPC methods work', async () => {
+test('GET /tools/info/:name returns tool details', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/tools/info/swarm_init`);
+  const data = await res.json();
+  await new Promise((r) => server.close(r));
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.name, 'swarm_init');
+  assert.ok(data.description);
+});
+
+test('WebSocket JSON-RPC methods work', { concurrency: 1 }, async () => {
   const server = await startServer(0);
   const port = server.address().port;
   const ws = new WebSocket(`ws://localhost:${port}`);
@@ -49,11 +60,11 @@ test('WebSocket JSON-RPC methods work', async () => {
   assert.strictEqual(batchData.result.length, 2);
 
   ws.close();
-  server.close();
+  await new Promise((r) => server.close(r));
 
 });
 
-test('session save and load persist data', async () => {
+test('session save and load persist data', { concurrency: 1 }, async () => {
   const server = await startServer(0);
   const port = server.address().port;
   const graph = { nodes: [{ id: '1' }], edges: [] };
@@ -71,6 +82,6 @@ test('session save and load persist data', async () => {
     body: JSON.stringify({ id: saved.id })
   });
   const loaded = await loadRes.json();
-  server.close();
+  await new Promise((r) => server.close(r));
   assert.deepStrictEqual(loaded.data, graph);
 });

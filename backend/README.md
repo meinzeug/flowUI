@@ -32,4 +32,9 @@ Current migrations create the following tables:
 - `memory_entries` - stores memory query results
 - `activity_log` - records system log messages
 - `sessions` - persists saved workflow graphs
-
+### REST API
+- `GET /health` - returns `{ status: 'ok' }` if the server and database are reachable.
+- `GET /tools/list` - lists all available MCP tools grouped by category.
+- `GET /tools/info/:name` - returns details for a single tool.
+- `POST /session/save` - persists or updates a session graph.
+- `POST /session/load` - loads a previously saved session by id.

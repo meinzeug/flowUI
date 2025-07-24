@@ -38,6 +38,20 @@ test('GET /tools/info/:name returns tool details', { concurrency: 1 }, async () 
   assert.ok(data.description);
 });
 
+test('POST /api/auth/login authenticates user', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password: 'password' })
+  });
+  const data = await res.json();
+  await new Promise((r) => server.close(r));
+  assert.strictEqual(res.status, 200);
+  assert.ok(data.token);
+});
+
 test('WebSocket JSON-RPC methods work', { concurrency: 1 }, async () => {
   const server = await startServer(0);
   const port = server.address().port;

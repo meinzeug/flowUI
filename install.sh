@@ -22,6 +22,7 @@ fi
 read -p "Domain name for HTTPS: " DOMAIN
 read -p "Email for LetsEncrypt: " EMAIL
 read -p "Linux user for Docker: " USERNAME
+read -p "OpenRouter API Key: " OPENROUTER_API_KEY
 
 # validate username
 if [[ "$USERNAME" =~ [[:space:]] ]]; then
@@ -42,6 +43,7 @@ cat > .env <<EOF
 DOMAIN=$DOMAIN
 FRONTEND_PORT=$FRONTEND_PORT
 BACKEND_PORT=$BACKEND_PORT
+OPENROUTER_API_KEY=$OPENROUTER_API_KEY
 EOF
 
 echo "Updating package lists..."

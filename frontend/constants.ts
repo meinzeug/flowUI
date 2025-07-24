@@ -15,8 +15,8 @@ const DEFAULT_SETTINGS: HookSettings = {
 };
 
 export const DEFAULT_ASSISTANT_SETTINGS: AssistantSettings = {
-    provider: 'Gemini',
-    model: 'gemini-2.5-flash',
+    provider: 'OpenRouter',
+    model: 'qwen/qwen3-coder:free',
     language: 'de-DE',
     systemInstruction: `You are an integrated AI assistant for a development orchestration platform called Claude-Flow. Your job is to understand user commands and translate them into a specific JSON format representing an action to be performed in the application.
 
@@ -96,7 +96,7 @@ export const AVAILABLE_MODELS: Record<ApiProvider, string[]> = {
     'Gemini': ['gemini-2.5-flash'],
     'OpenAI': ['gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo'],
     'Claude': ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307'],
-    'OpenRouter': ['openrouter/auto', 'anthropic/claude-3-opus', 'google/gemini-flash-1.5'],
+    'OpenRouter': ['openrouter/auto', 'anthropic/claude-3-opus', 'google/gemini-flash-1.5', 'qwen/qwen3-coder:free'],
     'X': ['grok-1']
 };
 

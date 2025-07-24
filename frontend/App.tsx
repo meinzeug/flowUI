@@ -692,27 +692,21 @@ const App: React.FC = () => {
         
         const { provider, model, systemInstruction } = activeProject.assistantSettings;
 
-        if (provider !== 'Gemini') {
-             addLog(`Assistant provider "${provider}" is not implemented. Please select Gemini in settings.`, "warning", true);
-             addChatMessage({ role: 'assistant', content: `My apologies, I can't use the ${provider} provider at the moment. Please select Gemini in my settings.` });
-             return;
-        }
-
         setAssistantStatus('thinking');
         addLog(`Assistant processing: "${command}"`, 'info');
 
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-            const response = await ai.models.generateContent({
-                model: model,
-                contents: command,
-                config: {
-                    systemInstruction: systemInstruction,
-                    responseMimeType: 'application/json',
-                    responseSchema: {
-                        type: Type.OBJECT,
-                        properties: {
+            if (provider === 'Gemini') {
+                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+                const response = await ai.models.generateContent({
+                    model: model,
+                    contents: command,
+                    config: {
+                        systemInstruction: systemInstruction,
+                        responseMimeType: 'application/json',
+                        responseSchema: {
+                            type: Type.OBJECT,
+                            properties: {
                             action: { type: Type.STRING, enum: ['CREATE_MISSION_WITH_TEAM', 'NAVIGATE', 'SPAWN_HIVE', 'UNKNOWN']},
                             parameters: { 
                                 type: Type.OBJECT,
@@ -742,14 +736,44 @@ const App: React.FC = () => {
                 }
             });
 
-            const actionResponse = JSON.parse(response.text);
-            handleAssistantAction(actionResponse);
+                const actionResponse = JSON.parse(response.text);
+                handleAssistantAction(actionResponse);
+            } else if (provider === 'OpenRouter') {
+                const apiKey = process.env.OPENROUTER_API_KEY || process.env.API_KEY;
+                if (!apiKey) {
+                    addLog('OpenRouter API key not set.', 'warning', true);
+                    addChatMessage({ role: 'assistant', content: "OpenRouter API key is missing." });
+                    return;
+                }
+                const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model,
+                        messages: [
+                            { role: 'system', content: systemInstruction },
+                            { role: 'user', content: command }
+                        ],
+                        response_format: { type: 'json_object' }
+                    })
+                });
+                const data = await resp.json();
+                const actionResponse = JSON.parse(data.choices[0].message.content);
+                handleAssistantAction(actionResponse);
+            } else {
+                addLog(`Assistant provider "${provider}" is not implemented.`, 'warning', true);
+                addChatMessage({ role: 'assistant', content: `Provider ${provider} not supported.` });
+            }
 
         } catch (error) {
             console.error('Assistant processing error:', error);
             const errorMessage = "I seem to have run into a problem processing that. Please try again.";
             addLog(`Assistant failed to process command: ${error}`, 'error', true);
             addChatMessage({ role: 'assistant', content: errorMessage });
+        } finally {
             setAssistantStatus('idle');
         }
     };
@@ -759,52 +783,65 @@ const App: React.FC = () => {
         
         addHodChatMessage({ role: 'user', content: command });
         
-        if (!process.env.API_KEY) {
-            addLog("Head of Development AI requires API_KEY to function.", "warning", true);
-            addHodChatMessage({ role: 'assistant', content: "My connection to the core intelligence is offline. API Key is missing." });
-            return;
-        }
-        
         setHodStatus('thinking');
         addLog(`HoD is analyzing directive: "${command}"`, 'info');
 
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-            const { model } = activeProject.assistantSettings;
-            
-            // Create a safe-to-log version of the project object
-            const projectContext = { ...activeProject, apiKeys: "REDACTED", settings: "REDACTED" };
-
+            const { provider, model } = activeProject.assistantSettings;
+            let hodResponse: any = null;
+            const projectContext = { ...activeProject, apiKeys: 'REDACTED', settings: 'REDACTED' };
             const prompt = `Here is the current project state in JSON: ${JSON.stringify(projectContext)}. The CTO's directive is: "${command}"`;
 
-            const response = await ai.models.generateContent({
-                model: model,
-                contents: prompt,
-                config: {
-                    systemInstruction: HEAD_OF_DEVELOPMENT_SYSTEM_PROMPT,
-                    responseMimeType: 'application/json',
-                    responseSchema: {
-                        type: Type.OBJECT,
-                        properties: {
-                            report: {
-                                type: Type.STRING,
-                                description: "A detailed report in Markdown format, based on the provided project data and the user's directive."
+            if (provider === 'Gemini') {
+                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+                const response = await ai.models.generateContent({
+                    model,
+                    contents: prompt,
+                    config: {
+                        systemInstruction: HEAD_OF_DEVELOPMENT_SYSTEM_PROMPT,
+                        responseMimeType: 'application/json',
+                        responseSchema: {
+                            type: Type.OBJECT,
+                            properties: {
+                                report: { type: Type.STRING, description: "A detailed report in Markdown format, based on the provided project data and the user's directive." },
+                                suggestedDirectives: { type: Type.ARRAY, description: "A list of follow-up questions or commands for the CTO.", items: { type: Type.STRING } }
                             },
-                            suggestedDirectives: {
-                                type: Type.ARRAY,
-                                description: "A list of follow-up questions or commands for the CTO.",
-                                items: { type: Type.STRING }
-                            }
-                        },
-                        required: ['report']
+                            required: ['report']
+                        }
                     }
+                });
+                hodResponse = JSON.parse(response.text);
+            } else if (provider === 'OpenRouter') {
+                const apiKey = process.env.OPENROUTER_API_KEY || process.env.API_KEY;
+                if (!apiKey) {
+                    addHodChatMessage({ role: 'assistant', content: 'OpenRouter API key is missing.' });
+                    return;
                 }
-            });
+                const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model,
+                        messages: [
+                            { role: 'system', content: HEAD_OF_DEVELOPMENT_SYSTEM_PROMPT },
+                            { role: 'user', content: prompt }
+                        ],
+                        response_format: { type: 'json_object' }
+                    })
+                });
+                const data = await resp.json();
+                hodResponse = JSON.parse(data.choices[0].message.content);
+            } else {
+                addLog(`Assistant provider "${provider}" is not implemented. Please select Gemini in settings.`, 'warning', true);
+                addHodChatMessage({ role: 'assistant', content: `Provider ${provider} not supported.` });
+                return;
+            }
 
-            const hodResponse = JSON.parse(response.text);
-            
             const suggestions = hodResponse.suggestedDirectives?.map((s: string) => ({ text: s, command: s })) || [];
-            addHodChatMessage({ role: 'assistant', content: hodResponse.report, suggestions: suggestions });
+            addHodChatMessage({ role: 'assistant', content: hodResponse.report, suggestions });
 
         } catch (error) {
             console.error("HoD AI Error:", error);
@@ -826,21 +863,14 @@ const App: React.FC = () => {
     const handleProcessHodContextualQuery = async (query: string) => {
         if (!activeProject || !hodQueryContext || !query.trim()) return;
     
-        if (!process.env.API_KEY) {
-            setHodQueryResponse("Cannot connect to the HoD. API Key is missing.");
-            return;
-        }
-        
         setHodQueryStatus('thinking');
         setHodQueryResponse('');
-    
+
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-            const { model } = activeProject.assistantSettings;
-            
+            const { provider, model } = activeProject.assistantSettings;
             const projectContext = { ...activeProject, apiKeys: "REDACTED", settings: "REDACTED" };
-    
-            let itemContext = null;
+
+            let itemContext: any = null;
             switch(hodQueryContext.type) {
                 case 'Mission':
                     itemContext = activeProject.roadmap.find(i => i.id === hodQueryContext.id);
@@ -852,25 +882,48 @@ const App: React.FC = () => {
                     itemContext = activeProject.daaAgents.find(i => i.id === hodQueryContext.id);
                     break;
                 case 'Workflow':
-                     itemContext = activeProject.workflows.find(i => i.id === hodQueryContext.id);
-                     break;
+                    itemContext = activeProject.workflows.find(i => i.id === hodQueryContext.id);
+                    break;
             }
-    
+
             if (!itemContext) {
                 throw new Error(`Could not find ${hodQueryContext.type} with id ${hodQueryContext.id}`);
             }
-            
+
             const prompt = `The CTO is asking about the following ${hodQueryContext.type}:\n\n${JSON.stringify(itemContext)}\n\nThe specific question is: "${query}"\n\nProvide a concise, data-driven report answering the question. The full project state is provided below for context, but focus your answer on the specific item queried.\n\nFull Project State:\n${JSON.stringify(projectContext)}`;
-    
-            const response = await ai.models.generateContent({
-                model: model,
-                contents: prompt,
-                config: {
-                    systemInstruction: HEAD_OF_DEVELOPMENT_SYSTEM_PROMPT,
+
+            if (provider === 'Gemini') {
+                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+                const response = await ai.models.generateContent({
+                    model,
+                    contents: prompt,
+                    config: { systemInstruction: HEAD_OF_DEVELOPMENT_SYSTEM_PROMPT }
+                });
+                setHodQueryResponse(response.text);
+            } else if (provider === 'OpenRouter') {
+                const apiKey = process.env.OPENROUTER_API_KEY || process.env.API_KEY;
+                if (!apiKey) {
+                    setHodQueryResponse('OpenRouter API key is missing.');
+                    return;
                 }
-            });
-            
-            setHodQueryResponse(response.text);
+                const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model,
+                        messages: [
+                            { role: 'system', content: HEAD_OF_DEVELOPMENT_SYSTEM_PROMPT },
+                            { role: 'user', content: prompt }
+                        ],
+                        response_format: { type: 'json_object' }
+                    })
+                });
+                const data = await resp.json();
+                setHodQueryResponse(data.choices[0].message.content);
+            } else {
+                setHodQueryResponse(`Provider ${provider} not supported.`);
+            }
+    
     
         } catch (error) {
             console.error("HoD Contextual Query Error:", error);

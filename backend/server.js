@@ -5,6 +5,7 @@ import pkg from 'pg';
 import knex from 'knex';
 import knexConfig from './knexfile.cjs';
 import { MCP_TOOLS } from './tools.js';
+import { randomUUID } from 'crypto';
 
 const { Pool } = pkg;
 
@@ -17,6 +18,13 @@ async function initPool() {
     const adapter = db.adapters.createPg();
     pool = new adapter.Pool();
     await pool.query('CREATE TABLE IF NOT EXISTS sessions (id SERIAL PRIMARY KEY, name TEXT, data JSONB)');
+    await pool.query(`CREATE TABLE IF NOT EXISTS memory_entries (
+      id uuid primary key,
+      namespace text not null,
+      query text not null,
+      summary text not null,
+      timestamp timestamp default now()
+    )`);
   } else {
     pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const db = knex({
@@ -112,6 +120,46 @@ async function createServer() {
         return res.status(404).json({ error: 'Not found' });
       }
       res.json(rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/memory/store', async (req, res) => {
+    const { namespace = 'default', query, summary } = req.body;
+    if (!query || !summary) {
+      return res.status(400).json({ error: 'query and summary required' });
+    }
+    try {
+      if (!pool) await initPool();
+      const id = randomUUID();
+      await pool.query(
+        'INSERT INTO memory_entries (id, namespace, query, summary) VALUES ($1, $2, $3, $4)',
+        [id, namespace, query, summary]
+      );
+      res.json({ id });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/memory/query', async (req, res) => {
+    const { namespace, query = '' } = req.body;
+    try {
+      if (!pool) await initPool();
+      let rows;
+      if (namespace) {
+        ({ rows } = await pool.query(
+          'SELECT * FROM memory_entries WHERE namespace = $1 AND query ILIKE $2 ORDER BY timestamp DESC LIMIT 10',
+          [namespace, `%${query}%`]
+        ));
+      } else {
+        ({ rows } = await pool.query(
+          'SELECT * FROM memory_entries WHERE query ILIKE $1 ORDER BY timestamp DESC LIMIT 10',
+          [`%${query}%`]
+        ));
+      }
+      res.json(rows);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

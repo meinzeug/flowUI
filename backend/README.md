@@ -38,3 +38,5 @@ Current migrations create the following tables:
 - `GET /tools/info/:name` - returns details for a single tool.
 - `POST /session/save` - persists or updates a session graph.
 - `POST /session/load` - loads a previously saved session by id.
+- `POST /memory/store` - stores a memory entry `{namespace, query, summary}` and returns an id.
+- `POST /memory/query` - searches stored entries by namespace and query.

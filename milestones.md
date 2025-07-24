@@ -38,9 +38,9 @@ This file will be updated as milestones are completed.
 *Start:* 2025-07-24  \
 *End:* 2025-07-26  \
 *Lead:* Codex Team
-- [ ] **Feature:** Implement backend MCP API according to `backend.md`. (@backend-agent)
-- [ ] **Bugfix:** Add persistence layer and migrations for PostgreSQL. (@backend-agent)
-- [ ] **Test:** Write unit tests for frontend and backend. (@qa-agent)
+- [x] **Feature:** Implement backend MCP API according to `backend.md`. (@backend-agent)
+- [x] **Bugfix:** Add persistence layer and migrations for PostgreSQL. (@backend-agent)
+- [x] **Test:** Write unit tests for frontend and backend. (@qa-agent)
 - [ ] **Doc:** Update README and API documentation. (@frontend-agent)
 
 ## Sprint Jul-27-2025

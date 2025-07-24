@@ -85,3 +85,24 @@ test('session save and load persist data', { concurrency: 1 }, async () => {
   await new Promise((r) => server.close(r));
   assert.deepStrictEqual(loaded.data, graph);
 });
+
+test('memory store and query', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const storeRes = await fetch(`http://localhost:${port}/memory/store`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ namespace: 'test', query: 'hello', summary: 'world' })
+  });
+  const stored = await storeRes.json();
+  assert.ok(stored.id);
+
+  const queryRes = await fetch(`http://localhost:${port}/memory/query`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ namespace: 'test', query: 'hello' })
+  });
+  const results = await queryRes.json();
+  await new Promise((r) => server.close(r));
+  assert.ok(results.some((r) => r.id === stored.id));
+});

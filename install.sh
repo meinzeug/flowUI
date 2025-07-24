@@ -17,6 +17,22 @@ fi
 
 CONFIG_FILE="$(dirname "$0")/install.json"
 
+# Optionally remove almost all packages to start from a clean system
+echo -e "\n### Preparing clean system (optional)" 
+read -rp "Strip packages leaving only SSH and base system? (y/n): " CLEAN_CONFIRM
+if [[ $CLEAN_CONFIRM =~ ^[Yy]$ ]]; then
+  KEEP_PKGS="openssh-server openssh-client sudo curl wget ufw vim nano lsb-release gnupg iproute2 net-tools"
+  ESSENTIAL_PKGS=$(dpkg-query -Wf '${Package} ${Priority} ${Essential}\n' | awk '$2=="required" || $2=="important" || $3=="yes" {print $1}')
+  KEEP_LIST="$KEEP_PKGS $ESSENTIAL_PKGS"
+  REMOVE_LIST=$(comm -23 <(dpkg --get-selections | awk '{print $1}' | sort) <(echo "$KEEP_LIST" | tr ' ' '\n' | sort))
+  if [ -n "$REMOVE_LIST" ]; then
+    echo "Removing packages: $REMOVE_LIST"
+    echo "$REMOVE_LIST" | xargs -r $SUDO apt-get purge -y
+    $SUDO apt-get autoremove -y
+    $SUDO apt-get clean
+  fi
+fi
+
 if [ -f "$CONFIG_FILE" ]; then
   DOMAIN=$(grep -oP '"domain"\s*:\s*"\K[^"]+' "$CONFIG_FILE" || true)
   EMAIL=$(grep -oP '"email"\s*:\s*"\K[^"]+' "$CONFIG_FILE" || true)

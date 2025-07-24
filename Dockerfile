@@ -1,14 +1,12 @@
 FROM node:18-alpine as build
 WORKDIR /app
-# Install dependencies for the frontend inside its directory
-COPY frontend/package.json frontend/package-lock.json ./frontend/
-RUN cd frontend && npm install
-# Copy the frontend sources and Vite config
+# Copy frontend sources and configuration
 COPY frontend ./frontend
 COPY vite.config.ts ./
 COPY index.html ./
-# Build the production bundle using the frontend package
-RUN npm --prefix frontend run build
+# Install dependencies and build the production bundle
+RUN npm --prefix frontend install \
+    && npm --prefix frontend run build
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html

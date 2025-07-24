@@ -294,15 +294,22 @@ Eine gut gestaltete visuelle Schnittstelle hat das Potenzial, das volle Potenzia
 
 ## Server Installation
 
-1. Clone this repository: `git clone <repo-url>`
-2. Run the setup script and follow the prompts:
+1. Clone this repository and change into the project directory:
    ```bash
+   git clone <repo-url>
+   cd flowUI
+   ```
+2. Ensure the install script is executable and run it (sudo permissions are required):
+   ```bash
+   chmod +x install.sh
    ./install.sh
    ```
+
 The script checks for Docker and NGINX, installs missing components and
 configures HTTPS via Let's Encrypt. You can choose custom ports for the
 frontend and backend which are forwarded to the containers via the
 `docker compose` plugin.
+
 3. Access the UI via `https://<your-domain>` once the containers are running.
 
 ### Updating the deployment
@@ -313,3 +320,7 @@ To fetch the latest version and rebuild all containers execute:
 ```
 This script uses the Docker Compose plugin to rebuild and restart the stack.
 
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

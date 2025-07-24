@@ -17,7 +17,10 @@ services:
     environment:
       DATABASE_URL: postgres://flowuser:flowpass@postgres:5432/flowdb
     ports:
-      - "${BACKEND_PORT:-3008}:3008"
+
+      - "3008:3008"
+    command: sh -c "npx knex --knexfile knexfile.cjs migrate:latest && npm start"
+
 
   frontend:
     build: ./frontend

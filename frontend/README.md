@@ -26,3 +26,14 @@ Alternatively, append `?dev` to the import URLs in `index.html` to force the non
 
 If you see `net::ERR_CERT_COMMON_NAME_INVALID` for `/favicon.ico`, your local HTTPS certificate is likely misconfigured. Use HTTP during development or fix the certificate to remove the warning.
 
+
+## Build Docker Image
+
+Use the provided `Dockerfile` to create a production image:
+
+```bash
+docker build -t flowui-frontend .
+```
+
+This bundles the React app with Vite and serves it via Nginx.
+

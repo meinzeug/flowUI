@@ -23,6 +23,20 @@ async function initDb() {
       type TEXT NOT NULL,
       message TEXT NOT NULL
     )`);
+    await pool.query(`CREATE TABLE projects (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id),
+      name TEXT NOT NULL,
+      description TEXT,
+      created_at TIMESTAMP DEFAULT now()
+    )`);
+    await pool.query(`CREATE TABLE workflows (
+      id SERIAL PRIMARY KEY,
+      project_id INTEGER REFERENCES projects(id),
+      name TEXT NOT NULL,
+      definition JSONB NOT NULL,
+      last_run TIMESTAMP
+    )`);
   } else {
     pool = new Pool({ connectionString: DATABASE_URL });
     await pool.query(`CREATE TABLE IF NOT EXISTS users (
@@ -37,6 +51,20 @@ async function initDb() {
       timestamp TIMESTAMP DEFAULT now(),
       type TEXT NOT NULL,
       message TEXT NOT NULL
+    )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS projects (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES users(id),
+      name TEXT NOT NULL,
+      description TEXT,
+      created_at TIMESTAMP DEFAULT now()
+    )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS workflows (
+      id SERIAL PRIMARY KEY,
+      project_id INTEGER REFERENCES projects(id),
+      name TEXT NOT NULL,
+      definition JSONB NOT NULL,
+      last_run TIMESTAMP
     )`);
   }
   return pool;

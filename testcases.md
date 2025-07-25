@@ -21,3 +21,13 @@
 4. **WebSocketService Reconnect**
    - Simuliere Schließen der Verbindung im Frontend
    - Erwartet neuen Verbindungsaufbau nach 1 Sekunde
+
+5. **wsConnections Middleware**
+   - Erzeuge Mock-WebSocket und speichere Verbindung mit `storeConnection`
+   - Erwartet, dass `getConnections` die Verbindung liefert
+   - Sende `close`-Event und prüfe, dass sie entfernt wurde
+
+6. **Hive-Log-Export-Skript**
+   - Führe `node scripts/exportLogs.js logs.json` aus
+   - Erwartet Datei `logs.json` mit Log-Einträgen
+   - Tabelle `activity_log` wird danach geleert

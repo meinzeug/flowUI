@@ -11,7 +11,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
-    image: ${BACKEND_IMAGE:-ghcr.io/<OWNER>/<REPO>-backend:latest}
+    image: ${BACKEND_IMAGE:-ghcr.io/meinzeug/flowUI-backend:latest}
     depends_on:
       - postgres
     environment:
@@ -24,7 +24,7 @@ services:
 
 
   frontend:
-    image: ${FRONTEND_IMAGE:-ghcr.io/<OWNER>/<REPO>-frontend:latest}
+    image: ${FRONTEND_IMAGE:-ghcr.io/meinzeug/flowUI-frontend:latest}
     depends_on:
       - backend
     environment:

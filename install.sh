@@ -106,6 +106,10 @@ else
 fi
 cd "$APP_DIR"
 
+# Determine repository slug for GHCR image defaults
+REPO_SLUG="$($SUDO git config --get remote.origin.url | \
+  sed -E 's#.*/([^/]+/[^/.]+)(\.git)?$#\1#')"
+
 if [ ! -f .env ]; then
   echo "\n### Creating environment file..."
   JWT_SECRET=$(openssl rand -hex 32)
@@ -113,8 +117,18 @@ if [ ! -f .env ]; then
 FRONTEND_PORT=8080
 BACKEND_PORT=3008
 JWT_SECRET=$JWT_SECRET
+BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest
+FRONTEND_IMAGE=ghcr.io/${REPO_SLUG}-frontend:latest
 EENV
   echo "Generated JWT_SECRET stored in .env"
+fi
+
+# Ensure image variables exist if .env was present
+if ! grep -q '^BACKEND_IMAGE=' .env; then
+  echo "BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest" | $SUDO tee -a .env
+fi
+if ! grep -q '^FRONTEND_IMAGE=' .env; then
+  echo "FRONTEND_IMAGE=ghcr.io/${REPO_SLUG}-frontend:latest" | $SUDO tee -a .env
 fi
 
 # Read ports from environment file for nginx configuration

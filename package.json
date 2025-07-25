@@ -5,7 +5,8 @@
   "main": "mcp/server.js",
   "scripts": {
     "start": "npm --prefix mcp start",
-    "test": "NODE_ENV=test node --test test/docker.test.js && npm --prefix mcp test"
+    "test": "NODE_ENV=test node --test test/docker.test.js && npm --prefix mcp test",
+    "pretest": "npm --prefix mcp install"
   },
   "keywords": [],
   "author": "",

@@ -20,6 +20,9 @@ Eine von Google AI Studio / Gemini erzeugte Platzhalter-Implementation fehlte je
 ### 2.3 Auswirkungen auf die Applikation
 Mehrere zentrale Funktionen greifen über `WebSocketService` auf das Backend zu – u. a. der Login-Fluss und die Werkzeugliste. Durch den fehlerhaften Handshake blieben diese Features wirkungslos und lieferten nur statische oder gar keine Daten.
 
+### 2.4 Fehlgeleitete Backend-Anbindung
+Zusätzlich zur defekten WebSocket-Implementierung stellte sich heraus, dass das Frontend historisch bedingt weiterhin das MCP‑Backend von ClaudeFlow ansprach. Dieses Backend dient der internen Orchestrierung und stellt **keine** stabile REST‑API bereit. Alle Aufrufe an erwartete REST-Endpunkte wie Benutzer‑ oder Toolverwaltung liefen somit ins Leere und lieferten 404‑Antworten. Erst eine klar definierte REST‑Schnittstelle ermöglicht es dem Frontend, Authentifizierung und Workflow-Steuerung zuverlässig abzubilden.
+
 ## 3. Zielarchitektur und technische Spezifikation
 
 ### 3.1 Funktionale Anforderung

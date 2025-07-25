@@ -1,4 +1,4 @@
- tags: ghcr.io/name: Publish Docker Images
+name: Publish Docker Images
 
 on:
   push:

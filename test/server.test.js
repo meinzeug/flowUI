@@ -139,7 +139,7 @@ test('POST /api/hive/log broadcasts to websocket clients', async () => {
   });
   const { token } = await reg.json();
 
-  const ws = new WebSocket(`ws://localhost:${port}/api/`);
+  const ws = new WebSocket(`ws://localhost:${port}/ws`);
   await new Promise(res => ws.on('open', res));
 
   const logPromise = new Promise(resolve => {
@@ -213,5 +213,30 @@ test('DELETE /api/hive/logs clears logs', async () => {
   const logs = await res.json();
   assert.strictEqual(logs.length, 0);
 
+  await new Promise(r => server.close(r));
+});
+
+test('WebSocket connection works with token', async () => {
+  const server = await start();
+  const port = server.address().port;
+
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'harry', email: 'h@h.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
+  await new Promise(res => ws.on('open', res));
+  ws.close();
+  await new Promise(r => server.close(r));
+});
+
+test('WebSocket connection fails on invalid path', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const ws = new WebSocket(`ws://localhost:${port}/bad`);
+  await new Promise(res => ws.on('error', res));
   await new Promise(r => server.close(r));
 });

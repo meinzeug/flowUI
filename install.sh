@@ -142,6 +142,41 @@ fi
 FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' .env 2>/dev/null || echo 8080)"
 BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' .env 2>/dev/null || echo 3008)"
 
+# Read GHCR credentials for private images
+GHCR_USERNAME="$(grep -oP '^GHCR_USERNAME=\K.*' .env 2>/dev/null || true)"
+GHCR_PAT="$(grep -oP '^GHCR_PAT=\K.*' .env 2>/dev/null || true)"
+
+if [ -z "$GHCR_USERNAME" ] || [ -z "$GHCR_PAT" ]; then
+  read -rp "GitHub username for GHCR (leave empty to build locally): " INPUT_USER
+  if [ -n "$INPUT_USER" ]; then
+    GHCR_USERNAME="$INPUT_USER"
+    read -rsp "Personal Access Token (read:packages): " INPUT_PAT
+    echo
+    GHCR_PAT="$INPUT_PAT"
+  fi
+fi
+
+LOGIN_SUCCESS=0
+if [ -n "$GHCR_USERNAME" ] && [ -n "$GHCR_PAT" ]; then
+  if echo "$GHCR_PAT" | $SUDO docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin; then
+    LOGIN_SUCCESS=1
+    if grep -q '^GHCR_USERNAME=' .env; then
+      $SUDO sed -i "s#^GHCR_USERNAME=.*#GHCR_USERNAME=$GHCR_USERNAME#" .env
+    else
+      echo "GHCR_USERNAME=$GHCR_USERNAME" | $SUDO tee -a .env
+    fi
+    if grep -q '^GHCR_PAT=' .env; then
+      $SUDO sed -i "s#^GHCR_PAT=.*#GHCR_PAT=$GHCR_PAT#" .env
+    else
+      echo "GHCR_PAT=$GHCR_PAT" | $SUDO tee -a .env
+    fi
+  else
+    echo "GHCR login failed, will build images locally"
+  fi
+else
+  echo "No GHCR credentials provided, will build images locally"
+fi
+
 
 
 # ensure compose file doesn't publish HTTPS port from the frontend container
@@ -151,7 +186,14 @@ if grep -q '"443:443"' docker-compose.yml 2>/dev/null; then
 fi
 
 echo "\n### Pulling Docker images and starting containers..."
-$SUDO docker compose pull
+if [ "$LOGIN_SUCCESS" -eq 1 ]; then
+  if ! $SUDO docker compose pull; then
+    echo "Pull failed, building images locally..."
+    $SUDO docker compose build
+  fi
+else
+  $SUDO docker compose build
+fi
 $SUDO docker compose up -d
 
 NGCONF="/etc/nginx/sites-available/${DOMAIN}"

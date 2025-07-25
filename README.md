@@ -108,11 +108,16 @@ docker pull ghcr.io/meinzeug/flowui-backend:latest
 docker pull ghcr.io/meinzeug/flowui-frontend:latest
 ```
 
-Damit lässt sich der Aufbau der Container in eigenen Deployments erheblich
-beschleunigen, da kein lokaler Build-Schritt mehr erforderlich ist. Das
-bereitgestellte `docker-compose.yml` nutzt diese Images bereits. Du kannst die
-Tags über die Umgebungsvariablen `BACKEND_IMAGE` und `FRONTEND_IMAGE`
-überschreiben und anschließend per
+Die Images sind privat und erfordern einen Login am
+GitHub Container Registry (GHCR). Hinterlege dafür deinen Benutzernamen
+und ein Personal Access Token mit der Berechtigung `read:packages` in den
+Variablen `GHCR_USERNAME` und `GHCR_PAT` der `.env` oder gib sie beim
+Installationsskript ein. Fehlen diese Angaben, baut das Skript die Docker
+Images lokal.
+
+Das bereitgestellte `docker-compose.yml` nutzt bereits die veröffentlichten
+Tags. Du kannst sie über `BACKEND_IMAGE` und `FRONTEND_IMAGE`
+anpassen und anschließend per
 
 ```bash
 docker compose pull

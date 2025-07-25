@@ -1,7 +1,6 @@
 # To-Do
 
 ## Open
-- Implement backend MCP API according to `backend.md`.
 - Set up CI/CD pipeline for automated tests.
 
 ## Done
@@ -14,3 +13,4 @@
 - Implemented HTTP /tools/batch endpoint with tests.
 - Added query suggestion dropdown in MemoryView.
 - Expanded `milestones.md` with detailed goals and added a new documentation milestone.
+- Implemented neural training metrics dashboard.

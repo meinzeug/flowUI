@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Project, FileNode, ActivityLogEntry } from '../../types';
 import { Card, Button } from '../UI';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const neuralModels = [
     'task-optimizer', 'cognitive-analysis', 'code-generator', 'pattern-recognizer', 'code-reviewer', 'security-auditor', 'performance-predictor', 'data-importer', 'api-generator'
@@ -70,6 +71,11 @@ const NeuralView: React.FC<{ project: Project; addLog: (message: string, type?: 
     const [predictModel, setPredictModel] = useState('task-optimizer');
     const [predictInput, setPredictInput] = useState('');
     const [predictionResult, setPredictionResult] = useState<string | null>(null);
+    const [metrics, setMetrics] = useState<{epoch:number,loss:number,accuracy:number}[]>([]);
+
+    useEffect(() => {
+        fetch('/metrics/training').then(r => r.json()).then(setMetrics).catch(() => {});
+    }, []);
     
     const jsonFiles = project.files.flatMap(function findJson(node: FileNode): string[] {
         if (node.type === 'file' && node.name.endsWith('.json')) {
@@ -202,6 +208,22 @@ const NeuralView: React.FC<{ project: Project; addLog: (message: string, type?: 
                  <Button variant="secondary" className="w-full" onClick={() => handleAdvancedTool('ensemble_create')}>Create Ensemble</Button>
                  <Button variant="secondary" className="w-full" onClick={() => handleAdvancedTool('transfer_learn')}>Transfer Learning</Button>
                  <Button variant="secondary" className="w-full" onClick={() => handleAdvancedTool('explain')}>Explain Prediction</Button>
+            </div>
+        </Card>
+        <Card>
+            <h3 className="text-xl font-bold text-cyan-400 mb-4">Training Metrics</h3>
+            <div className="h-48">
+                {metrics.length > 0 && (
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={metrics} margin={{top:5,right:20,bottom:5,left:0}}>
+                            <Line type="monotone" dataKey="loss" stroke="#FF0090" dot={false} />
+                            <Line type="monotone" dataKey="accuracy" stroke="#00FFED" dot={false} />
+                            <XAxis dataKey="epoch" stroke="#94a3b8" />
+                            <YAxis stroke="#94a3b8" />
+                            <Tooltip contentStyle={{ backgroundColor: 'rgba(15,23,42,0.8)', borderColor: '#334155' }} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                )}
             </div>
         </Card>
       </div>

@@ -164,3 +164,14 @@ test('POST /tools/batch executes multiple tools', { concurrency: 1 }, async () =
   assert.strictEqual(Array.isArray(data), true);
   assert.strictEqual(data.length, 2);
 });
+
+test('GET /metrics/training returns metrics', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/metrics/training`);
+  const data = await res.json();
+  await new Promise(r => server.close(r));
+  assert.strictEqual(res.status, 200);
+  assert.ok(Array.isArray(data));
+  assert.ok(data.length > 0);
+});

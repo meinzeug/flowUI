@@ -111,7 +111,12 @@ FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' .env 2>/dev/null || echo 8080)"
 BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' .env 2>/dev/null || echo 3008)"
 
 
-$SUDO sed -i '/"443:443"/d' docker-compose.yml
+
+# ensure compose file doesn't publish HTTPS port from the frontend container
+if grep -q '"443:443"' docker-compose.yml 2>/dev/null; then
+  echo "Removing obsolete HTTPS port mapping from docker-compose.yml"
+  $SUDO sed -i '/"443:443"/d' docker-compose.yml
+fi
 
 echo "\n### Building and starting Docker containers..."
 $SUDO docker compose up -d --build

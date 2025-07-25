@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import WorkflowsView from './WorkflowsView';
 import { Project } from '../../types';
@@ -34,5 +34,15 @@ describe('WorkflowsView', () => {
     (global as any).fetch = fetchMock;
     render(<WorkflowsView project={project} addLog={noop} onCreateWorkflow={noop} onQueryHoD={noop} />);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/session/list'));
+  });
+
+  it('renders export button', async () => {
+    const fetchMock = vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve([]) }));
+    (global as any).fetch = fetchMock;
+    const { getAllByRole } = render(
+      <WorkflowsView project={project} addLog={noop} onCreateWorkflow={noop} onQueryHoD={noop} />
+    );
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/session/list'));
+    expect(getAllByRole('button', { name: 'Export' }).length).toBeGreaterThan(0);
   });
 });

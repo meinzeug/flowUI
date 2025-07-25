@@ -51,6 +51,7 @@ This document outlines the roadmap for building **Flow Weaver**, a web-based GUI
 - [x] Memory search interface with query suggestions.
 - [ ] Visualization of agent resource usage on canvas.
 - [ ] Export/import workflow graphs as JSON templates.
+- [x] Export/import workflow graphs as JSON templates.
 
 ## Milestone 6 - CI/CD and Deployment
 *Target:* 2025-04-20  \

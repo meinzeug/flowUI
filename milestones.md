@@ -124,3 +124,13 @@ The following sprints track short term progress inside the larger milestones.
 *Lead:* Codex Team
 - [x] **Test:** Add DashboardView render test and update vitest config. (@frontend-agent)
 - [ ] **Doc:** Summarize progress in bericht.html. (@frontend-agent)
+
+### Sprint Aug-05-2025
+*Start:* 2025-08-05  \
+*End:* 2025-08-07  \
+*Lead:* Codex Team
+- [x] **Feature:** Create Docker image publish workflow. (@backend-agent)
+- [ ] **Test:** Verify Dockerfiles build in CI. (@qa-agent)
+- [ ] **Process:** Document image usage and release steps. (@teamlead)
+- [ ] **Doc:** Update README with registry instructions. (@frontend-agent)
+- [ ] **Bugfix:** Update docker-compose to reference images. (@backend-agent)

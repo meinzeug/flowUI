@@ -92,7 +92,7 @@ if [ ! -d "$APP_DIR" ]; then
 else
   echo "\n### Repository already exists. Updating..."
   if ! $SUDO git -C "$APP_DIR" pull; then
-    if [ -f "$APP_DIR/.env" ] && ! git -C "$APP_DIR" ls-files --error-unmatch .env >/dev/null 2>&1; then
+    if [ -f "$APP_DIR/.env" ] && ! $SUDO git -C "$APP_DIR" ls-files --error-unmatch .env >/dev/null 2>&1; then
       echo "Untracked .env detected, backing up during update..."
       $SUDO mv "$APP_DIR/.env" "$APP_DIR/.env.bak"
       $SUDO git -C "$APP_DIR" pull

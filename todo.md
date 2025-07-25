@@ -1,10 +1,6 @@
 # To-Do
 
 ## Open
-* Publish Docker images via GitHub Actions
-* Reference published images in docker-compose.yml
-* Add CI step to build Dockerfiles
-* Document Docker registry usage
 * Write tests for Docker container startup
 
 ## Done
@@ -20,3 +16,7 @@
 - Expanded `milestones.md` with detailed goals and added a new documentation milestone.
 - Implemented neural training metrics dashboard.
 - Implemented session export/import endpoints and UI with tests.
+- Publish Docker images via GitHub Actions.
+- Reference published images in docker-compose.yml.
+- Add CI step to build Dockerfiles.
+- Document Docker registry usage.

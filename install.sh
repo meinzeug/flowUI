@@ -129,8 +129,9 @@ if grep -q '"443:443"' docker-compose.yml 2>/dev/null; then
   $SUDO sed -i '/"443:443"/d' docker-compose.yml
 fi
 
-echo "\n### Building and starting Docker containers..."
-$SUDO docker compose up -d --build
+echo "\n### Pulling Docker images and starting containers..."
+$SUDO docker compose pull
+$SUDO docker compose up -d
 
 NGCONF="/etc/nginx/sites-available/${DOMAIN}"
 if [ ! -f "$NGCONF" ]; then

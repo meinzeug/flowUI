@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 3)
-1. [P0] Implementiere den neuen WebSocketService im Frontend, der das kanalisierte Protokoll verwendet und Reconnect unterstützt.
-2. [P1] Entwickle einen Worker-Prozess zur Abarbeitung der Workflow-Queue im Backend.
-3. [P1] Dokumentiere die Workflow-Queue-Endpunkte und Worker-Architektur in backend.md.
+## Nächste Aufgaben (Sprint 4)
+1. [P0] Schreibe Unit-Tests für den neuen WebSocketService und die Queue-Verarbeitung im Backend.
+2. [P1] Erweitere die Workflow-Queue um eine Redis-basierte Persistenzschicht.
+3. [P1] Optimiere die Auto-Reconnect-Strategie des WebSocketService.

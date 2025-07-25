@@ -567,12 +567,12 @@ Best Practices: Implementieren Sie Tracing mit Standards wie OpenTelemetry und v
 B. Engineering for Failure: Wichtige Fehlertoleranzmuster
 Durch die Kombination einer robusten berwachungsstrategie mit diesen Fehlertoleranzmustern wird ein Backend-System geschaffen, das nicht nur leistungsstark, sondern auch widerstandsfhig und zuverlssig im Angesicht der unvermeidlichen Ausflle in einer verteilten Umgebung ist.
 ## WebSocket API (/ws)
-Der Endpunkt `/ws` ermöglicht kanalbasierte Echtzeitkommunikation. Beim HTTP-Upgrade muss ein gültiges JWT im Query-Parameter `token` übermittelt werden. Fehlende oder ungültige Tokens führen zu `401 Unauthorized`.
+Der Endpunkt `/ws` ermöglicht kanalbasierte Echtzeitkommunikation. Beim HTTP-Upgrade muss ein gültiges JWT entweder im Query-Parameter `token` oder im `Authorization`-Header (`Bearer <token>`) übermittelt werden. Fehlende oder ungültige Tokens führen zu `401 Unauthorized`.
 
 **Handshake Ablauf**
-1. Client stellt HTTP-Upgrade auf `/ws?token=<JWT>` her.
+1. Client stellt HTTP-Upgrade auf `/ws` her und übermittelt das JWT als Query-Parameter oder Header.
 2. Der Server validiert das Token. Ist es ungültig, wird die Verbindung mit `401` abgelehnt.
-3. Nach erfolgreicher Prüfung wird die WebSocket-Verbindung aufgebaut und dem Client eine leere Kanal-Liste zugeordnet.
+3. Nach erfolgreicher Prüfung wird die WebSocket-Verbindung aufgebaut und dem Client eine leere Kanal-Liste zugeordnet. Ein Ping/Pong-Mechanismus überwacht in 30s-Abständen die Verbindung.
 
 ### Nachrichtenformat
 Alle WebSocket-Nachrichten sind Objekte mit folgender Struktur:
@@ -619,3 +619,5 @@ Checkpointing: Periodisches Speichern des Zustands eines Prozesses. Im Falle ein
 Graceful Degradation (würdevoller Leistungsabfall): Wenn ein abhängiger Dienst ausfällt, sollte die Anwendung nicht vollständig ausfallen. Stattdessen sollte sie in einem eingeschränkten, aber immer noch nützlichen Modus weiterarbeiten. Beispiel: Wenn der Empfehlungsdienst einer E-Commerce-Website ausfällt, sollte die Website weiterhin Produkte anzeigen und Verkäufe ermöglichen, nur eben ohne personalisierte Empfehlungen. Dies kann durch die Rückgabe von zwischengespeicherten Daten oder Standardwerten erreicht werden.
 
 Durch die Kombination einer robusten Überwachungsstrategie mit diesen Fehlertoleranzmustern wird ein Backend-System geschaffen, das nicht nur leistungsstark, sondern auch widerstandsfähig und zuverlässig im Angesicht der unvermeidlichen Ausfälle in einer verteilten Umgebung ist.
+## Workflow Queue und Worker
+Der Server stellt einen REST-Endpunkt `POST /queue/enqueue` bereit. Clients übermitteln dort die Ziel-`channel` sowie frei wählbare Nutzdaten. Die Aufgaben werden in einer In-Memory-Queue gespeichert und von einem Worker-Prozess in regelmäßigen Abständen abgearbeitet. Nach Abschluss sendet der Worker das Ergebnis als `{event:'message', channel, payload}` über die WebSocket-Verbindung an alle Abonnenten des Kanals.

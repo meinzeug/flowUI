@@ -8,6 +8,7 @@ import { MCP_TOOLS } from './tools.js';
 import { randomUUID } from 'crypto';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { enqueueTask, startWorker } from './worker.js';
 
 const { Pool } = pkg;
 
@@ -16,6 +17,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is required');
 }
+
+const channelMap = new Map();
 
 async function initPool() {
   if (process.env.NODE_ENV === 'test') {
@@ -82,11 +85,24 @@ async function createServer() {
   app.use(express.json());
   const server = http.createServer(app);
   const wss = new WebSocketServer({ noServer: true });
+  function broadcast(channel, payload) {
+    const set = channelMap.get(channel);
+    if (!set) return;
+    for (const client of set) {
+      if (client.readyState === client.OPEN) {
+        client.send(JSON.stringify({ event: 'message', channel, payload }));
+      }
+    }
+  }
 
   server.on('upgrade', (req, socket, head) => {
     const { pathname, searchParams } = new URL(req.url, `http://${req.headers.host}`);
     if (pathname === '/ws') {
-      const token = searchParams.get('token');
+      const header = req.headers['authorization'];
+      let token = searchParams.get('token');
+      if (!token && header && header.startsWith('Bearer ')) {
+        token = header.slice(7);
+      }
       if (!token) {
         socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
         socket.destroy();
@@ -100,6 +116,7 @@ async function createServer() {
         return;
       }
       wss.handleUpgrade(req, socket, head, ws => {
+        ws.authToken = token;
         wss.emit('connection', ws, req);
       });
     } else {
@@ -110,6 +127,9 @@ async function createServer() {
 
   wss.on('connection', ws => {
     ws.channels = new Set();
+    ws.isAlive = true;
+    ws.on('pong', () => { ws.isAlive = true; });
+
     ws.on('message', data => {
       let msg;
       try {
@@ -120,28 +140,52 @@ async function createServer() {
       }
 
       const { event, channel, payload } = msg;
-      if (typeof event !== 'string' || typeof channel !== 'string') {
+      if (typeof event !== 'string') {
         ws.send(JSON.stringify({ event: 'error', channel: null, payload: { message: 'invalid_format' } }));
         return;
       }
 
       if (event === 'subscribe') {
+        if (typeof channel !== 'string') return;
         ws.channels.add(channel);
+        if (!channelMap.has(channel)) channelMap.set(channel, new Set());
+        channelMap.get(channel).add(ws);
         ws.send(JSON.stringify({ event: 'subscribed', channel, payload: {} }));
       } else if (event === 'unsubscribe') {
+        if (typeof channel !== 'string') return;
         ws.channels.delete(channel);
+        const set = channelMap.get(channel);
+        if (set) {
+          set.delete(ws);
+          if (set.size === 0) channelMap.delete(channel);
+        }
         ws.send(JSON.stringify({ event: 'unsubscribed', channel, payload: {} }));
-      } else if (event === 'publish') {
-        wss.clients.forEach(client => {
-          if (client.channels && client.channels.has(channel)) {
-            client.send(JSON.stringify({ event: 'message', channel, payload }));
-          }
-        });
+      } else if (event === 'message') {
+        broadcast(channel, payload);
       } else {
         ws.send(JSON.stringify({ event: 'error', channel, payload: { message: 'unknown_event' } }));
       }
     });
+
+    ws.on('close', () => {
+      for (const ch of ws.channels) {
+        const set = channelMap.get(ch);
+        if (set) {
+          set.delete(ws);
+          if (set.size === 0) channelMap.delete(ch);
+        }
+      }
+    });
   });
+
+  const heartbeat = setInterval(() => {
+    wss.clients.forEach(client => {
+      if (!client.isAlive) return client.terminate();
+      client.isAlive = false;
+      client.ping();
+    });
+  }, 30000);
+  wss.on('close', () => clearInterval(heartbeat));
 
   app.get('/health', async (req, res) => {
     try {
@@ -346,6 +390,13 @@ async function createServer() {
     }
   });
 
+  app.post('/queue/enqueue', (req, res) => {
+    const { channel, payload } = req.body;
+    if (!channel) return res.status(400).json({ error: 'channel required' });
+    enqueueTask({ id: randomUUID(), channel, payload });
+    res.json({ enqueued: true });
+  });
+
   app.get('/metrics/training', async (req, res) => {
     try {
       if (!pool) await initPool();
@@ -357,6 +408,8 @@ async function createServer() {
       res.status(500).json({ error: err.message });
     }
   });
+
+  startWorker(broadcast);
 
   return { app, server };
 }

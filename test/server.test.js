@@ -184,3 +184,34 @@ test('GET /api/hive/logs returns persisted logs', async () => {
   assert.ok(logs.some(l => l.message === 'persisted'));
   await new Promise(r => server.close(r));
 });
+
+test('DELETE /api/hive/logs clears logs', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'gary', email: 'g@g.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+
+  await fetch(`http://localhost:${port}/api/hive/log`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ message: 'remove me' })
+  });
+
+  const delRes = await fetch(`http://localhost:${port}/api/hive/logs`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const delData = await delRes.json();
+  assert.strictEqual(delRes.status, 200);
+  assert.strictEqual(delData.success, true);
+
+  const res = await fetch(`http://localhost:${port}/api/hive/logs`);
+  const logs = await res.json();
+  assert.strictEqual(logs.length, 0);
+
+  await new Promise(r => server.close(r));
+});

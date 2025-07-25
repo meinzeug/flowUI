@@ -1,3 +1,1 @@
-- Add endpoint to clear hive logs from the database.
-- Provide a button in the Activity Console to trigger log clearing.
-- Ensure existing log tests pass and add test for the clear logs endpoint.
+- Set up CI/CD pipeline to automatically run backend and frontend tests on each commit.

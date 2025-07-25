@@ -1048,6 +1048,15 @@ const App: React.FC = () => {
     }
   };
 
+  const handleClearLogs = async () => {
+    try {
+      await fetch('/api/hive/logs', { method: 'DELETE' });
+    } catch {
+      // ignore
+    }
+    setActivityLog([]);
+  };
+
   if (!activeProject) {
     return <ProjectSelector projects={projects} onSelectProject={handleSelectProject} onCreateProject={handleCreateProject} />;
   }
@@ -1071,9 +1080,9 @@ const App: React.FC = () => {
           />
         )}
       </div>
-      <ActivityLog 
-          logs={activityLog} 
-          onClear={() => setActivityLog([])} 
+      <ActivityLog
+          logs={activityLog}
+          onClear={handleClearLogs}
           isOpen={isActivityLogOpen}
           onToggle={() => setIsActivityLogOpen(!isActivityLogOpen)}
       />

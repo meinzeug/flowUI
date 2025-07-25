@@ -1,7 +1,6 @@
-
-## Nächste Aufgaben (Sprint Aug-12-2025)
-1. [P1] Implementiere JWT-Verifizierung beim WebSocket-Handshake und weise Verbindungen ohne Token ab.
-2. [P1] Schreibe Middleware zum Speichern der aktiven WebSocket-Verbindungen nach Benutzer-ID.
-3. [P2] Ergänze Wiederverbindungs-Tests für `WebSocketService` im Frontend.
-4. [P2] Dokumentiere das neue `/ws`-API in `backend.md`.
-5. [P3] Aktualisiere `docker-compose.yml`, um den Pfad `/ws` auch im Reverse Proxy bereitzustellen.
+## Nächste Aufgaben (Sprint Aug-15-2025)
+1. [P1] Implementiere Funktion zum Senden von WebSocket-Nachrichten an einen bestimmten Benutzer.
+2. [P1] Erstelle Datenbanktabellen für `projects` und `workflows` inkl. Migration.
+3. [P2] Entwickle CLI-Skript zum Exportieren und Löschen von Hive-Logs.
+4. [P2] Schreibe Unit-Tests für `wsConnections`-Middleware.
+5. [P3] Dokumentiere Installationsschritte für Produktionsdeployment in `README.md`.

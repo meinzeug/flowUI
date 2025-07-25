@@ -142,3 +142,13 @@ The following sprints track short term progress inside the larger milestones.
 - [x] **Bugfix:** Switch WebSocket path to /ws and update frontend. (@backend-agent)
 - [x] **Test:** Add WebSocket login flow tests. (@qa-agent)
 - [x] **Doc:** Document WebSocket changes in code_issues and testcases. (@doku-agent)
+
+### Sprint Aug-12-2025
+*Start:* 2025-08-12  \
+*End:* 2025-08-14  \
+*Lead:* Codex Team
+- [x] **Security:** JWT-Verifizierung beim WebSocket-Handshake. (@backend-agent)
+- [x] **Feature:** Speicherung aktiver WS-Verbindungen pro Benutzer. (@backend-agent)
+- [x] **Test:** Wiederverbindungs-Test f\u00fcr WebSocketService. (@qa-agent)
+- [x] **Doc:** WebSocket-API dokumentiert. (@doku-agent)
+- [x] **Config:** Compose-Datei f\u00fcr /ws angepasst. (@teamlead)

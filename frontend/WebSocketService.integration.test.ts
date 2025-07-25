@@ -12,7 +12,13 @@ beforeAll(async () => {
   server = await srv.startServer(0);
   port = server.address().port;
   (global as any).WebSocket = WebSocket;
-  (global as any).localStorage = { getItem: () => null } as any;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'ws', email: 'ws@x.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+  (global as any).localStorage = { getItem: () => token } as any;
   (global as any).window = {
     location: { protocol: 'http:', host: `localhost:${port}` },
     setInterval,

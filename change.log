@@ -28,3 +28,4 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 
 2025-07-25: Added Docker image publishing workflow and updated README.
 2025-07-25: Updated compose to use GHCR images, added docker build tests and docs.
+2025-08-12: Added JWT WebSocket auth, connection tracking, reconnection tests and compose update.

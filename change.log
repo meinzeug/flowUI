@@ -1,3 +1,5 @@
+v0.2.0-alpha
+DEPRECATION: Vollständige Entfernung der von Gemini generierten, nicht-funktionalen WebSocket-Platzhalterimplementierung.
 2025-08-22: Added project CRUD API and documentation.
 2025-08-08: Switched WebSocket endpoint to /ws, updated NGINX, frontend WebSocketService and tests.
 2025-08-04: Added hive log WebSocket broadcasting with frontend listener and tests.

@@ -1,4 +1,3 @@
-const { broadcast } = require('../ws');
 const { initDb, getPool } = require('../db');
 
 async function logActivity(req, res, next) {
@@ -11,7 +10,6 @@ async function logActivity(req, res, next) {
       [type, message]
     );
     const entry = rows[0];
-    broadcast('hive-log', entry);
     res.json(entry);
   } catch (err) {
     next(err);
@@ -40,7 +38,6 @@ async function clearLogs(req, res, next) {
     await initDb();
     const pool = getPool();
     await pool.query('DELETE FROM activity_log');
-    broadcast('hive-log-batch', []);
     res.json({ success: true });
   } catch (err) {
     next(err);

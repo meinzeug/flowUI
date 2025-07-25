@@ -1,0 +1,3 @@
+- Implement authentication middleware and integrate with JWT.
+- Add database connection using configuration from .env.
+- Expand test suite for new routes.

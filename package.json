@@ -1,0 +1,17 @@
+{
+  "name": "flowui",
+  "version": "1.0.0",
+  "description": "Flow Weaver ist eine anspruchsvolle Hybrid-IDE für Claude-Flow. Sie verbindet strategische Projektplanung mit prozeduraler KI-Orchestrierung und überbrückt damit die Distanz zwischen *Was* und *Wie* der Softwareentwicklung.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^4.21.2"
+  }
+}

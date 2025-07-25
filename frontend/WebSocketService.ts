@@ -92,10 +92,15 @@ class WebSocketService {
     }
 
     setAuthToken(token: string | null) {
+        if (this.authToken === token) return;
         this.authToken = token;
-        if (this.ws) {
+        if (!this.ws) {
+            this.connect();
+            return;
+        }
+        if (this.ws.readyState === WebSocket.OPEN) {
             this.ws.close();
-        } else {
+        } else if (this.ws.readyState === WebSocket.CLOSED) {
             this.connect();
         }
     }

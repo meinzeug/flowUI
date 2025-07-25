@@ -1,9 +1,3 @@
-- Publish Docker images for backend and frontend.
-- Add GitHub Actions workflow to build and push Docker images to GHCR.
-- Document usage of the published images in README.md.
-- Update deployment process to use prebuilt images by default.
-- Create tests ensuring Dockerfiles build successfully.
-- Document Docker image workflow in milestones and todo lists.
 
 ## Nächste Aufgaben (Sprint Aug-08-2025)
 

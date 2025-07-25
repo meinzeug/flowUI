@@ -16,6 +16,7 @@ class WebSocketService {
     private pending: Map<number, (res: RPCResponse) => void> = new Map();
     private url: string;
     private heartbeatInterval?: number;
+    private authToken: string | null = localStorage.getItem('token');
 
     constructor(url?: string) {
         if (url) {
@@ -29,8 +30,16 @@ class WebSocketService {
         this.connect();
     }
 
+    private buildUrl() {
+        if (this.authToken) {
+            const sep = this.url.includes('?') ? '&' : '?';
+            return `${this.url}${sep}token=${encodeURIComponent(this.authToken)}`;
+        }
+        return this.url;
+    }
+
     private connect() {
-        this.ws = new WebSocket(this.url);
+        this.ws = new WebSocket(this.buildUrl());
         this.ws.addEventListener('open', () => {
             this.startHeartbeat();
         });
@@ -74,6 +83,15 @@ class WebSocketService {
             this.pending.set(id, res => resolve(res.result));
             this.ws?.send(JSON.stringify(request));
         });
+    }
+
+    setAuthToken(token: string | null) {
+        this.authToken = token;
+        if (this.ws) {
+            this.ws.close();
+        } else {
+            this.connect();
+        }
     }
 }
 

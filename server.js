@@ -25,7 +25,22 @@ async function createServer() {
   setWss(wss);
   const { MCP_TOOLS } = await import('./backend/tools.js');
 
-  wss.on('connection', ws => {
+  const { getPool } = require('./db');
+
+  wss.on('connection', async ws => {
+    await initDb();
+    const pool = getPool();
+    try {
+      const { rows } = await pool.query(
+        'SELECT id, timestamp, type, message FROM activity_log ORDER BY id DESC LIMIT 20'
+      );
+      ws.send(
+        JSON.stringify({ event: 'hive-log-batch', data: rows.reverse() })
+      );
+    } catch (err) {
+      // ignore
+    }
+
     ws.on('message', data => {
       let msg;
       try {

@@ -1,3 +1,3 @@
-- Persist hive session logs in the database with REST endpoints to list and add logs.
-- Load recent hive logs on frontend connect and display them.
-- Add tests for log persistence and retrieval.
+- Add endpoint to clear hive logs from the database.
+- Provide a button in the Activity Console to trigger log clearing.
+- Ensure existing log tests pass and add test for the clear logs endpoint.

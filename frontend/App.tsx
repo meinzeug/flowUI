@@ -191,6 +191,16 @@ const App: React.FC = () => {
       wsService.on('hive-log', (entry: any) => {
           addLog(entry.message, entry.type as any);
       });
+      wsService.on('hive-log-batch', (entries: any[]) => {
+          setActivityLog(
+            entries.map(e => ({
+                id: e.id,
+                timestamp: new Date(e.timestamp).toLocaleTimeString(),
+                type: e.type,
+                message: e.message
+            }))
+          );
+      });
   }, []);
   
   const addChatMessage = (message: Omit<ChatMessage, 'id'>) => {

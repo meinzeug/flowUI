@@ -23,6 +23,7 @@ class MockWebSocket {
   setInterval,
   clearInterval,
 };
+(global as any).localStorage = { getItem: () => null, setItem: () => {} } as any;
 // @ts-ignore
 global.WebSocket = MockWebSocket;
 
@@ -50,5 +51,14 @@ describe('WebSocketService', () => {
     svc.on('hive-log', d => received.push(d));
     ws.dispatch('message', { data: JSON.stringify({ event: 'hive-log', data: { message: 'hi' } }) });
     expect(received[0].message).toBe('hi');
+  });
+
+  it('emits batch events', async () => {
+    const svc = new WebSocketService('ws://test');
+    const ws = (svc as any).ws as MockWebSocket;
+    const batches: any[] = [];
+    svc.on('hive-log-batch', b => batches.push(b));
+    ws.dispatch('message', { data: JSON.stringify({ event: 'hive-log-batch', data: [{ message: 'x' }] }) });
+    expect(batches[0][0].message).toBe('x');
   });
 });

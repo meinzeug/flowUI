@@ -156,6 +156,31 @@ test('POST /api/hive/log broadcasts to websocket clients', async () => {
   assert.strictEqual(msg.event, 'hive-log');
   assert.strictEqual(msg.data.message, 'hello');
 
+  const listRes = await fetch(`http://localhost:${port}/api/hive/logs`);
+  const list = await listRes.json();
+  assert.ok(list.some(l => l.message === 'hello'));
+
   ws.close();
+  await new Promise(r => server.close(r));
+});
+
+test('GET /api/hive/logs returns persisted logs', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'frank', email: 'f@f.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+  await fetch(`http://localhost:${port}/api/hive/log`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ message: 'persisted' })
+  });
+
+  const res = await fetch(`http://localhost:${port}/api/hive/logs`);
+  const logs = await res.json();
+  assert.ok(logs.some(l => l.message === 'persisted'));
   await new Promise(r => server.close(r));
 });

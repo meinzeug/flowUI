@@ -17,6 +17,12 @@ async function initDb() {
       password_hash TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT now()
     )`);
+    await pool.query(`CREATE TABLE activity_log (
+      id SERIAL PRIMARY KEY,
+      timestamp TIMESTAMP DEFAULT now(),
+      type TEXT NOT NULL,
+      message TEXT NOT NULL
+    )`);
   } else {
     pool = new Pool({ connectionString: DATABASE_URL });
     await pool.query(`CREATE TABLE IF NOT EXISTS users (
@@ -25,6 +31,12 @@ async function initDb() {
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT now()
+    )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS activity_log (
+      id SERIAL PRIMARY KEY,
+      timestamp TIMESTAMP DEFAULT now(),
+      type TEXT NOT NULL,
+      message TEXT NOT NULL
     )`);
   }
   return pool;

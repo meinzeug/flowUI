@@ -58,6 +58,9 @@ $SUDO ln -sf "$NGCONF" /etc/nginx/sites-enabled/${DOMAIN}
 $SUDO nginx -t
 $SUDO systemctl reload nginx
 
+# Ensure certbot and the nginx plugin are installed
+$SUDO apt-get install -y certbot python3-certbot-nginx
+
 CERTBOT_ARGS="--nginx --non-interactive --agree-tos --redirect -d ${DOMAIN}"
 if [ -n "$EMAIL" ]; then
   CERTBOT_ARGS="$CERTBOT_ARGS -m $EMAIL"

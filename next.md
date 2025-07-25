@@ -1,3 +1,3 @@
-- Implement authentication middleware and integrate with JWT.
-- Add database connection using configuration from .env.
-- Expand test suite for new routes.
+- Implement /api/profile endpoint returning current user info using auth middleware.
+- Update frontend Auth context to fetch profile after login.
+- Add tests covering profile retrieval with and without valid token.

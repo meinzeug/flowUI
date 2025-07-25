@@ -52,7 +52,7 @@ cat > "$CONFIG_FILE" <<EOF
 EOF
 
 echo "\n### Installing required packages..."
-$SUDO apt-get update
+$SUDO apt-get update && $SUDO apt-get upgrade -y
 
 # Remove Ubuntu's containerd package if it exists to avoid conflicts with Docker's containerd.io
 if dpkg -s containerd >/dev/null 2>&1; then

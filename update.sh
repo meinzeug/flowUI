@@ -135,6 +135,10 @@ trap rollback ERR
 info "Updating repository..."
 create_backup
 $SUDO git pull --ff-only
+echo "Installing Node dependencies..."
+$SUDO npm --prefix backend install
+$SUDO npm --prefix mcp install
+$SUDO npm --prefix frontend install
 
 # Remove legacy HTTPS port mapping if present
 if grep -q '"443:443"' docker-compose.yml 2>/dev/null; then

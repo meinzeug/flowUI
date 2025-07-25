@@ -117,6 +117,10 @@ else
   fi
 fi
 cd "$APP_DIR"
+echo "### Installing Node dependencies..."
+$SUDO npm --prefix backend install
+$SUDO npm --prefix mcp install
+$SUDO npm --prefix frontend install
 
 # Determine repository slug for GHCR image defaults
 REPO_SLUG="$($SUDO git config --get remote.origin.url | \
@@ -129,9 +133,11 @@ if [ ! -f .env ]; then
   JWT_SECRET=$(openssl rand -hex 32)
   cat <<EENV | $SUDO tee .env
 FRONTEND_PORT=8080
-BACKEND_PORT=3008
+BACKEND_PORT=4000
+MCP_PORT=3008
 JWT_SECRET=$JWT_SECRET
 BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest
+MCP_IMAGE=ghcr.io/${REPO_SLUG}-mcp:latest
 FRONTEND_IMAGE=ghcr.io/${REPO_SLUG}-frontend:latest
 EENV
   echo "Generated JWT_SECRET stored in .env"
@@ -142,6 +148,11 @@ if grep -q '^BACKEND_IMAGE=' .env; then
   $SUDO sed -i "s#^BACKEND_IMAGE=.*#BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest#" .env
 else
   echo "BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest" | $SUDO tee -a .env
+fi
+if grep -q '^MCP_IMAGE=' .env; then
+  $SUDO sed -i "s#^MCP_IMAGE=.*#MCP_IMAGE=ghcr.io/${REPO_SLUG}-mcp:latest#" .env
+else
+  echo "MCP_IMAGE=ghcr.io/${REPO_SLUG}-mcp:latest" | $SUDO tee -a .env
 fi
 
 if grep -q '^FRONTEND_IMAGE=' .env; then

@@ -1,21 +1,19 @@
 {
-  "name": "claude-flow-backend",
+  "name": "flowui-rest-backend",
   "version": "0.1.0",
   "type": "module",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "NODE_ENV=test node --test",
-    "coverage": "NODE_ENV=test node --test --experimental-test-coverage",
-    "migrate": "npx knex --knexfile knexfile.cjs migrate:latest"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts"
   },
   "dependencies": {
+    "express": "^4.21.2",
     "bcrypt": "^6.0.0",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
-    "knex": "^2.5.1",
-    "pg": "^8.11.5",
-    "pg-mem": "^3.0.5",
-    "ws": "^8.17.0"
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.0"
   }
 }

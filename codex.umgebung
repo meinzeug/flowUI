@@ -1,0 +1,17 @@
+# Codex setup script for Flow Weaver project
+# Ensures Node.js dependencies are installed for root, backend and frontend
+# Uses Node 20 which matches CI configuration
+
+setup() {
+  local node_version=20
+  if command -v nvm >/dev/null 2>&1; then
+    nvm install "$node_version"
+    nvm use "$node_version"
+  fi
+
+  npm install
+  (cd backend && npm install)
+  (cd frontend && npm install)
+}
+
+setup "$@"

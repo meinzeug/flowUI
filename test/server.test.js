@@ -96,6 +96,30 @@ test('profile returns user info with token', async () => {
   await new Promise(r => server.close(r));
 });
 
+test('GET /api/users returns users array', async () => {
+  const server = await start();
+  const port = server.address().port;
+  await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'dave', email: 'd@d.com', password: 'p' })
+  });
+  const loginRes = await fetch(`http://localhost:${port}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'dave', password: 'p' })
+  });
+  const { token } = await loginRes.json();
+  const res = await fetch(`http://localhost:${port}/api/users`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  assert.strictEqual(res.status, 200);
+  assert.ok(Array.isArray(data));
+  assert.ok(data.some(u => u.username === 'dave'));
+  await new Promise(r => server.close(r));
+});
+
 test('GET /api/status returns ok with user count', async () => {
   const server = await start();
   const port = server.address().port;

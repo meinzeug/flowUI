@@ -1,7 +1,6 @@
 name: CI
 on:
   push:
-    branches: [main]
   pull_request:
 
 jobs:
@@ -16,6 +15,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
       - name: Install backend deps
         run: |
           cd backend
@@ -40,3 +43,8 @@ jobs:
         run: |
           cd frontend
           npm run coverage >> ../coverage_report.txt
+      - name: Upload coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage_report.txt

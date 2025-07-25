@@ -130,6 +130,10 @@ Das Frontend basiert auf React, TypeScript und React Flow und setzt eine defensi
 - Die Kernlogik befindet sich in `App.tsx`, das den globalen Zustand und die Kommunikation mit den KI-Diensten koordiniert【F:frontend/docs.md†L11-L20】.
 - Das Styling nutzt Tailwind CSS mit einer futuristischen Farbpalette und festen Design-Tokens【F:frontend/docs.md†L299-L315】.
 
+## Backend-Entwicklung
+
+Der Express-Server lauscht standardmäßig auf Port 3008. Nach `npm install` startet er mit `npm start`. Eine Testroute erreicht man über `POST /api/test`.
+
 ## Vision
 
 Flow Weaver soll sich zu einer vollwertigen Plattform entwickeln. Geplant sind ein Community-Marktplatz für geteilte Workflows, kollaboratives Arbeiten mit visuellem Diff, Performance-Analysen sowie eine erweiterte Benutzererfahrung mit Undo/Redo und Hilfslinien【F:idee.md†L83-L90】.

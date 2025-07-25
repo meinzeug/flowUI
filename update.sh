@@ -13,7 +13,24 @@ success() { echo -e "${GREEN}$*${RESET}"; }
 warn() { echo -e "${YELLOW}$*${RESET}"; }
 fail() { echo -e "${RED}$*${RESET}"; }
 
-APP_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Determine application directory. When executed via curl pipe, $0 is "bash"
+# and the script has no physical path. Default to /opt/flowUI which is used by
+# install.sh. If the script resides inside the repository, prefer that location.
+if [ -z "${APP_DIR:-}" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
+  if [ -d "$SCRIPT_DIR/.git" ]; then
+    APP_DIR="$SCRIPT_DIR"
+  else
+    APP_DIR="/opt/flowUI"
+  fi
+fi
+
+if [ ! -d "$APP_DIR/.git" ]; then
+  fail "$APP_DIR is not a flowUI repository"
+  exit 1
+fi
+cd "$APP_DIR"
+
 BACKUP_DIR="$APP_DIR/backups"
 TIMESTAMP="$(date +%Y%m%d%H%M%S)"
 BACKUP_FILE="$BACKUP_DIR/flowUI-${TIMESTAMP}.tar.gz"

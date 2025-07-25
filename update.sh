@@ -57,7 +57,10 @@ BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || ech
 create_backup() {
   info "Creating backup at $BACKUP_FILE"
   $SUDO mkdir -p "$BACKUP_DIR"
-  $SUDO git archive --format=tar HEAD | gzip > "$BACKUP_FILE"
+  # Use sudo for the entire pipeline so the redirected file is created with
+  # elevated privileges. Otherwise the redirection happens as the calling user
+  # which may not have write permission.
+  $SUDO bash -c "git archive --format=tar HEAD | gzip > \"$BACKUP_FILE\""
 }
 
 create_nginx_conf() {

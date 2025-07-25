@@ -38,6 +38,16 @@ stop_nginx() {
   fi
 }
 
+# Stop all running Docker containers to ensure ports are free
+stop_all_containers() {
+  local running
+  running=$($SUDO docker ps -q)
+  if [ -n "$running" ]; then
+    info "Stopping running Docker containers..."
+    $SUDO docker stop $running >/dev/null
+  fi
+}
+
 # Restart nginx if we stopped it earlier
 start_nginx() {
   if [ "${NGINX_STOPPED:-0}" = 1 ] && command -v systemctl >/dev/null 2>&1; then
@@ -66,13 +76,15 @@ cd "$APP_DIR"
 
 # ensure nginx is not occupying ports used by docker
 stop_nginx
+stop_all_containers
 
 create_env() {
   if [ ! -f .env ]; then
     info "Creating environment file..."
     cat <<EENV | $SUDO tee .env >/dev/null
 FRONTEND_PORT=8080
-BACKEND_PORT=3008
+BACKEND_PORT=4000
+MCP_PORT=3008
 EENV
   fi
 }
@@ -86,7 +98,17 @@ CURRENT_COMMIT="$(git rev-parse HEAD)"
 create_env
 # Ports used for health checks (fallback to defaults)
 FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 8080)"
-BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 3008)"
+BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 4000)"
+MCP_PORT="$(grep -oP '^MCP_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 3008)"
+
+# Avoid port clash between backend and MCP
+if [ "$BACKEND_PORT" = "$MCP_PORT" ]; then
+  warn "BACKEND_PORT equals MCP_PORT, adjusting backend to 4000"
+  BACKEND_PORT=4000
+  if [ -f .env ]; then
+    $SUDO sed -i 's/^BACKEND_PORT=.*/BACKEND_PORT=4000/' .env
+  fi
+fi
 
 create_backup() {
   info "Creating backup at $BACKUP_FILE"
@@ -122,6 +144,7 @@ cleanup() { $SUDO docker image prune -f >/dev/null; }
 
 rollback() {
   warn "Rolling back to previous commit $CURRENT_COMMIT"
+  stop_all_containers
   $SUDO docker compose down
   $SUDO git reset --hard "$CURRENT_COMMIT"
   FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
@@ -149,6 +172,7 @@ fi
 update_nginx_conf
 
 info "Updating containers..."
+stop_all_containers
 $SUDO docker compose down
 if ! $SUDO docker compose pull; then
   warn "Pull failed, building images locally..."

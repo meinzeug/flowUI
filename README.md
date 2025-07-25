@@ -61,6 +61,10 @@ bash install.sh
    liest diese Variable aus `.env` und reicht sie an den Backend-Container
    weiter. Wenn du die Container manuell startest, setze das Environment
    entsprechend.
+   Optional kannst du in `frontend/.env.local` eine Variable `VITE_WS_URL`
+   definieren, um den WebSocket-Endpunkt explizit festzulegen
+   (z. B. `wss://meinzeug.cloud/api/`). Ohne diesen Eintrag wird automatisch
+   der Host der aktuell aufgerufenen Seite verwendet.
 3. Nach Abschluss ist die Oberfläche unter `http://localhost:8080` erreichbar.
 
 ### Update des Systems

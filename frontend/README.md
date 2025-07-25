@@ -9,7 +9,8 @@ This contains everything you need to run your app locally.
 
 1. Install dependencies:
    `npm install`
-2. Copy `.env.local.example` to `.env.local` and set `GEMINI_API_KEY` to your Gemini API key
+2. Copy `.env.local.example` to `.env.local` and set `GEMINI_API_KEY` to your Gemini API key.
+   Optionally configure `VITE_WS_URL` if your backend WebSocket endpoint differs.
 3. Run the app:
    `npm run dev`
 

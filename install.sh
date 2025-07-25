@@ -91,13 +91,25 @@ if [ ! -d "$APP_DIR" ]; then
   $SUDO git clone https://github.com/meinzeug/flowUI.git "$APP_DIR"
 else
   echo "\n### Repository already exists. Updating..."
-  if ! $SUDO git -C "$APP_DIR" pull; then
+  if ! $SUDO git -C "$APP_DIR" pull --rebase --autostash; then
     if [ -f "$APP_DIR/.env" ] && ! $SUDO git -C "$APP_DIR" ls-files --error-unmatch .env >/dev/null 2>&1; then
       echo "Untracked .env detected, backing up during update..."
       $SUDO mv "$APP_DIR/.env" "$APP_DIR/.env.bak"
-      $SUDO git -C "$APP_DIR" pull
+      $SUDO git -C "$APP_DIR" pull --rebase --autostash
       $SUDO mv "$APP_DIR/.env.bak" "$APP_DIR/.env"
       echo "Restored original .env file"
+    elif [ -f "$APP_DIR/.env" ]; then
+      echo "Preserving local .env changes during update..."
+      $SUDO cp "$APP_DIR/.env" "$APP_DIR/.env.bak"
+      $SUDO git -C "$APP_DIR" checkout -- .env
+      if $SUDO git -C "$APP_DIR" pull --rebase --autostash; then
+        $SUDO mv "$APP_DIR/.env.bak" "$APP_DIR/.env"
+        echo "Restored local .env file"
+      else
+        echo "Failed to update repository." >&2
+        $SUDO mv "$APP_DIR/.env.bak" "$APP_DIR/.env"
+        exit 1
+      fi
     else
       echo "Failed to update repository." >&2
       exit 1

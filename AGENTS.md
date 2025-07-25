@@ -1,3 +1,3 @@
-- Implement /api/profile endpoint returning current user info using auth middleware.
-- Update frontend Auth context to fetch profile after login.
-- Add tests covering profile retrieval with and without valid token.
+- Implement /api/status endpoint returning { status: 'ok', userCount }.
+- Display server status in frontend header using new component.
+- Add tests for status endpoint and component.

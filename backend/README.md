@@ -38,6 +38,7 @@ Current migrations create the following tables:
 - `GET /tools/list` - lists all available MCP tools grouped by category.
 - `GET /tools/info/:name` - returns details for a single tool.
 - `POST /tools/call` - executes a tool and records the call.
+- `POST /tools/batch` - executes multiple tools in one request.
 - `POST /session/save` - persists or updates a session graph.
 - `POST /session/load` - loads a previously saved session by id.
 - `GET /session/list` - lists saved sessions.

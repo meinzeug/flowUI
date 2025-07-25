@@ -11,3 +11,4 @@
 - Added memory store and query endpoints with tests.
 - Added persistence layer and migrations for PostgreSQL.
 - Extended React Flow canvas with session save/load and selector.
+- Implemented HTTP /tools/batch endpoint with tests.

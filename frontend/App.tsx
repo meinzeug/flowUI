@@ -188,10 +188,10 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-      wsService.on('hive-log', (entry: any) => {
+      wsService.on('hive-log', 'hive-log', (entry: any) => {
           addLog(entry.message, entry.type as any);
       });
-      wsService.on('hive-log-batch', (entries: any[]) => {
+      wsService.on('hive-log-batch', 'hive-log', (entries: any[]) => {
           setActivityLog(
             entries.map(e => ({
                 id: e.id,

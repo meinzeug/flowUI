@@ -41,7 +41,7 @@
 *Lead:* Eve
 - [ ] Live monitoring of hive activity via WebSocket events.
 - [ ] Dashboard for neural network training metrics.
-- [ ] Memory search interface with query suggestions.
+- [x] Memory search interface with query suggestions.
 - [ ] Visualization of agent resource usage on canvas.
 - [ ] Export/import workflow graphs as JSON templates.
 

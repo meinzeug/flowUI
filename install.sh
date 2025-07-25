@@ -1,4 +1,10 @@
 #!/bin/bash
+# FlowUI deploys a web based interface for orchestrating AI workflows.
+# This installer sets up Docker, obtains SSL certificates and configures
+# Nginx as a reverse proxy for the application.
+# After installation browse to your domain for the frontend and use
+# https://<domain>/api for API requests.
+# Use update.sh to upgrade later; configuration lives under /opt/flowUI.
 set -euo pipefail
 
 LOGFILE="$HOME/flowui-install.log"
@@ -97,6 +103,11 @@ BACKEND_PORT=3008
 EENV
 fi
 
+# Read ports from environment file for nginx configuration
+FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' .env 2>/dev/null || echo 8080)"
+BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' .env 2>/dev/null || echo 3008)"
+
+
 $SUDO sed -i '/"443:443"/d' docker-compose.yml
 
 echo "\n### Building and starting Docker containers..."
@@ -111,7 +122,15 @@ server {
     server_name ${DOMAIN};
 
     location / {
-        proxy_pass http://localhost:8080;
+        proxy_pass http://localhost:${FRONTEND_PORT};
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://localhost:${BACKEND_PORT}/;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;

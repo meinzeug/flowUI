@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Project, Workflow, ActivityLogEntry, WorkflowStep, HoDQueryContext } from '../../types';
 import { Card, Button, Modal } from '../UI';
 import { PlusIcon, TerminalIcon, XIcon, HeadOfDevIcon } from '../Icons';
@@ -127,7 +127,14 @@ const WorkflowsView: React.FC<{
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [graph, setGraph] = useState<GraphData | undefined>();
     const [sessionId, setSessionId] = useState<number | null>(null);
+    const [sessions, setSessions] = useState<{id: number; name: string}[]>([]);
 
+    useEffect(() => {
+        fetch('/session/list')
+            .then(res => res.json())
+            .then(data => setSessions(data))
+            .catch(() => {});
+    }, []);
     const handleSaveGraph = async (g: GraphData) => {
         const res = await fetch('/session/save', {
             method: 'POST',
@@ -202,7 +209,17 @@ const WorkflowsView: React.FC<{
             <div className="pt-8">
                 <h3 className="text-xl font-bold text-white mb-2">Workflow Graph</h3>
                 <FlowEditor onSave={handleSaveGraph} initial={graph} />
-                <div className="mt-2 flex gap-2">
+                <div className="mt-2 flex gap-2 items-center">
+                    <select
+                        className="bg-slate-800 border border-slate-700 text-white rounded-lg px-2 py-1"
+                        value={sessionId ?? ''}
+                        onChange={e => setSessionId(e.target.value ? Number(e.target.value) : null)}
+                    >
+                        <option value="">Select Session</option>
+                        {sessions.map(s => (
+                            <option key={s.id} value={s.id}>{s.name}</option>
+                        ))}
+                    </select>
                     <Button variant="secondary" onClick={handleLoadGraph} disabled={!sessionId}>Load</Button>
                 </div>
             </div>

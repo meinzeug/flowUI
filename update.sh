@@ -26,6 +26,7 @@ else
   SUDO=""
 fi
 
+
 # Determine application directory. When executed via curl pipe, $0 is "bash"
 # and the script has no physical path. Default to /opt/flowUI which is used by
 # install.sh. If the script resides inside the repository, prefer that location.

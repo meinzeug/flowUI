@@ -78,6 +78,22 @@ cd "$APP_DIR"
 stop_nginx
 stop_all_containers
 
+# Backup local environment before resetting repository
+if [ -f .env ]; then
+  info "Backing up .env"
+  $SUDO cp .env .env.bak
+fi
+
+# Reset local changes and pull latest code
+$SUDO git reset --hard HEAD
+$SUDO git pull origin main
+
+# Restore environment file after updating
+if [ -f .env.bak ]; then
+  info "Restoring .env"
+  $SUDO mv .env.bak .env
+fi
+
 create_env() {
   if [ ! -f .env ]; then
     info "Creating environment file..."

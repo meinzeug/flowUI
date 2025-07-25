@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'assert';
 import { WebSocket } from 'ws';
 import { once } from 'node:events';
+import jwt from 'jsonwebtoken';
 
 process.env.JWT_SECRET = 'testsecret';
 
@@ -261,4 +262,18 @@ test('GET /metrics/training returns metrics', { concurrency: 1 }, async () => {
   assert.strictEqual(res.status, 200);
   assert.ok(Array.isArray(data));
   assert.ok(data.length > 0);
+});
+
+test('POST /api/workflows/:id/execute queues workflow', { concurrency: 1 }, async () => {
+  const server = await startServerWrapper();
+  const port = server.address().port;
+  const token = jwt.sign({ user: 'w' }, 'testsecret');
+  const res = await fetch(`http://localhost:${port}/api/workflows/1/execute`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  await new Promise(r => server.close(r));
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.queued, true);
 });

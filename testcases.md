@@ -40,3 +40,4 @@
    - Füge Workflow in Datenbank ein
    - Sende `POST /api/workflows/:id/execute` mit Token
    - Erwartet Antwort `{ queued: true }`
+\n10. **Workflow Worker**\n   - F\u00fcge Eintrag in `workflow_queue` hinzu\n   - Starte `node backend/worker.js` und warte zwei Sekunden\n   - Pr\u00fcfe, dass der Eintrag den Status `done` hat

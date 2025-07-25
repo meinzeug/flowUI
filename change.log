@@ -38,3 +38,4 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 2025-09-01: Start Sprint 1 to fix WebSocket handshake.
 2025-09-01: Fixed WebSocket handshake path and updated tests.
 2025-09-02: Removed Gemini legacy WebSocket implementation and cleaned old server.
+2025-09-05: Added channel-based WebSocketService, workflow queue worker and docs.

@@ -190,3 +190,4 @@ The following sprints track short term progress inside the larger milestones.
 
 ### Sprint 2 Summary
 Removed legacy Gemini WebSocket code and documented new channel-based protocol.
+\n### Sprint 3 Summary\nImplemented WebSocketService with channel protocol and reconnect. Added backend workflow queue worker and documented API.

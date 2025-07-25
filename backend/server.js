@@ -50,6 +50,13 @@ async function initPool() {
       accuracy float not null,
       timestamp timestamp default now()
     )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS workflow_queue (
+      id serial primary key,
+      workflow_id int not null,
+      status text default 'queued',
+      created_at timestamp default now(),
+      updated_at timestamp default now()
+    )`);
     for (let i = 1; i <= 5; i++) {
       await pool.query(
         'INSERT INTO training_metrics (epoch, loss, accuracy) VALUES ($1, $2, $3)',
@@ -79,6 +86,18 @@ async function initPool() {
 
 async function createServer() {
   const app = express();
+  function authenticate(req, res, next) {
+    const auth = req.headers['authorization'];
+    if (!auth?.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'unauthorized' });
+    }
+    try {
+      jwt.verify(auth.slice(7), JWT_SECRET);
+      next();
+    } catch {
+      res.status(401).json({ error: 'unauthorized' });
+    }
+  }
   app.use(express.json());
   const server = http.createServer(app);
   const wss = new WebSocketServer({ noServer: true });
@@ -353,6 +372,17 @@ async function createServer() {
         'SELECT epoch, loss, accuracy FROM training_metrics ORDER BY epoch'
       );
       res.json(rows);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/workflows/:id/execute', authenticate, async (req, res) => {
+    const { id } = req.params;
+    try {
+      if (!pool) await initPool();
+      await pool.query('INSERT INTO workflow_queue (workflow_id) VALUES ($1)', [id]);
+      res.json({ queued: true });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

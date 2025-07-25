@@ -619,3 +619,7 @@ Checkpointing: Periodisches Speichern des Zustands eines Prozesses. Im Falle ein
 Graceful Degradation (würdevoller Leistungsabfall): Wenn ein abhängiger Dienst ausfällt, sollte die Anwendung nicht vollständig ausfallen. Stattdessen sollte sie in einem eingeschränkten, aber immer noch nützlichen Modus weiterarbeiten. Beispiel: Wenn der Empfehlungsdienst einer E-Commerce-Website ausfällt, sollte die Website weiterhin Produkte anzeigen und Verkäufe ermöglichen, nur eben ohne personalisierte Empfehlungen. Dies kann durch die Rückgabe von zwischengespeicherten Daten oder Standardwerten erreicht werden.
 
 Durch die Kombination einer robusten Überwachungsstrategie mit diesen Fehlertoleranzmustern wird ein Backend-System geschaffen, das nicht nur leistungsstark, sondern auch widerstandsfähig und zuverlässig im Angesicht der unvermeidlichen Ausfälle in einer verteilten Umgebung ist.
+### Workflow-Queue
+- `POST /api/workflows/:id/execute` legt einen Eintrag in der Tabelle `workflow_queue` an und erfordert ein JWT im `Authorization`-Header. Antwort: `{ "queued": true }`.
+- Der Worker `backend/worker.js` prüft periodisch auf neue Einträge, setzt sie auf `processing`, führt Platzhalter-Logik aus und markiert sie als `done`.
+

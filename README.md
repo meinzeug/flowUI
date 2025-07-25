@@ -57,6 +57,19 @@ bash install.sh
    Das Skript baut die Docker-Container und startet sie mit `docker compose`.
 3. Nach Abschluss ist die Oberfläche unter `http://localhost:8080` erreichbar.
 
+### Update des Systems
+
+Nach der Installation kann Flow Weaver jederzeit mit einem einfachen Befehl auf
+den neuesten Stand gebracht werden:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/meinzeug/flowUI/main/update.sh)"
+```
+
+Das Skript aktualisiert das Repository in `/opt/flowUI` und startet die Docker-
+Container neu. Wie beim Installationsskript werden erforderliche Root-Rechte
+automatisch per `sudo` angefordert.
+
 ## Kernidee: Zwei Betriebsmodi
 
 Flow Weaver unterstützt sowohl kurzfristige als auch langfristige Workflows und fasst beide Ansätze in einer einheitlichen Bedienoberfläche zusammen:

@@ -1,5 +1,6 @@
 Ein technischer Entwurf für moderne Backend-Systeme
 Executive Summary: Ein Entwurf für das Backend-System
+Mit Sprint 4 wurde ein separates REST-Backend eingeführt, das Benutzerverwaltung und Proxy-Funktionen zum MCP-Server bereitstellt.
 Dieses Dokument dient als maßgebliche technische Spezifikation für das Backend-System des Projekts. Sein Zweck ist es, dem Backend-Design- und Entwicklungsteam einen umfassenden, umsetzbaren und technisch fundierten Plan an die Hand zu geben. Es fasst die wichtigsten architektonischen Entscheidungen, die Auswahl des Technologiestacks und die Kernprinzipien zusammen, die dem gesamten Entwurf zugrunde liegen: Sicherheit, Skalierbarkeit und Wartbarkeit.
 
 Die empfohlene Architektur basiert auf einem Microservices-Ansatz, der auf einer Kubernetes-Plattform orchestriert wird, um Skalierbarkeit und unabhängige Bereitstellung zu gewährleisten. Der vorgeschlagene Technologiestack umfasst Spring Boot (Java) für robuste, unternehmenstaugliche Dienste, eine polyglotte Persistenzstrategie mit PostgreSQL für transaktionale Daten und MongoDB für flexible Produktdaten sowie GraphQL als API-Schicht zur Optimierung der Datenabfrage für Client-Anwendungen. Als Cloud-Anbieter wird Amazon Web Services (AWS) aufgrund seiner ausgereiften Dienste und globalen Reichweite empfohlen.

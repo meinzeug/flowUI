@@ -17,8 +17,14 @@ class WebSocketService {
     private url: string;
     private heartbeatInterval?: number;
 
-    constructor(url = `ws://${window.location.hostname}:3008`) {
-        this.url = url;
+    constructor(url?: string) {
+        if (url) {
+            this.url = url;
+        } else {
+            const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            this.url = `${protocol}://${window.location.hostname}:3008`;
+        }
+        
         this.connect();
     }
 

@@ -100,6 +100,9 @@ info "Updating repository..."
 create_backup
 $SUDO git pull --ff-only
 
+# Remove potential 443 binding to avoid port conflicts
+$SUDO sed -i '/"443:443"/d' docker-compose.yml
+
 create_nginx_conf
 
 info "Rebuilding containers..."

@@ -88,6 +88,7 @@ REMOVE_HTTPS_PORT=1 bash update.sh
 ### Betriebsmodus wechseln
 
 Mit `switch.sh` kannst du jederzeit zwischen Produktions- und Entwicklungsmodus umschalten. Im Entwicklungsmodus werden Frontend und Backend direkt aus dem Quellcode gestartet, was Updates wesentlich beschleunigt.
+Das Skript nutzt `lsof`, um zu prüfen, ob die vorgesehenen Ports bereits belegt sind. Installiere es bei Bedarf mit `sudo apt install -y lsof`.
 
 ```
 ./switch.sh d   # Development

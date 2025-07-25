@@ -1,3 +1,3 @@
-- Implement /api/status endpoint returning { status: 'ok', userCount }.
-- Display server status in frontend header using new component.
-- Add tests for status endpoint and component.
+- Implement users list endpoint /api/users returning array of {id, username, email}.
+- Create frontend admin view listing users via new endpoint.
+- Add tests for users endpoint and admin component.

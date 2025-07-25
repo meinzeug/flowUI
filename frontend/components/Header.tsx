@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { SearchIcon, SettingsIcon } from './Icons';
+import ServerStatus from './ServerStatus';
 
 interface HeaderProps {
   projectName: string;
@@ -15,6 +16,7 @@ const Header: React.FC<HeaderProps> = ({ projectName, onOpenCommandPalette, onOp
         <h2 className="text-2xl font-bold text-white">{projectName}</h2>
       </div>
       <div className="flex items-center gap-4">
+        <ServerStatus />
         <button
             onClick={onOpenCommandPalette}
             className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 w-72 text-slate-400 hover:text-white hover:border-slate-600 transition-colors flex items-center justify-between"

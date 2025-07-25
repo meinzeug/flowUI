@@ -21,3 +21,4 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 2025-07-25: Added /api/users endpoint with admin list view and tests.
 2025-07-25: Added WebSocket endpoint and integration tests
 2025-07-25: Added persistent hive log endpoints with websocket batch delivery and frontend integration.
+2025-08-04: Added endpoint to clear hive logs with frontend button and tests.

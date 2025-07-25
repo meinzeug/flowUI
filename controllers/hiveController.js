@@ -31,4 +31,16 @@ async function listLogs(req, res, next) {
   }
 }
 
-module.exports = { logActivity, listLogs };
+async function clearLogs(req, res, next) {
+  try {
+    await initDb();
+    const pool = getPool();
+    await pool.query('DELETE FROM activity_log');
+    broadcast('hive-log-batch', []);
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { logActivity, listLogs, clearLogs };

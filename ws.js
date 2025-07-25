@@ -1,4 +1,5 @@
 const { OPEN } = require('ws');
+const { getConnections } = require('./middlewares/wsConnections');
 let wss;
 
 function setWss(server) {
@@ -15,4 +16,15 @@ function broadcast(event, data) {
   });
 }
 
-module.exports = { setWss, broadcast };
+function sendToUser(userId, event, data) {
+  if (!wss) return;
+  const msg = JSON.stringify({ event, data });
+  const connections = getConnections(userId);
+  connections.forEach(ws => {
+    if (ws.readyState === OPEN) {
+      ws.send(msg);
+    }
+  });
+}
+
+module.exports = { setWss, broadcast, sendToUser };

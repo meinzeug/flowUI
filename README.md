@@ -119,6 +119,27 @@ docker compose pull
 docker compose up -d
 ```
 
+### Produktionsdeployment
+
+Folgende Schritte richten Flow Weaver auf einem frischen Server ein:
+
+1. Installiere alle Abhängigkeiten mit dem bereitgestellten Install-Skript oder
+   klone das Repository und führe `./install.sh` aus.
+2. Lege in `install.json` deine Domain fest, damit NGINX automatisch ein
+   Let's‑Encrypt-Zertifikat beantragt.
+3. Starte die Container für den Produktivbetrieb:
+
+   ```bash
+   docker compose pull
+   docker compose up -d
+   ```
+
+4. Aktualisiere das System später mit `update.sh`, welches den Code zieht,
+   Container neu baut und NGINX neu lädt.
+
+Die Anwendung ist anschließend unter der konfigurierten Domain beziehungsweise
+`http://<server-ip>:8080` erreichbar.
+
 starten.
 
 

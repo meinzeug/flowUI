@@ -152,3 +152,13 @@ The following sprints track short term progress inside the larger milestones.
 - [x] **Test:** Wiederverbindungs-Test f\u00fcr WebSocketService. (@qa-agent)
 - [x] **Doc:** WebSocket-API dokumentiert. (@doku-agent)
 - [x] **Config:** Compose-Datei f\u00fcr /ws angepasst. (@teamlead)
+
+### Sprint Aug-15-2025
+*Start:* 2025-08-15  \
+*End:* 2025-08-17  \
+*Lead:* Codex Team
+- [x] **Feature:** Gezielt WebSocket-Nachrichten an Benutzer senden. (@backend-agent)
+- [x] **Feature:** Tabellen `projects` und `workflows` angelegt. (@backend-agent)
+- [x] **Tooling:** CLI zum Exportieren und Löschen von Hive-Logs. (@backend-agent)
+- [x] **Test:** Unit-Tests für wsConnections. (@qa-agent)
+- [x] **Doc:** Produktionsdeploy-Anleitung im README. (@doku-agent)

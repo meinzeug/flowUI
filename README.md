@@ -87,6 +87,7 @@ Mit `switch.sh` kannst du jederzeit zwischen Produktions- und Entwicklungsmodus 
 ```
 ./switch.sh d   # Development
 ./switch.sh p   # Production
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/meinzeug/flowUI/main/switch.sh)"  # direkt aus dem Netz
 ```
 
 

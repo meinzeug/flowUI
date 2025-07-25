@@ -40,3 +40,7 @@
    - Füge Workflow in Datenbank ein
    - Sende `POST /api/workflows/:id/execute` mit Token
    - Erwartet Antwort `{ queued: true }`
+10. **Queue Worker Broadcast**
+   - Rufe `enqueueTask` mit Kanal und Payload auf
+   - Starte Worker mit Mock-Broadcast
+   - Erwarte, dass nach 1s ein Ergebnis mit `status: done` gesendet wird

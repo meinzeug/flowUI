@@ -192,3 +192,5 @@ The following sprints track short term progress inside the larger milestones.
 Removed legacy Gemini WebSocket code and documented new channel-based protocol.
 ### Sprint 3 Summary
 Implemented worker queue and new WebSocket client with heartbeat.
+### Sprint 4 Summary
+Added unit tests for WebSocketService and worker queue.

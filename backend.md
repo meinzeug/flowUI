@@ -621,3 +621,5 @@ Graceful Degradation (würdevoller Leistungsabfall): Wenn ein abhängiger Dienst
 Durch die Kombination einer robusten Überwachungsstrategie mit diesen Fehlertoleranzmustern wird ein Backend-System geschaffen, das nicht nur leistungsstark, sondern auch widerstandsfähig und zuverlässig im Angesicht der unvermeidlichen Ausfälle in einer verteilten Umgebung ist.
 ## Workflow Queue und Worker
 Der Server stellt einen REST-Endpunkt `POST /queue/enqueue` bereit. Clients übermitteln dort die Ziel-`channel` sowie frei wählbare Nutzdaten. Die Aufgaben werden in einer In-Memory-Queue gespeichert und von einem Worker-Prozess in regelmäßigen Abständen abgearbeitet. Nach Abschluss sendet der Worker das Ergebnis als `{event:'message', channel, payload}` über die WebSocket-Verbindung an alle Abonnenten des Kanals.
+
+Die Worker-Logik wird über `startWorker(broadcast)` aktiviert und kann für Tests mit `stopWorker()` wieder beendet werden.

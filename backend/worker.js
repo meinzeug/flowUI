@@ -14,3 +14,10 @@ export function startWorker(broadcast) {
     broadcast(task.channel, result);
   }, 1000);
 }
+
+export function stopWorker() {
+  if (interval) {
+    clearInterval(interval);
+    interval = undefined;
+  }
+}

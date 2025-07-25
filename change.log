@@ -39,3 +39,4 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 2025-09-01: Fixed WebSocket handshake path and updated tests.
 2025-09-02: Removed Gemini legacy WebSocket implementation and cleaned old server.
 2025-09-03: Implemented WebSocketService with auto-reconnect, added worker queue and documented endpoints.
+2025-09-04: Added tests for WebSocketService and worker queue with stopWorker utility.

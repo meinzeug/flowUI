@@ -7,10 +7,10 @@ DOMAIN="${DOMAIN:-${domain:-}}"
 BACKEND_PORT="${BACKEND_PORT:-3008}"
 EMAIL="${EMAIL:-${email:-}}"
 
-if [ -z "$DOMAIN" ]; then
-  echo "DOMAIN variable not set" >&2
-  exit 1
-fi
+while [ -z "$DOMAIN" ]; do
+  read -rp "Domain for the app (e.g. myapp.example.com): " DOMAIN
+done
+
 
 if [ "${EUID:-$(id -u)}" -ne 0 ]; then
   if command -v sudo >/dev/null 2>&1; then

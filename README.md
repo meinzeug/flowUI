@@ -31,6 +31,7 @@ Das Skript klont das Repository nach `/opt/flowUI`, installiert Docker sowie
 NGINX und startet anschließend die Container per `docker compose`. Es benötigt
 Root- bzw. **sudo**‑Rechte und schreibt ein Log nach
 `~/flowui-install.log`.
+Dabei wird auch eine `.env`-Datei mit einem zufälligen `JWT_SECRET` erzeugt.
 
 Hinweis: Ersetze `main` im URL, falls dein Standard-Branch anders heißt (z. B. `master`). Über `-f` bzw. `-q` bricht der Befehl bei HTTP-Fehlern ab.
 
@@ -55,6 +56,11 @@ bash install.sh
    ./install.sh
    ```
    Das Skript baut die Docker-Container und startet sie mit `docker compose`.
+   Dabei wird eine `.env`-Datei mit einem zufälligen `JWT_SECRET` erzeugt,
+   das vom Backend für die Ausgabe von JWT-Tokens benötigt wird. Docker Compose
+   liest diese Variable aus `.env` und reicht sie an den Backend-Container
+   weiter. Wenn du die Container manuell startest, setze das Environment
+   entsprechend.
 3. Nach Abschluss ist die Oberfläche unter `http://localhost:8080` erreichbar.
 
 ### Update des Systems

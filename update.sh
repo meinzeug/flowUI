@@ -13,6 +13,20 @@ success() { echo -e "${GREEN}$*${RESET}"; }
 warn() { echo -e "${YELLOW}$*${RESET}"; }
 fail() { echo -e "${RED}$*${RESET}"; }
 
+# Use sudo for privileged commands if not executed as root, similar to
+# install.sh. Exit if sudo is unavailable.
+if [ "${EUID:-$(id -u)}" -ne 0 ]; then
+  if command -v sudo >/dev/null 2>&1; then
+    SUDO="sudo"
+  else
+    fail "This script requires root privileges or sudo"
+    exit 1
+  fi
+else
+  SUDO=""
+fi
+
+
 # Determine application directory. When executed via curl pipe, $0 is "bash"
 # and the script has no physical path. Default to /opt/flowUI which is used by
 # install.sh. If the script resides inside the repository, prefer that location.
@@ -42,24 +56,24 @@ BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || ech
 
 create_backup() {
   info "Creating backup at $BACKUP_FILE"
-  mkdir -p "$BACKUP_DIR"
-  git archive --format=tar HEAD | gzip > "$BACKUP_FILE"
+  $SUDO mkdir -p "$BACKUP_DIR"
+  $SUDO git archive --format=tar HEAD | gzip > "$BACKUP_FILE"
 }
 
 create_nginx_conf() {
   local conf="$APP_DIR/nginx/default.conf"
   if [ ! -f "$conf" ]; then
     info "Creating default NGINX configuration..."
-    cp "$APP_DIR/nginx/default.conf.template" "$conf"
+    $SUDO cp "$APP_DIR/nginx/default.conf.template" "$conf"
   fi
 }
 
-cleanup() { docker image prune -f >/dev/null; }
+cleanup() { $SUDO docker image prune -f >/dev/null; }
 
 rollback() {
   warn "Rolling back to previous commit $CURRENT_COMMIT"
-  git reset --hard "$CURRENT_COMMIT"
-  docker compose up -d
+  $SUDO git reset --hard "$CURRENT_COMMIT"
+  $SUDO docker compose up -d
   fail "Rollback finished"
 }
 
@@ -67,15 +81,15 @@ trap rollback ERR
 
 info "Updating repository..."
 create_backup
-git pull --ff-only
+$SUDO git pull --ff-only
 
 create_nginx_conf
 
 info "Rebuilding containers..."
-docker compose build --pull --no-cache
+$SUDO docker compose build --pull --no-cache
 
 info "Restarting services..."
-docker compose up -d
+$SUDO docker compose up -d
 
 info "Performing health checks..."
 sleep 5

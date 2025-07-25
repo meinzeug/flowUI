@@ -67,7 +67,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/meinzeug/flowUI/main/upd
 ```
 
 Das Skript aktualisiert das Repository in `/opt/flowUI` und startet die Docker-
-Container neu.
+Container neu. Wie beim Installationsskript werden erforderliche Root-Rechte
+automatisch per `sudo` angefordert.
+
 
 ## Kernidee: Zwei Betriebsmodi
 

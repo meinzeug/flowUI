@@ -4,6 +4,8 @@ const http = require('http');
 const { WebSocketServer } = require('ws');
 const { setWss, broadcast } = require('./ws');
 const jwt = require('jsonwebtoken');
+const path = require('path');
+const fs = require('fs');
 
 const apiRoutes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
@@ -16,8 +18,21 @@ async function createServer() {
   const app = express();
   app.use(express.json());
 
-  app.all('/', (req, res) => res.status(403).json({ error: 'Forbidden' }));
+  const distPath = path.join(__dirname, 'dist');
+  const hasFrontend = fs.existsSync(distPath);
+  if (hasFrontend) {
+    app.use(express.static(distPath));
+  }
+
   app.use('/api', apiRoutes);
+
+  if (hasFrontend) {
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  } else {
+    app.all('/', (req, res) => res.status(403).json({ error: 'Forbidden' }));
+  }
 
   app.use(errorHandler);
 

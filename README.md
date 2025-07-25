@@ -194,7 +194,7 @@ Das Frontend basiert auf React, TypeScript und React Flow und setzt eine defensi
 
 ## Backend-Entwicklung
 
-Der Express-Server lauscht standardmäßig auf Port 3008. Nach `npm install` startet er mit `npm start`. Eine Testroute erreicht man über `POST /api/test`.
+Der Express-Server lauscht standardmäßig auf Port 3008. Nach `npm install` baust du zuerst das Frontend mit `npm run build` und startest anschließend mit `npm start`. Eine Testroute erreicht man über `POST /api/test`.
 
 ## Vision
 
@@ -203,4 +203,3 @@ Flow Weaver soll sich zu einer vollwertigen Plattform entwickeln. Geplant sind e
 ## Lizenz
 
 Dieses Projekt steht unter der [MIT-Lizenz](LICENSE).
-\nIndex.html befindet sich nun im Projektwurzelverzeichnis.

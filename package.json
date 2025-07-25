@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "NODE_ENV=test node --test test/*.js"
+    "test": "NODE_ENV=test node --test test/*.js",
+    "build": "npm --prefix frontend run build"
   },
   "keywords": [],
   "author": "",

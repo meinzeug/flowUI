@@ -179,3 +179,11 @@ The following sprints track short term progress inside the larger milestones.
 - [ ] **Feature:** Worker zur Verarbeitung der Workflow-Queue. (@backend-agent)
 - [ ] **Feature:** REST-Endpunkte f\u00fcr Workflow CRUD. (@backend-agent)
 - [ ] **Doc:** Queue-Endpunkte dokumentieren. (@doku-agent)
+
+### Sprint 1
+*Start:* 2025-09-01  \
+*End:* 2025-09-03  \
+*Lead:* Codex Team
+- [ ] **Bugfix:** WebSocket-Handshake unter `/ws` implementieren. (@backend-agent)
+- [ ] **Test:** WebSocket-Handshake-Tests aktualisieren. (@qa-agent)
+- [ ] **Doc:** WebSocket-Endpunkt dokumentieren. (@doku-agent)

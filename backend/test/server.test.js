@@ -104,7 +104,18 @@ test('POST /api/auth/login rejects invalid credentials', { concurrency: 1 }, asy
 test('WebSocket JSON-RPC methods work', { concurrency: 1 }, async () => {
   const server = await startServerWrapper();
   const port = server.address().port;
-  const ws = new WebSocket(`ws://localhost:${port}`);
+  await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'wsuser', email: 'ws@e.com', password: 'p' })
+  });
+  const login = await fetch(`http://localhost:${port}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'wsuser', password: 'p' })
+  });
+  const { token } = await login.json();
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
   await once(ws, 'open');
 
   ws.send(JSON.stringify({ jsonrpc: '2.0', method: 'tools/list', params: {}, id: 1 }));

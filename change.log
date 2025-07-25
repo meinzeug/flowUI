@@ -33,3 +33,5 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 2025-08-15: Added sendToUser, project/workflow tables, exportLogs CLI, wsConnections tests, and production docs.
 2025-08-21: Added GHCR authentication with fallback to local build in install.sh, compose build contexts and updated docs.
 2025-08-24: Added workflow execute endpoint with queue, hive log pagination and project components.
+2025-09-01: Start Sprint 1 to fix WebSocket handshake.
+2025-09-01: Fixed WebSocket handshake path and updated tests.

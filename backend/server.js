@@ -81,7 +81,32 @@ async function createServer() {
   const app = express();
   app.use(express.json());
   const server = http.createServer(app);
-  const wss = new WebSocketServer({ server });
+  const wss = new WebSocketServer({ noServer: true });
+
+  server.on('upgrade', (req, socket, head) => {
+    const { pathname, searchParams } = new URL(req.url, `http://${req.headers.host}`);
+    if (pathname === '/ws') {
+      const token = searchParams.get('token');
+      if (!token) {
+        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+      try {
+        jwt.verify(token, JWT_SECRET);
+      } catch {
+        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+      wss.handleUpgrade(req, socket, head, ws => {
+        wss.emit('connection', ws, req);
+      });
+    } else {
+      socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
+      socket.destroy();
+    }
+  });
 
   wss.on('connection', ws => {
     ws.on('message', data => {

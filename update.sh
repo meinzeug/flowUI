@@ -27,6 +27,25 @@ else
 fi
 
 
+# Stop nginx if running to avoid port conflicts during update
+stop_nginx() {
+  if command -v systemctl >/dev/null 2>&1; then
+    if $SUDO systemctl is-active --quiet nginx; then
+      info "Stopping NGINX service..."
+      $SUDO systemctl stop nginx
+      NGINX_STOPPED=1
+    fi
+  fi
+}
+
+# Restart nginx if we stopped it earlier
+start_nginx() {
+  if [ "${NGINX_STOPPED:-0}" = 1 ] && command -v systemctl >/dev/null 2>&1; then
+    info "Starting NGINX service..."
+    $SUDO systemctl start nginx
+  fi
+}
+
 # Determine application directory. When executed via curl pipe, $0 is "bash"
 # and the script has no physical path. Default to /opt/flowUI which is used by
 # install.sh. If the script resides inside the repository, prefer that location.
@@ -44,6 +63,9 @@ if [ ! -d "$APP_DIR/.git" ]; then
   exit 1
 fi
 cd "$APP_DIR"
+
+# ensure nginx is not occupying ports used by docker
+stop_nginx
 
 create_env() {
   if [ ! -f .env ]; then
@@ -104,6 +126,7 @@ rollback() {
   $SUDO git reset --hard "$CURRENT_COMMIT"
   FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
     $SUDO docker compose up -d
+  start_nginx
   fail "Rollback finished"
 }
 
@@ -137,6 +160,8 @@ curl -fs "http://localhost:${BACKEND_PORT}/health" >/dev/null
 curl -fs "http://localhost:${FRONTEND_PORT}" >/dev/null
 
 cleanup
+
+start_nginx
 
 success "Update complete"
 trap - ERR

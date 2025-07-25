@@ -79,6 +79,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/meinzeug/flowUI/main/upd
 Das Skript aktualisiert das Repository in `/opt/flowUI` und startet die Docker-
 Container neu. Wie beim Installationsskript werden erforderliche Root-Rechte
 automatisch per `sudo` angefordert.
+Falls ein lokaler NGINX-Prozess läuft, stoppt das Skript diesen kurzzeitig,
+damit die Container ihre Ports problemlos binden können. Anschließend wird
+der Dienst wieder gestartet.
 Besitzt die Datei `install.json` einen Domain-Eintrag, passt das Skript zudem die NGINX-Konfiguration im Container an und nutzt das zugehörige Let's-Encrypt-Zertifikat.
 Wenn du ein externes NGINX mit eigenem TLS-Zertifikat nutzt, kannst du die HTTPS-Portbindung des Containers entfernen, indem du die Variable `REMOVE_HTTPS_PORT=1` setzt:
 

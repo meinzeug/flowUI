@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const http = require('http');
+const { WebSocketServer } = require('ws');
 const apiRoutes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const { PORT } = require('./config/config');
@@ -17,6 +18,54 @@ async function createServer() {
   app.use(errorHandler);
 
   const server = http.createServer(app);
+
+  const wss = new WebSocketServer({ noServer: true });
+  const { MCP_TOOLS } = await import('./backend/tools.js');
+
+  wss.on('connection', ws => {
+    ws.on('message', data => {
+      let msg;
+      try {
+        msg = JSON.parse(data);
+      } catch (err) {
+        ws.send(
+          JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } })
+        );
+        return;
+      }
+
+      const { id, method, params = {} } = msg;
+
+      if (method === 'tools/list') {
+        ws.send(JSON.stringify({ jsonrpc: '2.0', id, result: MCP_TOOLS }));
+      } else if (method === 'tools/call') {
+        const { tool } = params;
+        ws.send(
+          JSON.stringify({ jsonrpc: '2.0', id, result: { tool, status: 'executed' } })
+        );
+      } else if (method === 'tools/batch') {
+        const { calls = [] } = params;
+        const results = calls.map(c => ({ tool: c.tool, status: 'executed' }));
+        ws.send(JSON.stringify({ jsonrpc: '2.0', id, result: results }));
+      } else {
+        ws.send(
+          JSON.stringify({ jsonrpc: '2.0', id, error: { code: -32601, message: 'Method not found' } })
+        );
+      }
+    });
+  });
+
+  server.on('upgrade', (req, socket, head) => {
+    const { pathname } = new URL(req.url, `http://${req.headers.host}`);
+    if (pathname === '/api/' || pathname === '/api') {
+      wss.handleUpgrade(req, socket, head, ws => {
+        wss.emit('connection', ws, req);
+      });
+    } else {
+      socket.destroy();
+    }
+  });
+
   return { app, server };
 }
 

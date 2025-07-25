@@ -75,7 +75,7 @@ async function createServer() {
 
   server.on('upgrade', (req, socket, head) => {
     const { pathname } = new URL(req.url, `http://${req.headers.host}`);
-    if (pathname === '/api/' || pathname === '/api') {
+    if (pathname === '/ws') {
       wss.handleUpgrade(req, socket, head, ws => {
         wss.emit('connection', ws, req);
       });

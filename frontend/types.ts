@@ -82,7 +82,7 @@ export interface HookSettings {
   sessionRestoreHook: Hook;
 }
 
-export type View = "dashboard" | "nexus-roadmap" | "ai-head-of-dev" | "workspace" | "memory" | "settings" | "neural" | "tools" | "daa" | "workflows" | "system" | "integrations" | "apikeys" | "assistant-settings";
+export type View = "dashboard" | "nexus-roadmap" | "ai-head-of-dev" | "workspace" | "memory" | "settings" | "neural" | "tools" | "daa" | "workflows" | "system" | "integrations" | "apikeys" | "assistant-settings" | "admin";
 
 export interface ActivityLogEntry {
     id: number;

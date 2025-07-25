@@ -3,7 +3,7 @@
 
 
 import React, { useState } from 'react';
-import { DashboardIcon, WorkspaceIcon, MemoryIcon, LogoIcon, LogoutIcon, BrainIcon, ToolsIcon, DAAIcon, WorkflowIcon, SystemIcon, IntegrationsIcon, NexusIcon, KeyIcon, ChevronDownIcon, RoadmapIcon, HeadOfDevIcon } from './Icons';
+import { DashboardIcon, WorkspaceIcon, MemoryIcon, LogoIcon, LogoutIcon, BrainIcon, ToolsIcon, DAAIcon, WorkflowIcon, SystemIcon, IntegrationsIcon, NexusIcon, KeyIcon, ChevronDownIcon, RoadmapIcon, HeadOfDevIcon, UsersIcon } from './Icons';
 import { View } from '../types';
 
 interface SidebarProps {
@@ -116,11 +116,17 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, onExitPr
             isActive={currentView === 'integrations'}
             onClick={() => setCurrentView('integrations')}
           />
-           <NavItem
+          <NavItem
             icon={<KeyIcon className="h-6 w-6" />}
             label="API Keys"
             isActive={currentView === 'apikeys'}
             onClick={() => setCurrentView('apikeys')}
+          />
+          <NavItem
+            icon={<UsersIcon className="h-6 w-6" />}
+            label="Admin"
+            isActive={currentView === 'admin'}
+            onClick={() => setCurrentView('admin')}
           />
           <NavItem
             icon={<SystemIcon className="h-6 w-6" />}

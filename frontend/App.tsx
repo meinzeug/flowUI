@@ -18,6 +18,7 @@ import WorkflowsView from './components/views/WorkflowsView';
 import SystemView from './components/views/SystemView';
 import IntegrationsView from './components/views/IntegrationsView';
 import ApiKeysView from './components/views/ApiKeysView';
+import AdminView from './components/views/AdminView';
 import AssistantSettingsView from './components/views/AssistantSettingsView';
 import AIHeadOfDevelopmentView from './components/views/AIHeadOfDevelopmentView';
 import CommandPalette from './components/CommandPalette';
@@ -1021,6 +1022,8 @@ const App: React.FC = () => {
         return <IntegrationsView project={activeProject} onUpdateIntegration={handleUpdateIntegration} addLog={addLog} />;
       case 'apikeys':
         return <ApiKeysView project={activeProject} onUpdateApiKeys={handleUpdateApiKeys} addLog={addLog} />;
+      case 'admin':
+        return <AdminView />;
       case 'assistant-settings':
         return <AssistantSettingsView project={activeProject} onUpdateSettings={handleUpdateAssistantSettings} addLog={addLog} />;
       default:

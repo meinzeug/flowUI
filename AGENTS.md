@@ -1,3 +1,3 @@
-- Implement users list endpoint /api/users returning array of {id, username, email}.
-- Create frontend admin view listing users via new endpoint.
-- Add tests for users endpoint and admin component.
+- Fix WebSocket handshake issue causing 404 on wss connection.
+- Implement WebSocket endpoint in Express server and ensure Nginx forwards correctly.
+- Add integration tests for WebSocketService connection.

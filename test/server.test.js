@@ -106,3 +106,23 @@ test('GET /api/status returns ok with user count', async () => {
   assert.ok(typeof data.userCount === 'number' && data.userCount >= 0);
   await new Promise(r => server.close(r));
 });
+
+test('GET /api/users returns list of users', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'dave', email: 'd@d.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+
+  const res = await fetch(`http://localhost:${port}/api/users`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  assert.strictEqual(res.status, 200);
+  assert.ok(Array.isArray(data) && data.length > 0);
+  assert.ok(data[0].username);
+  await new Promise(r => server.close(r));
+});

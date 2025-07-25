@@ -67,3 +67,31 @@ test('protected route works with token', async () => {
 
   await new Promise(r => server.close(r));
 });
+
+test('profile requires auth', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/api/profile`);
+  assert.strictEqual(res.status, 401);
+  await new Promise(r => server.close(r));
+});
+
+test('profile returns user info with token', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'carol', email: 'c@c.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+
+  const res = await fetch(`http://localhost:${port}/api/profile`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.user.username, 'carol');
+
+  await new Promise(r => server.close(r));
+});

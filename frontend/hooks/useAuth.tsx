@@ -1,8 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { wsService } from '../WebSocketService';
 
+import { User } from '../types';
+
 interface AuthContextType {
   token: string | null;
+  user: User | null;
   login: (username: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
@@ -10,6 +13,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   token: null,
+  user: null,
   login: async () => false,
   register: async () => false,
   logout: () => {},
@@ -17,9 +21,28 @@ const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     wsService.setAuthToken(token);
+  }, [token]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!token) { setUser(null); return; }
+      try {
+        const res = await fetch('/api/profile');
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      } catch {
+        setUser(null);
+      }
+    };
+    fetchProfile();
   }, [token]);
 
   useEffect(() => {
@@ -44,6 +67,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await res.json();
       localStorage.setItem('token', data.token);
       setToken(data.token);
+      const prof = await fetch('/api/profile');
+      if (prof.ok) {
+        const pData = await prof.json();
+        setUser(pData.user);
+      }
       return true;
     }
     return false;
@@ -59,6 +87,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await res.json();
       localStorage.setItem('token', data.token);
       setToken(data.token);
+      const prof = await fetch('/api/profile');
+      if (prof.ok) {
+        const pData = await prof.json();
+        setUser(pData.user);
+      }
       return true;
     }
     return false;
@@ -67,10 +100,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, register, logout }}>
+    <AuthContext.Provider value={{ token, user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

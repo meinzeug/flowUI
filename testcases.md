@@ -36,3 +36,11 @@
    - Erstelle Projekt mit `POST /api/projects` und Token
    - Erwartet Antwort mit Projekt-ID
    - Rufe `GET /api/projects` auf und prüfe, dass das Projekt gelistet wird
+8. **Hive-Log Pagination**
+   - Erzeuge mehrere Logeinträge via `POST /api/hive/log`
+   - Rufe `GET /api/hive/logs?page=2&limit=1` auf
+   - Erwartet genau einen Eintrag
+9. **Workflow Execution Queue**
+   - Füge Workflow in Datenbank ein
+   - Sende `POST /api/workflows/:id/execute` mit Token
+   - Erwartet Antwort `{ queued: true }`

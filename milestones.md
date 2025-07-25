@@ -168,6 +168,14 @@ The following sprints track short term progress inside the larger milestones.
 *End:* 2025-08-24  \
 *Lead:* Codex Team
 - [x] **Feature:** REST-Endpunkte f\u00fcr Projekte implementiert. (@backend-agent)
-- [ ] **Feature:** Workflow-Ausf\u00fchrungs-API mit Queue. (@backend-agent)
-- [ ] **Bugfix:** Hive-Log-API Pagination. (@backend-agent)
-- [ ] **Doc:** API-Dokumentation erg\u00e4nzt. (@doku-agent)
+- [x] **Feature:** Workflow-Ausf\u00fchrungs-API mit Queue. (@backend-agent)
+- [x] **Bugfix:** Hive-Log-API Pagination. (@backend-agent)
+- [x] **Doc:** API-Dokumentation erg\u00e4nzt. (@doku-agent)
+
+### Sprint Aug-29-2025
+*Start:* 2025-08-29  \
+*End:* 2025-08-31  \
+*Lead:* Codex Team
+- [ ] **Feature:** Worker zur Verarbeitung der Workflow-Queue. (@backend-agent)
+- [ ] **Feature:** REST-Endpunkte f\u00fcr Workflow CRUD. (@backend-agent)
+- [ ] **Doc:** Queue-Endpunkte dokumentieren. (@doku-agent)

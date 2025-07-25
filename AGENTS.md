@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint Aug-22-2025)
-1. [P1] Workflow-Ausführungs-API mit Queue anlegen
-2. [P2] Hive-Log-API um Pagination erweitern
-3. [P2] React-Komponenten für Projektübersicht und -erstellung bauen
+## Nächste Aufgaben (Sprint Aug-29-2025)
+1. [P1] Worker zur Verarbeitung der Workflow-Queue implementieren
+2. [P2] REST-Endpunkte zum Erstellen und Listen von Workflows ergänzen
+3. [P2] API-Dokumentation für Workflow-Queue aktualisieren

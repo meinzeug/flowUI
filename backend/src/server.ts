@@ -13,7 +13,7 @@ function generateToken(user: string) {
   return jwt.sign({ user }, JWT_SECRET, { expiresIn: '1h' });
 }
 
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', async (req: express.Request, res: express.Response) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'username, email and password required' });
@@ -27,7 +27,7 @@ app.post('/api/auth/register', async (req, res) => {
   res.json({ token });
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req: express.Request, res: express.Response) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'username and password required' });
@@ -52,11 +52,11 @@ function auth(req: express.Request, res: express.Response, next: express.NextFun
   }
 }
 
-app.get('/health', (_req, res) => {
+app.get('/health', (_req: express.Request, res: express.Response) => {
   res.json({ status: 'ok' });
 });
 
-app.post('/api/proxy/tools/batch', auth, async (req, res) => {
+app.post('/api/proxy/tools/batch', auth, async (req: express.Request, res: express.Response) => {
   try {
     const resp = await fetch(`http://localhost:${MCP_PORT}/tools/batch`, {
       method: 'POST',

@@ -56,6 +56,7 @@ bash install.sh
    ```
    Das Skript baut die Docker-Container und startet sie mit `docker compose`.
 3. Nach Abschluss ist die Oberfläche unter `http://localhost:8080` erreichbar.
+API-Aufrufe erfolgen über `https://$domain/api`.
 
 ### Update des Systems
 

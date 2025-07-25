@@ -19,7 +19,7 @@
 *Lead:* Carol
 - [x] Containerize the React application for production.
 - [x] Establish WebSocket connection from UI to backend MCP server.
-- [x] Visualize tool list retrieved from `/tools/list` endpoint.
+- [x] Visualize tool list retrieved from `https://$domain/api/tools/list` endpoint.
 
 ## Milestone 4 - Persistent Sessions
 *Target:* 2025-03-10  \

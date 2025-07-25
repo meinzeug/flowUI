@@ -80,6 +80,16 @@ Das Skript aktualisiert das Repository in `/opt/flowUI` und startet die Docker-
 Container neu. Wie beim Installationsskript werden erforderliche Root-Rechte
 automatisch per `sudo` angefordert.
 
+### Betriebsmodus wechseln
+
+Mit `switch.sh` kannst du jederzeit zwischen Produktions- und Entwicklungsmodus umschalten. Im Entwicklungsmodus werden Frontend und Backend direkt aus dem Quellcode gestartet, was Updates wesentlich beschleunigt.
+
+```
+./switch.sh d   # Development
+./switch.sh p   # Production
+```
+
+
 
 ## Kernidee: Zwei Betriebsmodi
 

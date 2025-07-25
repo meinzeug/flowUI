@@ -30,4 +30,9 @@
 6. **Hive-Log-Export-Skript**
    - Führe `node scripts/exportLogs.js logs.json` aus
    - Erwartet Datei `logs.json` mit Log-Einträgen
-   - Tabelle `activity_log` wird danach geleert
+ - Tabelle `activity_log` wird danach geleert
+
+7. **Project API**
+   - Erstelle Projekt mit `POST /api/projects` und Token
+   - Erwartet Antwort mit Projekt-ID
+   - Rufe `GET /api/projects` auf und prüfe, dass das Projekt gelistet wird

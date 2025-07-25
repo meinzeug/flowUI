@@ -95,3 +95,14 @@ test('profile returns user info with token', async () => {
 
   await new Promise(r => server.close(r));
 });
+
+test('GET /api/status returns ok with user count', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/api/status`);
+  const data = await res.json();
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.status, 'ok');
+  assert.ok(typeof data.userCount === 'number' && data.userCount >= 0);
+  await new Promise(r => server.close(r));
+});

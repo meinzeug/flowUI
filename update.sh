@@ -144,10 +144,9 @@ fi
 
 update_nginx_conf
 
-info "Rebuilding containers..."
+info "Updating containers..."
 $SUDO docker compose down
-FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
-  $SUDO docker compose build --pull --no-cache
+$SUDO docker compose pull
 
 info "Restarting services..."
 FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \

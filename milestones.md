@@ -57,8 +57,8 @@ This document outlines the roadmap for building **Flow Weaver**, a web-based GUI
 *Target:* 2025-04-20  \
 *Lead:* Frank
 **Goal:** Automate testing and deployment of the platform.
-- [ ] Build GitHub Actions pipeline running frontend and backend tests.
-- [ ] Publish Docker images for backend and frontend.
+- [x] Build GitHub Actions pipeline running frontend and backend tests.
+- [x] Publish Docker images for backend and frontend.
 - [ ] Deploy containers via Docker Compose in staging environment.
 - [ ] Generate coverage reports on each pull request.
 - [ ] Automate changelog generation from Git history.
@@ -130,7 +130,7 @@ The following sprints track short term progress inside the larger milestones.
 *End:* 2025-08-07  \
 *Lead:* Codex Team
 - [x] **Feature:** Create Docker image publish workflow. (@backend-agent)
-- [ ] **Test:** Verify Dockerfiles build in CI. (@qa-agent)
-- [ ] **Process:** Document image usage and release steps. (@teamlead)
-- [ ] **Doc:** Update README with registry instructions. (@frontend-agent)
-- [ ] **Bugfix:** Update docker-compose to reference images. (@backend-agent)
+- [x] **Test:** Verify Dockerfiles build in CI. (@qa-agent)
+- [x] **Process:** Document image usage and release steps. (@teamlead)
+- [x] **Doc:** Update README with registry instructions. (@frontend-agent)
+- [x] **Bugfix:** Update docker-compose to reference images. (@backend-agent)

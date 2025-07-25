@@ -109,7 +109,17 @@ docker pull ghcr.io/<OWNER>/<REPO>-frontend:latest
 ```
 
 Damit lässt sich der Aufbau der Container in eigenen Deployments erheblich
-beschleunigen, da kein lokaler Build-Schritt mehr erforderlich ist.
+beschleunigen, da kein lokaler Build-Schritt mehr erforderlich ist. Das
+bereitgestellte `docker-compose.yml` nutzt diese Images bereits. Du kannst die
+Tags über die Umgebungsvariablen `BACKEND_IMAGE` und `FRONTEND_IMAGE`
+überschreiben und anschließend per
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+starten.
 
 
 ### Betriebsmodus wechseln

@@ -2,11 +2,17 @@ import test from 'node:test';
 import assert from 'assert';
 import { WebSocket } from 'ws';
 import { once } from 'node:events';
-import { startServer } from '../server.js';
+
+process.env.JWT_SECRET = 'testsecret';
+
+async function startServerWrapper() {
+  const { startServer } = await import('../server.js');
+  return startServer(0);
+}
 
 
 test('GET /health returns ok', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/health`);
   const data = await res.json();
@@ -17,7 +23,7 @@ test('GET /health returns ok', { concurrency: 1 }, async () => {
 
 
 test('GET /tools/list returns tool catalog', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/tools/list`);
   const data = await res.json();
@@ -28,7 +34,7 @@ test('GET /tools/list returns tool catalog', { concurrency: 1 }, async () => {
 });
 
 test('GET /tools/info/:name returns tool details', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/tools/info/swarm_init`);
   const data = await res.json();
@@ -38,13 +44,32 @@ test('GET /tools/info/:name returns tool details', { concurrency: 1 }, async () 
   assert.ok(data.description);
 });
 
-test('POST /api/auth/login authenticates user', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+test('POST /api/auth/register creates user', { concurrency: 1 }, async () => {
+  const server = await startServerWrapper();
   const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'alice', email: 'a@example.com', password: 'secret' })
+  });
+  const data = await res.json();
+  await new Promise((r) => server.close(r));
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.status, 'ok');
+});
+
+test('POST /api/auth/login authenticates user', { concurrency: 1 }, async () => {
+  const server = await startServerWrapper();
+  const port = server.address().port;
+  await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'bob', email: 'b@example.com', password: 'pass' })
+  });
   const res = await fetch(`http://localhost:${port}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: 'admin', password: 'password' })
+    body: JSON.stringify({ username: 'bob', password: 'pass' })
   });
   const data = await res.json();
   await new Promise((r) => server.close(r));
@@ -52,8 +77,25 @@ test('POST /api/auth/login authenticates user', { concurrency: 1 }, async () => 
   assert.ok(data.token);
 });
 
+test('POST /api/auth/login rejects invalid credentials', { concurrency: 1 }, async () => {
+  const server = await startServerWrapper();
+  const port = server.address().port;
+  await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'charlie', email: 'c@example.com', password: 'good' })
+  });
+  const res = await fetch(`http://localhost:${port}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'charlie', password: 'bad' })
+  });
+  await new Promise((r) => server.close(r));
+  assert.strictEqual(res.status, 401);
+});
+
 test('WebSocket JSON-RPC methods work', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const ws = new WebSocket(`ws://localhost:${port}`);
   await once(ws, 'open');
@@ -79,7 +121,7 @@ test('WebSocket JSON-RPC methods work', { concurrency: 1 }, async () => {
 });
 
 test('session save and load persist data', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const graph = { nodes: [{ id: '1' }], edges: [] };
   const saveRes = await fetch(`http://localhost:${port}/session/save`, {
@@ -101,7 +143,7 @@ test('session save and load persist data', { concurrency: 1 }, async () => {
 });
 
 test('memory store and query', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const storeRes = await fetch(`http://localhost:${port}/memory/store`, {
     method: 'POST',
@@ -122,7 +164,7 @@ test('memory store and query', { concurrency: 1 }, async () => {
 });
 
 test('GET /session/list returns saved sessions', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const graph = { nodes: [{ id: '1' }], edges: [] };
   const saveRes = await fetch(`http://localhost:${port}/session/save`, {
@@ -138,7 +180,7 @@ test('GET /session/list returns saved sessions', { concurrency: 1 }, async () =>
 });
 
 test('session export and import', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const graph = { nodes: [{ id: '1' }], edges: [] };
   const saveRes = await fetch(`http://localhost:${port}/session/save`, {
@@ -170,7 +212,7 @@ test('session export and import', { concurrency: 1 }, async () => {
 });
 
 test('POST /tools/call logs execution', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/tools/call`, {
     method: 'POST',
@@ -184,7 +226,7 @@ test('POST /tools/call logs execution', { concurrency: 1 }, async () => {
 });
 
 test('POST /tools/batch executes multiple tools', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/tools/batch`, {
     method: 'POST',
@@ -198,7 +240,7 @@ test('POST /tools/batch executes multiple tools', { concurrency: 1 }, async () =
 });
 
 test('GET /metrics/training returns metrics', { concurrency: 1 }, async () => {
-  const server = await startServer(0);
+  const server = await startServerWrapper();
   const port = server.address().port;
   const res = await fetch(`http://localhost:${port}/metrics/training`);
   const data = await res.json();

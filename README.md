@@ -104,8 +104,8 @@ veröffentlicht sie im GitHub Container Registry. Du kannst die
 aktuellen Images direkt ziehen:
 
 ```bash
-docker pull ghcr.io/meinzeug/flowUI-backend:latest
-docker pull ghcr.io/meinzeug/flowUI-frontend:latest
+docker pull ghcr.io/meinzeug/flowui-backend:latest
+docker pull ghcr.io/meinzeug/flowui-frontend:latest
 ```
 
 Damit lässt sich der Aufbau der Container in eigenen Deployments erheblich

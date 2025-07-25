@@ -126,10 +126,15 @@ EENV
 fi
 
 # Ensure image variables exist if .env was present
-if ! grep -q '^BACKEND_IMAGE=' .env; then
+if grep -q '^BACKEND_IMAGE=' .env; then
+  $SUDO sed -i "s#^BACKEND_IMAGE=.*#BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest#" .env
+else
   echo "BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest" | $SUDO tee -a .env
 fi
-if ! grep -q '^FRONTEND_IMAGE=' .env; then
+
+if grep -q '^FRONTEND_IMAGE=' .env; then
+  $SUDO sed -i "s#^FRONTEND_IMAGE=.*#FRONTEND_IMAGE=ghcr.io/${REPO_SLUG}-frontend:latest#" .env
+else
   echo "FRONTEND_IMAGE=ghcr.io/${REPO_SLUG}-frontend:latest" | $SUDO tee -a .env
 fi
 

@@ -567,8 +567,23 @@ Best Practices: Implementieren Sie Tracing mit Standards wie OpenTelemetry und v
 B. Engineering for Failure: Wichtige Fehlertoleranzmuster
 Durch die Kombination einer robusten berwachungsstrategie mit diesen Fehlertoleranzmustern wird ein Backend-System geschaffen, das nicht nur leistungsstark, sondern auch widerstandsfhig und zuverlssig im Angesicht der unvermeidlichen Ausflle in einer verteilten Umgebung ist.
 ## WebSocket API (/ws)
-Der WebSocket-Endpunkt `/ws` akzeptiert Verbindungen nur mit gültigem JWT im Query-Parameter `token`. Fehlt der Token oder ist er ungültig, wird die Verbindung mit HTTP 401 abgewiesen.
-Nach dem Connect wird die Verbindung unter der Benutzer-ID gespeichert und ein `hive-log-batch`-Event mit den letzten 20 Logeinträgen gesendet.
+Der Endpunkt `/ws` ermöglicht kanalbasierte Echtzeitkommunikation. Beim HTTP-Upgrade muss ein gültiges JWT im Query-Parameter `token` übermittelt werden. Fehlende oder ungültige Tokens führen zu `401 Unauthorized`.
+
+### Nachrichtenformat
+Alle WebSocket-Nachrichten sind Objekte mit folgender Struktur:
+
+```json
+{
+  "event": "string",
+  "channel": "string",
+  "payload": {}
+}
+```
+
+Nachrichten außerhalb dieses Schemas werden mit einer Fehlermeldung zurückgewiesen.
+
+### Kanalkonzept
+Clients können nach dem Verbindungsaufbau beliebige Kanäle abonnieren (`subscribe`) oder verlassen (`unsubscribe`). Ereignisse innerhalb eines Kanals werden an alle dort registrierten Clients verteilt. Beispiele sind `chat:room-123`, `notifications:<user>` oder `live-data:dashboard-A`.
 
 1. Redundanz, Replikation und Lastausgleich
 

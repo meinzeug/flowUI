@@ -5,7 +5,7 @@ COPY package.json package-lock.json ./
 RUN apk add --no-cache python3 make g++ curl \
     && npm install --production \
     && npm install -g @anthropic-ai/claude-code claude-flow@alpha
-COPY server.js ./
+COPY server.js worker.js ./
 COPY tools.js ./
 COPY knexfile.cjs ./
 COPY migrations ./migrations

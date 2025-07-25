@@ -139,7 +139,7 @@ test('POST /api/hive/log broadcasts to websocket clients', async () => {
   });
   const { token } = await reg.json();
 
-  const ws = new WebSocket(`ws://localhost:${port}/ws`);
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
   await new Promise(res => ws.on('open', res));
 
   const logPromise = new Promise(resolve => {

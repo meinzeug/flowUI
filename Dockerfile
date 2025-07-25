@@ -6,7 +6,7 @@ COPY vite.config.ts ./
 COPY index.html ./
 # Install dependencies and build the production bundle
 RUN npm --prefix frontend install \
-    && npm --prefix frontend run build
+    && npx --prefix frontend vite build
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html

@@ -81,6 +81,13 @@ This file will be updated as milestones are completed.
 - [x] **Doc:** Document debugging outcome in bericht.html. (@frontend-agent)
 - [ ] **Feature:** Prepare deployment scripts for CI/CD pipeline. (@backend-agent)
 
+## Sprint Aug-02-2025
+*Start:* 2025-08-02  \
+*End:* 2025-08-04  \
+*Lead:* Codex Team
+- [x] **Feature:** Add HTTP `/tools/batch` endpoint and tests. (@backend-agent)
+- [ ] **Test:** Expand coverage for REST API. (@qa-agent)
+
 ## Sprint Jul-24b-2025
 *Start:* 2025-07-24  \
 *End:* 2025-07-26  \

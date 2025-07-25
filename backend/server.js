@@ -114,6 +114,23 @@ async function createServer() {
     }
   });
 
+  app.post('/tools/batch', async (req, res) => {
+    const { calls = [] } = req.body;
+    if (!Array.isArray(calls) || calls.some(c => !c.tool)) {
+      return res.status(400).json({ error: 'calls array with tool field required' });
+    }
+    try {
+      if (!pool) await initPool();
+      for (const c of calls) {
+        await pool.query('INSERT INTO tool_calls (name) VALUES ($1)', [c.tool]);
+      }
+      const results = calls.map(c => ({ tool: c.tool, status: 'executed' }));
+      res.json(results);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   app.post('/api/auth/login', (req, res) => {
     const { username, password } = req.body;
     const valid = username === 'admin' && password === 'password';

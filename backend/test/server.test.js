@@ -150,3 +150,17 @@ test('POST /tools/call logs execution', { concurrency: 1 }, async () => {
   assert.strictEqual(data.tool, 'swarm_init');
   assert.strictEqual(data.status, 'executed');
 });
+
+test('POST /tools/batch executes multiple tools', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const res = await fetch(`http://localhost:${port}/tools/batch`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ calls: [{ tool: 'swarm_init' }, { tool: 'agent_spawn' }] })
+  });
+  const data = await res.json();
+  await new Promise(r => server.close(r));
+  assert.strictEqual(Array.isArray(data), true);
+  assert.strictEqual(data.length, 2);
+});

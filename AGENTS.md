@@ -1,1 +1,1 @@
-- Implement continuous deployment pipeline after tests pass.
+Publish Docker images for backend and frontend.

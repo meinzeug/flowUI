@@ -240,3 +240,19 @@ test('WebSocket connection fails on invalid path', async () => {
   await new Promise(res => ws.on('error', res));
   await new Promise(r => server.close(r));
 });
+
+test('WebSocket connection requires token', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const ws = new WebSocket(`ws://localhost:${port}/ws`);
+  await new Promise(res => ws.on('error', res));
+  await new Promise(r => server.close(r));
+});
+
+test('WebSocket connection rejects invalid token', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=bad`);
+  await new Promise(res => ws.on('error', res));
+  await new Promise(r => server.close(r));
+});

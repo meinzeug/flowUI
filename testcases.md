@@ -15,3 +15,9 @@
    - Öffne WebSocket-Verbindung zu `/ws` mit JWT als Query-Parameter
    - Erwartet erfolgreiche Verbindung
    - Verbindungsversuch auf ungültigem Pfad liefert Fehler
+   - Verbindungsversuch ohne Token wird abgewiesen
+   - Verbindungsversuch mit ungültigem Token wird abgewiesen
+
+4. **WebSocketService Reconnect**
+   - Simuliere Schließen der Verbindung im Frontend
+   - Erwartet neuen Verbindungsaufbau nach 1 Sekunde

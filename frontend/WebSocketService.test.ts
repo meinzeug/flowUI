@@ -61,4 +61,15 @@ describe('WebSocketService', () => {
     ws.dispatch('message', { data: JSON.stringify({ event: 'hive-log-batch', data: [{ message: 'x' }] }) });
     expect(batches[0][0].message).toBe('x');
   });
+
+  it('reconnects after close', () => {
+    vi.useFakeTimers();
+    const svc = new WebSocketService('ws://test');
+    const ws1 = (svc as any).ws as MockWebSocket;
+    ws1.dispatch('close', {});
+    vi.advanceTimersByTime(1000);
+    const ws2 = (svc as any).ws as MockWebSocket;
+    expect(ws2).not.toBe(ws1);
+    vi.useRealTimers();
+  });
 });

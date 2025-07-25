@@ -3,11 +3,13 @@ const express = require('express');
 const http = require('http');
 const { WebSocketServer } = require('ws');
 const { setWss, broadcast } = require('./ws');
+const jwt = require('jsonwebtoken');
 
 const apiRoutes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
-const { PORT } = require('./config/config');
+const { PORT, JWT_SECRET } = require('./config/config');
 const { initDb } = require('./db');
+const { storeConnection } = require('./middlewares/wsConnections');
 
 async function createServer() {
   await initDb();
@@ -74,9 +76,25 @@ async function createServer() {
   });
 
   server.on('upgrade', (req, socket, head) => {
-    const { pathname } = new URL(req.url, `http://${req.headers.host}`);
+    const { pathname, searchParams } = new URL(req.url, `http://${req.headers.host}`);
     if (pathname === '/ws') {
+      const token = searchParams.get('token');
+      if (!token) {
+        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+      let payload;
+      try {
+        payload = jwt.verify(token, JWT_SECRET);
+        req.user = payload;
+      } catch {
+        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+        socket.destroy();
+        return;
+      }
       wss.handleUpgrade(req, socket, head, ws => {
+        storeConnection(payload.user, ws);
         wss.emit('connection', ws, req);
       });
     } else {

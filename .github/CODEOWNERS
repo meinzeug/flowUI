@@ -1,0 +1,6 @@
+# Kritische Scripts erfordern Review von bestimmten Personen
+install.sh @meinzeug @trusted-maintainer
+update.sh @meinzeug @trusted-maintainer
+
+# Oder f\xC3\xBCr alle Scripts
+*.sh @meinzeug

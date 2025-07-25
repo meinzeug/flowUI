@@ -25,3 +25,4 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 2025-07-25: Added CI workflow to run backend and frontend tests on each commit
 2025-07-25: Added deployment workflow triggered after tests to run update.sh via SSH.
 
+2025-07-25: Added Docker image publishing workflow and updated README.

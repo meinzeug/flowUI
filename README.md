@@ -97,6 +97,20 @@ Pipeline triggert das Skript `update.sh` per SSH und hängt das Ergebnis in
 `deploy_log.md` an. Für die Verbindung werden die Secrets `DEPLOY_HOST`,
 `DEPLOY_USER` und `DEPLOY_SSH_KEY` benötigt.
 
+### Vorgefertigte Docker-Images
+
+Zusätzlich baut ein separater Workflow automatisch Docker-Images und
+veröffentlicht sie im GitHub Container Registry. Du kannst die
+aktuellen Images direkt ziehen:
+
+```bash
+docker pull ghcr.io/<OWNER>/<REPO>-backend:latest
+docker pull ghcr.io/<OWNER>/<REPO>-frontend:latest
+```
+
+Damit lässt sich der Aufbau der Container in eigenen Deployments erheblich
+beschleunigen, da kein lokaler Build-Schritt mehr erforderlich ist.
+
 
 ### Betriebsmodus wechseln
 

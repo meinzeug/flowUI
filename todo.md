@@ -1,6 +1,11 @@
 # To-Do
 
 ## Open
+* Publish Docker images via GitHub Actions
+* Reference published images in docker-compose.yml
+* Add CI step to build Dockerfiles
+* Document Docker registry usage
+* Write tests for Docker container startup
 
 ## Done
 - Set up CI/CD pipeline for automated tests.

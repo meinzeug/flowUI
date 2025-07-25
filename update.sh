@@ -45,11 +45,23 @@ if [ ! -d "$APP_DIR/.git" ]; then
 fi
 cd "$APP_DIR"
 
+create_env() {
+  if [ ! -f .env ]; then
+    info "Creating environment file..."
+    cat <<EENV | $SUDO tee .env >/dev/null
+FRONTEND_PORT=8080
+BACKEND_PORT=3008
+EENV
+  fi
+}
+
 BACKUP_DIR="$APP_DIR/backups"
 TIMESTAMP="$(date +%Y%m%d%H%M%S)"
 BACKUP_FILE="$BACKUP_DIR/flowUI-${TIMESTAMP}.tar.gz"
 CURRENT_COMMIT="$(git rev-parse HEAD)"
 
+# Ensure environment file exists and read ports
+create_env
 # Ports used for health checks (fallback to defaults)
 FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 8080)"
 BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 3008)"
@@ -75,8 +87,10 @@ cleanup() { $SUDO docker image prune -f >/dev/null; }
 
 rollback() {
   warn "Rolling back to previous commit $CURRENT_COMMIT"
+  $SUDO docker compose down
   $SUDO git reset --hard "$CURRENT_COMMIT"
-  $SUDO docker compose up -d
+  FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
+    $SUDO docker compose up -d
   fail "Rollback finished"
 }
 
@@ -89,10 +103,13 @@ $SUDO git pull --ff-only
 create_nginx_conf
 
 info "Rebuilding containers..."
-$SUDO docker compose build --pull --no-cache
+$SUDO docker compose down
+FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
+  $SUDO docker compose build --pull --no-cache
 
 info "Restarting services..."
-$SUDO docker compose up -d
+FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
+  $SUDO docker compose up -d
 
 info "Performing health checks..."
 sleep 5

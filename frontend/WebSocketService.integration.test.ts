@@ -54,4 +54,26 @@ describe('WebSocketService integration', () => {
     expect(events[0].message).toBe('test');
     (svc as any).ws.close();
   });
+
+  it('sends recent logs on connect', async () => {
+    const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'batch', email: 'b@x.com', password: 'p' })
+    });
+    const { token } = await reg.json();
+    await fetch(`http://localhost:${port}/api/hive/log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ message: 'batchlog' })
+    });
+
+    const svc = new WebSocketService();
+    const batches: any[] = [];
+    svc.on('hive-log-batch', b => batches.push(b));
+    await new Promise(res => (svc as any).ws.addEventListener('open', res));
+    await new Promise(r => setTimeout(r, 50));
+    expect(batches[0].some((e: any) => e.message === 'batchlog')).toBe(true);
+    (svc as any).ws.close();
+  });
 });

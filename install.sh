@@ -97,10 +97,13 @@ cd "$APP_DIR"
 
 if [ ! -f .env ]; then
   echo "\n### Creating environment file..."
+  JWT_SECRET=$(openssl rand -hex 32)
   cat <<EENV | $SUDO tee .env
 FRONTEND_PORT=8080
 BACKEND_PORT=3008
+JWT_SECRET=$JWT_SECRET
 EENV
+  echo "Generated JWT_SECRET stored in .env"
 fi
 
 # Read ports from environment file for nginx configuration

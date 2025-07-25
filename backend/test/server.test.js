@@ -10,6 +10,13 @@ async function startServerWrapper() {
   return startServer(0);
 }
 
+test('server fails to start without JWT_SECRET', { concurrency: 1 }, async () => {
+  const original = process.env.JWT_SECRET;
+  delete process.env.JWT_SECRET;
+  await assert.rejects(() => import('../server.js?' + Date.now()), /JWT_SECRET/);
+  if (original !== undefined) process.env.JWT_SECRET = original;
+});
+
 
 test('GET /health returns ok', { concurrency: 1 }, async () => {
   const server = await startServerWrapper();

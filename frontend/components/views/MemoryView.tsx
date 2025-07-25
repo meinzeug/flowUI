@@ -184,6 +184,13 @@ const MemoryView: React.FC<{ project: Project; onStoreMemory: (entry: Omit<Memor
     const [isStoreModalOpen, setIsStoreModalOpen] = useState(false);
     const [isImportExportModalOpen, setIsImportExportModalOpen] = useState(false);
 
+    const suggestions = useMemo(() => {
+        if (!searchTerm) return [] as string[];
+        const lower = searchTerm.toLowerCase();
+        const uniq = Array.from(new Set(project.memory.map(m => m.query)));
+        return uniq.filter(q => q.toLowerCase().includes(lower)).slice(0, 5);
+    }, [searchTerm, project.memory]);
+
     const sortedMemory = useMemo(() => {
         return [...project.memory].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     }, [project.memory]);
@@ -239,6 +246,13 @@ const MemoryView: React.FC<{ project: Project; onStoreMemory: (entry: Omit<Memor
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-500"
                           />
+                          {suggestions.length > 0 && (
+                            <ul className="absolute left-0 right-0 mt-1 bg-slate-800 border border-slate-700 rounded-lg z-10 max-h-40 overflow-y-auto">
+                              {suggestions.map(s => (
+                                <li key={s} className="px-3 py-1 text-sm text-slate-300 hover:bg-slate-700 cursor-pointer" onClick={() => setSearchTerm(s)}>{s}</li>
+                              ))}
+                            </ul>
+                          )}
                         </div>
                         <div className="flex gap-2 flex-wrap justify-center">
                           <Button variant="secondary" onClick={() => setIsStoreModalOpen(true)}>Store</Button>

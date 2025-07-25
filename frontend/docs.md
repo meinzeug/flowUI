@@ -170,6 +170,10 @@ Dieser Abschnitt beschreibt die wichtigsten wiederverwendbaren und Ansichts-Komp
 - **Beschreibung:** Bietet ein Chat-Interface zur Interaktion mit der "AI Head of Development"-Persönlichkeit.
 - **Funktionen:** `handleSendDirective` sendet eine Benutzereingabe (Direktive) zur Verarbeitung an `App.tsx`.
 
+#### `/components/views/MemoryView.tsx`
+- **Beschreibung:** Zeigt gespeicherte Memory-Einträge an und bietet Funktionen zum Suchen und Analysieren der Datenbank.
+- **Besonderheit:** Das Suchfeld schlägt während der Eingabe passende Queries aus vorhandenen Einträgen vor. Ein Klick auf einen Vorschlag übernimmt ihn in die Suche.
+
 ---
 
 ## 2. Hooks

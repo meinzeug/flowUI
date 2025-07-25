@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main]
+    branches: ['**']
   pull_request:
 
 jobs:
@@ -40,3 +40,8 @@ jobs:
         run: |
           cd frontend
           npm run coverage >> ../coverage_report.txt
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage_report.txt

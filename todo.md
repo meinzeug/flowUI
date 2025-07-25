@@ -1,7 +1,7 @@
 # To-Do
 
 ## Open
-- Set up CI/CD pipeline for automated tests.
+ - Implement user profile management endpoints (view and update) with tests.
 
 ## Done
 - Added Docker infrastructure and install/update scripts.

@@ -1,1 +1,1 @@
-- Set up CI/CD pipeline to automatically run backend and frontend tests on each commit.
+- Implement user profile management endpoints (view and update) with tests.

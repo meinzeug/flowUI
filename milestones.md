@@ -184,6 +184,9 @@ The following sprints track short term progress inside the larger milestones.
 *Start:* 2025-09-01  \
 *End:* 2025-09-03  \
 *Lead:* Codex Team
-- [ ] **Bugfix:** WebSocket-Handshake unter `/ws` implementieren. (@backend-agent)
-- [ ] **Test:** WebSocket-Handshake-Tests aktualisieren. (@qa-agent)
-- [ ] **Doc:** WebSocket-Endpunkt dokumentieren. (@doku-agent)
+- [x] **Bugfix:** WebSocket-Handshake unter `/ws` implementieren. (@backend-agent)
+- [x] **Test:** WebSocket-Handshake-Tests aktualisieren. (@qa-agent)
+- [x] **Doc:** WebSocket-Endpunkt dokumentieren. (@doku-agent)
+
+### Sprint 2 Summary
+Removed legacy Gemini WebSocket code and documented new channel-based protocol.

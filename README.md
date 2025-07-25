@@ -194,7 +194,15 @@ Das Frontend basiert auf React, TypeScript und React Flow und setzt eine defensi
 
 ## Backend-Entwicklung
 
-Der Express-Server lauscht standardmäßig auf Port 3008. Nach `npm install` startet er mit `npm start`. Eine Testroute erreicht man über `POST /api/test`.
+Der Servercode befindet sich im Verzeichnis `backend`. Wechsel in dieses Verzeichnis, installiere die Abhängigkeiten und starte den Server:
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+Der Server lauscht auf Port 3008. Eine Testroute erreichst du über `POST /api/test`.
 
 ## Vision
 

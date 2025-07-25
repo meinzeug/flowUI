@@ -27,10 +27,6 @@
    - Erwartet, dass `getConnections` die Verbindung liefert
    - Sende `close`-Event und prüfe, dass sie entfernt wurde
 
-6. **Hive-Log-Export-Skript**
-   - Führe `node scripts/exportLogs.js logs.json` aus
-   - Erwartet Datei `logs.json` mit Log-Einträgen
- - Tabelle `activity_log` wird danach geleert
 
 7. **Project API**
    - Erstelle Projekt mit `POST /api/projects` und Token

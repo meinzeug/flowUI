@@ -138,9 +138,22 @@ else
   echo "FRONTEND_IMAGE=ghcr.io/${REPO_SLUG}-frontend:latest" | $SUDO tee -a .env
 fi
 
-# Read ports from environment file for nginx configuration
+# Read ports from environment file, falling back to defaults if absent
 FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' .env 2>/dev/null || echo 8080)"
 BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' .env 2>/dev/null || echo 3008)"
+
+# Ensure port variables exist or are updated
+if grep -q '^FRONTEND_PORT=' .env; then
+  $SUDO sed -i "s#^FRONTEND_PORT=.*#FRONTEND_PORT=${FRONTEND_PORT}#" .env
+else
+  echo "FRONTEND_PORT=${FRONTEND_PORT}" | $SUDO tee -a .env
+fi
+
+if grep -q '^BACKEND_PORT=' .env; then
+  $SUDO sed -i "s#^BACKEND_PORT=.*#BACKEND_PORT=${BACKEND_PORT}#" .env
+else
+  echo "BACKEND_PORT=${BACKEND_PORT}" | $SUDO tee -a .env
+fi
 
 # Read GHCR credentials for private images
 GHCR_USERNAME="$(grep -oP '^GHCR_USERNAME=\K.*' .env 2>/dev/null || true)"

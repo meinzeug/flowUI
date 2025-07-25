@@ -28,18 +28,18 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ghcr.io/${{ github.repository }}-backend:latest
+          tags: ghcr.io/meinzeug/flowui-backend:latest
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
-          tags: ghcr.io/${{ github.repository }}-frontend:latest
+          tags: ghcr.io/meinzeug/flowui-frontend:latest
 
       - name: Build and push MCP image
         uses: docker/build-push-action@v5
         with:
           context: ./mcp
           push: true
-          tags: ghcr.io/${{ github.repository }}-mcp:latest
+          tags: ghcr.io/meinzeug/flowui-mcp:latest

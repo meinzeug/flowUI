@@ -28,6 +28,9 @@ import InitiateProjectModal from './components/views/InitiateProjectModal';
 import Assistant from './components/Assistant';
 import HoDQueryModal from './components/HoDQueryModal';
 import { GoogleGenAI, Type } from "@google/genai";
+import LoginView from './components/views/LoginView';
+import RegisterView from './components/views/RegisterView';
+import { useAuth } from './hooks/useAuth';
 
 const ActivityLog: React.FC<{ 
     logs: ActivityLogEntry[], 
@@ -132,6 +135,13 @@ const SpawnHiveModal: React.FC<{
 };
 
 const App: React.FC = () => {
+  const { token } = useAuth();
+  const [showRegister, setShowRegister] = useState(false);
+
+  if (!token) {
+    return showRegister ? <RegisterView onSwitch={() => setShowRegister(false)} /> : <LoginView onSwitch={() => setShowRegister(true)} />;
+  }
+
   const [projects, setProjects] = useState<Project[]>(MOCK_PROJECTS);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [currentView, setCurrentView] = useState<View>('dashboard');

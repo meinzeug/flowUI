@@ -69,7 +69,7 @@ This file will be updated as milestones are completed.
 *Start:* 2025-07-27  \
 *End:* 2025-07-29  \
 *Lead:* Codex Team
-- [ ] **Feature:** Extend React Flow canvas with save/load sessions. (@frontend-agent)
+- [x] **Feature:** Extend React Flow canvas with save/load sessions. (@frontend-agent)
 - [ ] **Test:** Implement CI/CD pipeline running unit tests. (@qa-agent)
 - [ ] **Bugfix:** Finalize backend MCP API with database persistence. (@backend-agent)
 

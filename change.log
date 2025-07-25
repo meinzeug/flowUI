@@ -11,3 +11,4 @@ BE-AUTH: 963bda5 2025-07-24 login API
 
 FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 
+2025-07-25: Added session selector and tests for WorkflowsView

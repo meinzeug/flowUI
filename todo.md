@@ -13,3 +13,4 @@
 - Extended React Flow canvas with session save/load and selector.
 - Implemented HTTP /tools/batch endpoint with tests.
 - Added query suggestion dropdown in MemoryView.
+- Expanded `milestones.md` with detailed goals and added a new documentation milestone.

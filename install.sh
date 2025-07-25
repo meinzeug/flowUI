@@ -103,6 +103,11 @@ BACKEND_PORT=3008
 EENV
 fi
 
+# Read ports from environment file for nginx configuration
+FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' .env 2>/dev/null || echo 8080)"
+BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' .env 2>/dev/null || echo 3008)"
+
+
 $SUDO sed -i '/"443:443"/d' docker-compose.yml
 
 echo "\n### Building and starting Docker containers..."
@@ -117,7 +122,15 @@ server {
     server_name ${DOMAIN};
 
     location / {
-        proxy_pass http://localhost:8080;
+        proxy_pass http://localhost:${FRONTEND_PORT};
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://localhost:${BACKEND_PORT}/;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;

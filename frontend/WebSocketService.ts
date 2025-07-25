@@ -14,6 +14,7 @@ class WebSocketService {
     private ws?: WebSocket;
     private nextId = 1;
     private pending: Map<number, (res: RPCResponse) => void> = new Map();
+    private listeners: Record<string, ((data: any) => void)[]> = {};
     private url: string;
     private heartbeatInterval?: number;
     private authToken: string | null = localStorage.getItem('token');
@@ -51,7 +52,11 @@ class WebSocketService {
         });
         this.ws.addEventListener('message', ev => {
             try {
-                const data: RPCResponse = JSON.parse(ev.data as string);
+                const data = JSON.parse(ev.data as string);
+                if (data.event) {
+                    this.emit(data.event, data.data);
+                    return;
+                }
                 const handler = this.pending.get(data.id ?? 0);
                 if (handler) {
                     handler(data);
@@ -80,6 +85,15 @@ class WebSocketService {
             clearInterval(this.heartbeatInterval);
             this.heartbeatInterval = undefined;
         }
+    }
+
+    on(event: string, handler: (data: any) => void) {
+        this.listeners[event] = this.listeners[event] || [];
+        this.listeners[event].push(handler);
+    }
+
+    private emit(event: string, data: any) {
+        (this.listeners[event] || []).forEach(fn => fn(data));
     }
 
     call(method: string, params?: any): Promise<any> {

@@ -42,4 +42,13 @@ describe('WebSocketService', () => {
     const result = await promise;
     expect(result).toBe('ok');
   });
+
+  it('emits events to listeners', async () => {
+    const svc = new WebSocketService('ws://test');
+    const ws = (svc as any).ws as MockWebSocket;
+    const received: any[] = [];
+    svc.on('hive-log', d => received.push(d));
+    ws.dispatch('message', { data: JSON.stringify({ event: 'hive-log', data: { message: 'hi' } }) });
+    expect(received[0].message).toBe('hi');
+  });
 });

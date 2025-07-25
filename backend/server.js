@@ -7,11 +7,15 @@ import knexConfig from './knexfile.cjs';
 import { MCP_TOOLS } from './tools.js';
 import { randomUUID } from 'crypto';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 const { Pool } = pkg;
 
 let pool;
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 async function initPool() {
   if (process.env.NODE_ENV === 'test') {
@@ -26,6 +30,13 @@ async function initPool() {
       query text not null,
       summary text not null,
       timestamp timestamp default now()
+    )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS users (
+      id serial primary key,
+      username text not null unique,
+      email text not null unique,
+      password_hash text not null,
+      created_at timestamp default now()
     )`);
     await pool.query(`CREATE TABLE IF NOT EXISTS tool_calls (
       id serial primary key,
@@ -153,12 +164,48 @@ async function createServer() {
     }
   });
 
-  app.post('/api/auth/login', (req, res) => {
+  app.post('/api/auth/register', async (req, res) => {
+    const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: 'username, email and password required' });
+    }
+    try {
+      if (!pool) await initPool();
+      const hash = await bcrypt.hash(password, 10);
+      await pool.query(
+        'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)',
+        [username, email, hash]
+      );
+      res.json({ status: 'ok' });
+    } catch (err) {
+      if (err.code === '23505') {
+        res.status(400).json({ error: 'Username or email already exists' });
+      } else {
+        res.status(500).json({ error: err.message });
+      }
+    }
+  });
+
+  app.post('/api/auth/login', async (req, res) => {
     const { username, password } = req.body;
-    const valid = username === 'admin' && password === 'password';
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
-    const token = jwt.sign({ user: username }, JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    if (!username || !password) {
+      return res.status(400).json({ error: 'username and password required' });
+    }
+    try {
+      if (!pool) await initPool();
+      const { rows } = await pool.query('SELECT password_hash FROM users WHERE username = $1', [username]);
+      if (rows.length === 0) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      const valid = await bcrypt.compare(password, rows[0].password_hash);
+      if (!valid) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      const token = jwt.sign({ user: username }, JWT_SECRET, { expiresIn: '1h' });
+      res.json({ token });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
   });
 
   app.post('/session/save', async (req, res) => {

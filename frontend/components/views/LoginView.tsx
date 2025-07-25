@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button } from '../UI';
 import { useAuth } from '../../hooks/useAuth';
+import { LogoIcon } from '../Icons';
 
 const LoginView: React.FC<{ onSwitch: () => void }> = ({ onSwitch }) => {
   const { login } = useAuth();
@@ -13,7 +14,11 @@ const LoginView: React.FC<{ onSwitch: () => void }> = ({ onSwitch }) => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="h-screen flex flex-col items-center justify-center space-y-6">
+      <div className="text-center">
+        <LogoIcon className="h-16 w-16 mx-auto mb-2" />
+        <h1 className="text-3xl font-black">Flow Weaver</h1>
+      </div>
       <Card className="w-full max-w-sm space-y-4">
         <h2 className="text-xl font-bold text-center">Login</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

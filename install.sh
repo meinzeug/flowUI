@@ -67,7 +67,7 @@ if dpkg -s containerd >/dev/null 2>&1; then
 fi
 
 # Base packages
-$SUDO apt-get install -y curl git ufw nginx certbot python3-certbot-nginx ca-certificates gnupg lsb-release
+$SUDO apt-get install -y curl git lsof ufw nginx certbot python3-certbot-nginx ca-certificates gnupg lsb-release
 
 # Set up Docker repository and install official packages
 $SUDO install -m 0755 -d /etc/apt/keyrings

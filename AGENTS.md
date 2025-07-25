@@ -1,3 +1,3 @@
-- Fix WebSocket handshake issue causing 404 on wss connection.
-- Implement WebSocket endpoint in Express server and ensure Nginx forwards correctly.
-- Add integration tests for WebSocketService connection.
+- Implement live monitoring of hive activity via WebSocket events.
+- Update frontend to display real-time hive logs.
+- Write tests for event broadcasting and frontend handling.

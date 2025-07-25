@@ -18,3 +18,4 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 2025-07-25: Added profile endpoint with auth, updated frontend Auth context to load user profile, and added tests.
 2025-07-25: Added /api/status endpoint with user count, frontend ServerStatus component integrated into Header, and tests for both.
 2025-07-25: Added /api/users endpoint with admin list view and tests.
+2025-07-25: Added WebSocket endpoint and integration tests

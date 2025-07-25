@@ -201,6 +201,31 @@ async function createServer() {
     }
   });
 
+  app.get('/session/export/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      if (!pool) await initPool();
+      const { rows } = await pool.query('SELECT name, data FROM sessions WHERE id = $1', [id]);
+      if (rows.length === 0) return res.status(404).json({ error: 'Not found' });
+      res.setHeader('Content-Disposition', `attachment; filename="session-${id}.json"`);
+      res.json(rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post('/session/import', async (req, res) => {
+    const { name, data } = req.body;
+    if (!name || !data) return res.status(400).json({ error: 'name and data required' });
+    try {
+      if (!pool) await initPool();
+      const { rows } = await pool.query('INSERT INTO sessions (name, data) VALUES ($1, $2) RETURNING id', [name, data]);
+      res.json({ id: rows[0].id });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   app.post('/memory/store', async (req, res) => {
     const { namespace = 'default', query, summary } = req.body;
     if (!query || !summary) {

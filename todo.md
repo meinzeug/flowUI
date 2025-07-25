@@ -14,3 +14,4 @@
 - Added query suggestion dropdown in MemoryView.
 - Expanded `milestones.md` with detailed goals and added a new documentation milestone.
 - Implemented neural training metrics dashboard.
+- Implemented session export/import endpoints and UI with tests.

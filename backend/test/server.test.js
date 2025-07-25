@@ -137,6 +137,38 @@ test('GET /session/list returns saved sessions', { concurrency: 1 }, async () =>
   assert.ok(list.some((s) => s.id === saved.id));
 });
 
+test('session export and import', { concurrency: 1 }, async () => {
+  const server = await startServer(0);
+  const port = server.address().port;
+  const graph = { nodes: [{ id: '1' }], edges: [] };
+  const saveRes = await fetch(`http://localhost:${port}/session/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'export-test', data: graph })
+  });
+  const saved = await saveRes.json();
+
+  const exportRes = await fetch(`http://localhost:${port}/session/export/${saved.id}`);
+  const exported = await exportRes.json();
+  assert.strictEqual(exportRes.status, 200);
+  assert.deepStrictEqual(exported.data, graph);
+
+  const importRes = await fetch(`http://localhost:${port}/session/import`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'imported', data: exported.data })
+  });
+  const imported = await importRes.json();
+  const loadRes = await fetch(`http://localhost:${port}/session/load`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: imported.id })
+  });
+  const loaded = await loadRes.json();
+  await new Promise(r => server.close(r));
+  assert.deepStrictEqual(loaded.data, graph);
+});
+
 test('POST /tools/call logs execution', { concurrency: 1 }, async () => {
   const server = await startServer(0);
   const port = server.address().port;

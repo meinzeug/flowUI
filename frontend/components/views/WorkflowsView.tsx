@@ -1,7 +1,7 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Project, Workflow, ActivityLogEntry, WorkflowStep, HoDQueryContext } from '../../types';
 import { Card, Button, Modal } from '../UI';
 import { PlusIcon, TerminalIcon, XIcon, HeadOfDevIcon } from '../Icons';
@@ -161,6 +161,44 @@ const WorkflowsView: React.FC<{
         }
     };
 
+    const handleExportGraph = async () => {
+        if (!sessionId) return;
+        const res = await fetch(`/session/export/${sessionId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const blob = new Blob([JSON.stringify(data.data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `workflow-${sessionId}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const fileRef = useRef<HTMLInputElement>(null);
+
+    const handleImportGraph = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const text = await file.text();
+        try {
+            const data: GraphData = JSON.parse(text);
+            const res = await fetch('/session/import', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: file.name, data })
+            });
+            const saved = await res.json();
+            setSessionId(saved.id);
+            setGraph(data);
+            addLog('Session imported', 'success');
+        } catch {
+            addLog('Failed to import session', 'error');
+        } finally {
+            if (fileRef.current) fileRef.current.value = '';
+        }
+    };
+
     const handleRunWorkflow = (workflowId: string) => {
         const workflow = project.workflows.find(w => w.id === workflowId);
         if (!workflow) return;
@@ -221,6 +259,9 @@ const WorkflowsView: React.FC<{
                         ))}
                     </select>
                     <Button variant="secondary" onClick={handleLoadGraph} disabled={!sessionId}>Load</Button>
+                    <Button variant="secondary" onClick={handleExportGraph} disabled={!sessionId}>Export</Button>
+                    <input ref={fileRef} type="file" accept="application/json" className="hidden" onChange={handleImportGraph} />
+                    <Button variant="secondary" onClick={() => fileRef.current?.click()}>Import</Button>
                 </div>
             </div>
         </div>

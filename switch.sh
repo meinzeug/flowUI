@@ -36,7 +36,7 @@ if [ ! -d "$APP_DIR/.git" ]; then
 fi
 cd "$APP_DIR"
 
-MODE="$1"
+MODE="${1:-}"
 if [ -z "$MODE" ]; then
   read -rp "Run environment in (p)roduction or (d)evelopment? " MODE
 fi

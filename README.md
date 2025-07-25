@@ -27,10 +27,10 @@ oder mit **wget**
 wget -qO- https://raw.githubusercontent.com/meinzeug/flowUI/main/install.sh | bash
 ```
 
-Das Skript klont das Repository nach `/opt/flowUI`, installiert Docker sowie
-NGINX und startet anschließend die Container per `docker compose`. Es benötigt
-Root- bzw. **sudo**‑Rechte und schreibt ein Log nach
-`~/flowui-install.log`.
+Das Skript klont das Repository nach `/opt/flowUI`, installiert Docker und
+startet anschließend die Container per `docker compose`. NGINX läuft dabei im
+Frontend-Container. Es benötigt Root- bzw. **sudo**‑Rechte und schreibt ein Log
+nach `~/flowui-install.log`.
 Dabei wird auch eine `.env`-Datei mit einem zufälligen `JWT_SECRET` erzeugt.
 
 Hinweis: Ersetze `main` im URL, falls dein Standard-Branch anders heißt (z. B. `master`). Über `-f` bzw. `-q` bricht der Befehl bei HTTP-Fehlern ab.

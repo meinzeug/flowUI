@@ -1,9 +1,9 @@
 #!/bin/bash
 # FlowUI deploys a web based interface for orchestrating AI workflows.
-# This installer sets up Docker, obtains SSL certificates and configures
-# Nginx as a reverse proxy for the application.
+# This installer sets up Docker and runs the FlowUI containers.
+# The Nginx server that serves the frontend runs inside the Docker container.
 # After installation browse to your domain for the frontend and use
-# https://<domain>/api for API requests.
+# http://<domain>/api for API requests.
 # Use update.sh to upgrade later; configuration lives under /opt/flowUI.
 set -euo pipefail
 
@@ -67,7 +67,7 @@ if dpkg -s containerd >/dev/null 2>&1; then
 fi
 
 # Base packages
-$SUDO apt-get install -y curl git ufw nginx certbot python3-certbot-nginx ca-certificates gnupg lsb-release
+$SUDO apt-get install -y curl git ufw ca-certificates gnupg lsb-release
 
 # Set up Docker repository and install official packages
 $SUDO install -m 0755 -d /etc/apt/keyrings
@@ -110,47 +110,10 @@ fi
 FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' .env 2>/dev/null || echo 8080)"
 BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' .env 2>/dev/null || echo 3008)"
 
-
-$SUDO sed -i '/"443:443"/d' docker-compose.yml
-
 echo "\n### Building and starting Docker containers..."
 $SUDO docker compose up -d --build
 
-NGCONF="/etc/nginx/sites-available/${DOMAIN}"
-if [ ! -f "$NGCONF" ]; then
-  echo "\n### Creating NGINX configuration..."
-  $SUDO tee "$NGCONF" >/dev/null <<NGINX
-server {
-    listen 80;
-    server_name ${DOMAIN};
-
-    location / {
-        proxy_pass http://localhost:${FRONTEND_PORT};
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-
-    location /api/ {
-        proxy_pass http://localhost:${BACKEND_PORT}/;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-}
-NGINX
-  $SUDO ln -sf "$NGCONF" /etc/nginx/sites-enabled/${DOMAIN}
-fi
-
-$SUDO nginx -t
-$SUDO systemctl reload nginx
-
-echo "\n### Obtaining SSL certificate..."
-$SUDO certbot --nginx --redirect --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"
-$SUDO systemctl enable certbot.timer
 
 echo "\n### Deployment complete"
-echo "Application is available at https://${DOMAIN}"
+echo "Application is available at http://${DOMAIN:-localhost}:${FRONTEND_PORT}"
 echo "Installation performed by ${NAME}"

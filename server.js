@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { WebSocketServer } = require('ws');
+const { setWss, broadcast } = require('./ws');
+
 const apiRoutes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const { PORT } = require('./config/config');
@@ -20,6 +22,7 @@ async function createServer() {
   const server = http.createServer(app);
 
   const wss = new WebSocketServer({ noServer: true });
+  setWss(wss);
   const { MCP_TOOLS } = await import('./backend/tools.js');
 
   wss.on('connection', ws => {
@@ -80,4 +83,4 @@ if (require.main === module) {
   startServer();
 }
 
-module.exports = { createServer, startServer };
+module.exports = { createServer, startServer, broadcast };

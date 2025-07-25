@@ -2,6 +2,7 @@ const { test } = require('node:test');
 const assert = require('assert');
 const fetch = global.fetch;
 const { startServer } = require('../server');
+const { WebSocket } = require('ws');
 
 process.env.JWT_SECRET = 'testsecret';
 
@@ -124,5 +125,37 @@ test('GET /api/users returns list of users', async () => {
   assert.strictEqual(res.status, 200);
   assert.ok(Array.isArray(data) && data.length > 0);
   assert.ok(data[0].username);
+  await new Promise(r => server.close(r));
+});
+
+test('POST /api/hive/log broadcasts to websocket clients', async () => {
+  const server = await start();
+  const port = server.address().port;
+
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'eve', email: 'e@e.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+
+  const ws = new WebSocket(`ws://localhost:${port}/api/`);
+  await new Promise(res => ws.on('open', res));
+
+  const logPromise = new Promise(resolve => {
+    ws.on('message', data => resolve(JSON.parse(data)));
+  });
+
+  await fetch(`http://localhost:${port}/api/hive/log`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ message: 'hello' })
+  });
+
+  const msg = await logPromise;
+  assert.strictEqual(msg.event, 'hive-log');
+  assert.strictEqual(msg.data.message, 'hello');
+
+  ws.close();
   await new Promise(r => server.close(r));
 });

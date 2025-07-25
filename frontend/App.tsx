@@ -28,6 +28,7 @@ import { AgentIcon, TerminalIcon, ChevronDownIcon, DashboardIcon, WorkspaceIcon,
 import InitiateProjectModal from './components/views/InitiateProjectModal';
 import Assistant from './components/Assistant';
 import HoDQueryModal from './components/HoDQueryModal';
+import { wsService } from './WebSocketService';
 import { GoogleGenAI, Type } from "@google/genai";
 import LoginView from './components/views/LoginView';
 import RegisterView from './components/views/RegisterView';
@@ -185,6 +186,12 @@ const App: React.FC = () => {
           addToast(message, type);
       }
   };
+
+  useEffect(() => {
+      wsService.on('hive-log', (entry: any) => {
+          addLog(entry.message, entry.type as any);
+      });
+  }, []);
   
   const addChatMessage = (message: Omit<ChatMessage, 'id'>) => {
     setChatHistory(prev => [...prev, { ...message, id: `chat-${Date.now()}` }]);

@@ -33,4 +33,25 @@ describe('WebSocketService integration', () => {
     expect(Array.isArray(result)).toBe(true);
     (svc as any).ws.close();
   });
+
+  it('receives hive log events', async () => {
+    const svc = new WebSocketService();
+    await new Promise(res => (svc as any).ws.addEventListener('open', res));
+    const events: any[] = [];
+    svc.on('hive-log', e => events.push(e));
+    const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'int', email: 'int@x.com', password: 'p' })
+    });
+    const { token } = await reg.json();
+    await fetch(`http://localhost:${port}/api/hive/log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ message: 'test' })
+    });
+    await new Promise(r => setTimeout(r, 50));
+    expect(events[0].message).toBe('test');
+    (svc as any).ws.close();
+  });
 });

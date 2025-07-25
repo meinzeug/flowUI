@@ -1,3 +1,3 @@
-- Implement live monitoring of hive activity via WebSocket events.
-- Update frontend to display real-time hive logs.
-- Write tests for event broadcasting and frontend handling.
+- Persist hive session logs in the database with REST endpoints to list and add logs.
+- Load recent hive logs on frontend connect and display them.
+- Add tests for log persistence and retrieval.

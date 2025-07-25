@@ -92,7 +92,7 @@ The following sprints track short term progress inside the larger milestones.
 *End:* 2025-07-29  \
 *Lead:* Codex Team
 - [x] **Feature:** Extend React Flow canvas with save/load sessions. (@frontend-agent)
-- [ ] **Test:** Implement CI/CD pipeline running unit tests. (@qa-agent)
+ - [x] **Test:** Implement CI/CD pipeline running unit tests. (@qa-agent)
 - [ ] **Bugfix:** Finalize backend MCP API with database persistence. (@backend-agent)
 
 ### Sprint Jul-30-2025
@@ -101,7 +101,7 @@ The following sprints track short term progress inside the larger milestones.
 *Lead:* Codex Team
 - [x] **Bugfix:** Investigate and resolve DashboardLoader error. (@frontend-agent)
 - [x] **Doc:** Document debugging outcome in bericht.html. (@frontend-agent)
-- [ ] **Feature:** Prepare deployment scripts for CI/CD pipeline. (@backend-agent)
+ - [x] **Feature:** Prepare deployment scripts for CI/CD pipeline. (@backend-agent)
 
 ### Sprint Aug-02-2025
 *Start:* 2025-08-02  \

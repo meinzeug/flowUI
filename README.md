@@ -89,6 +89,15 @@ Wenn du ein externes NGINX mit eigenem TLS-Zertifikat nutzt, kannst du die HTTPS
 REMOVE_HTTPS_PORT=1 bash update.sh
 ```
 
+### Kontinuierliche Bereitstellung
+
+Ein GitHub Actions Workflow sorgt dafür, dass nach erfolgreich durchlaufenen
+Tests automatisch die neueste Version auf dem Zielserver eingespielt wird. Die
+Pipeline triggert das Skript `update.sh` per SSH und hängt das Ergebnis in
+`deploy_log.md` an. Für die Verbindung werden die Secrets `DEPLOY_HOST`,
+`DEPLOY_USER` und `DEPLOY_SSH_KEY` benötigt.
+
+
 ### Betriebsmodus wechseln
 
 Mit `switch.sh` kannst du jederzeit zwischen Produktions- und Entwicklungsmodus umschalten. Im Entwicklungsmodus werden Frontend und Backend direkt aus dem Quellcode gestartet, was Updates wesentlich beschleunigt.

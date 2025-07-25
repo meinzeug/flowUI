@@ -109,6 +109,8 @@ cd "$APP_DIR"
 # Determine repository slug for GHCR image defaults
 REPO_SLUG="$($SUDO git config --get remote.origin.url | \
   sed -E 's#.*/([^/]+/[^/.]+)(\.git)?$#\1#')"
+# Docker image names must be lowercase
+REPO_SLUG="$(echo "$REPO_SLUG" | tr '[:upper:]' '[:lower:]')"
 
 if [ ! -f .env ]; then
   echo "\n### Creating environment file..."

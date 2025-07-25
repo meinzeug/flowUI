@@ -1,4 +1,10 @@
 #!/bin/bash
+# FlowUI deploys a web based interface for orchestrating AI workflows.
+# This installer sets up Docker, obtains SSL certificates and configures
+# Nginx as a reverse proxy for the application.
+# After installation browse to your domain for the frontend and use
+# https://<domain>/api for API requests.
+# Use update.sh to upgrade later; configuration lives under /opt/flowUI.
 set -euo pipefail
 
 LOGFILE="$HOME/flowui-install.log"

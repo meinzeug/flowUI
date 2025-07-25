@@ -32,6 +32,19 @@ async function initPool() {
       name text not null,
       timestamp timestamp default now()
     )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS training_metrics (
+      id serial primary key,
+      epoch int not null,
+      loss float not null,
+      accuracy float not null,
+      timestamp timestamp default now()
+    )`);
+    for (let i = 1; i <= 5; i++) {
+      await pool.query(
+        'INSERT INTO training_metrics (epoch, loss, accuracy) VALUES ($1, $2, $3)',
+        [i, 1 / i, i * 0.1 + 0.7]
+      );
+    }
   } else {
     pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const db = knex({
@@ -40,6 +53,15 @@ async function initPool() {
     });
     await db.migrate.latest();
     await db.destroy();
+    const check = await pool.query('SELECT COUNT(*) FROM training_metrics');
+    if (parseInt(check.rows[0].count, 10) === 0) {
+      for (let i = 1; i <= 5; i++) {
+        await pool.query(
+          'INSERT INTO training_metrics (epoch, loss, accuracy) VALUES ($1, $2, $3)',
+          [i, 1 / i, i * 0.1 + 0.7]
+        );
+      }
+    }
   }
 }
 
@@ -213,6 +235,18 @@ async function createServer() {
           [`%${query}%`]
         ));
       }
+      res.json(rows);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.get('/metrics/training', async (req, res) => {
+    try {
+      if (!pool) await initPool();
+      const { rows } = await pool.query(
+        'SELECT epoch, loss, accuracy FROM training_metrics ORDER BY epoch'
+      );
       res.json(rows);
     } catch (err) {
       res.status(500).json({ error: err.message });

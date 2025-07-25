@@ -22,7 +22,8 @@ class WebSocketService {
             this.url = url;
         } else {
             const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-            this.url = `${protocol}://${window.location.hostname}:3008`;
+            const host = window.location.host;
+            this.url = `${protocol}://${host}/api`;
         }
         
         this.connect();

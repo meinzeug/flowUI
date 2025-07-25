@@ -146,7 +146,10 @@ update_nginx_conf
 
 info "Updating containers..."
 $SUDO docker compose down
-$SUDO docker compose pull
+if ! $SUDO docker compose pull; then
+  warn "Pull failed, building images locally..."
+  $SUDO docker compose build
+fi
 
 info "Restarting services..."
 FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \

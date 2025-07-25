@@ -21,6 +21,8 @@ class WebSocketService {
     constructor(url?: string) {
         if (url) {
             this.url = url;
+        } else if (import.meta.env.VITE_WS_URL) {
+            this.url = import.meta.env.VITE_WS_URL;
         } else {
             const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
             const host = window.location.host;
@@ -43,6 +45,9 @@ class WebSocketService {
         this.ws = new WebSocket(this.buildUrl());
         this.ws.addEventListener('open', () => {
             this.startHeartbeat();
+        });
+        this.ws.addEventListener('error', () => {
+            console.error('WebSocket connection error');
         });
         this.ws.addEventListener('message', ev => {
             try {

@@ -101,7 +101,7 @@ test('POST /api/auth/login rejects invalid credentials', { concurrency: 1 }, asy
   assert.strictEqual(res.status, 401);
 });
 
-test('WebSocket JSON-RPC methods work', { concurrency: 1 }, async () => {
+test('WebSocket channel messaging works', { concurrency: 1 }, async () => {
   const server = await startServerWrapper();
   const port = server.address().port;
   await fetch(`http://localhost:${port}/api/auth/register`, {
@@ -118,24 +118,19 @@ test('WebSocket JSON-RPC methods work', { concurrency: 1 }, async () => {
   const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
   await once(ws, 'open');
 
-  ws.send(JSON.stringify({ jsonrpc: '2.0', method: 'tools/list', params: {}, id: 1 }));
-  const [listMsg] = await once(ws, 'message');
-  const listData = JSON.parse(listMsg);
-  assert.ok(Array.isArray(listData.result));
+  ws.send(JSON.stringify({ event: 'subscribe', channel: 'echo', payload: {} }));
+  const [subMsg] = await once(ws, 'message');
+  const subData = JSON.parse(subMsg);
+  assert.strictEqual(subData.event, 'subscribed');
 
-  ws.send(JSON.stringify({ jsonrpc: '2.0', method: 'tools/call', params: { tool: 'swarm_init' }, id: 2 }));
-  const [callMsg] = await once(ws, 'message');
-  const callData = JSON.parse(callMsg);
-  assert.strictEqual(callData.result.tool, 'swarm_init');
-
-  ws.send(JSON.stringify({ jsonrpc: '2.0', method: 'tools/batch', params: { calls: [{ tool: 'swarm_init' }, { tool: 'agent_spawn' }] }, id: 3 }));
-  const [batchMsg] = await once(ws, 'message');
-  const batchData = JSON.parse(batchMsg);
-  assert.strictEqual(batchData.result.length, 2);
+  ws.send(JSON.stringify({ event: 'publish', channel: 'echo', payload: { msg: 'hi' } }));
+  const [pubMsg] = await once(ws, 'message');
+  const pubData = JSON.parse(pubMsg);
+  assert.strictEqual(pubData.event, 'message');
+  assert.strictEqual(pubData.payload.msg, 'hi');
 
   ws.close();
   await new Promise((r) => server.close(r));
-
 });
 
 test('session save and load persist data', { concurrency: 1 }, async () => {

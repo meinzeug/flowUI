@@ -569,6 +569,11 @@ Durch die Kombination einer robusten berwachungsstrategie mit diesen Fehlertoler
 ## WebSocket API (/ws)
 Der Endpunkt `/ws` ermöglicht kanalbasierte Echtzeitkommunikation. Beim HTTP-Upgrade muss ein gültiges JWT im Query-Parameter `token` übermittelt werden. Fehlende oder ungültige Tokens führen zu `401 Unauthorized`.
 
+**Handshake Ablauf**
+1. Client stellt HTTP-Upgrade auf `/ws?token=<JWT>` her.
+2. Der Server validiert das Token. Ist es ungültig, wird die Verbindung mit `401` abgelehnt.
+3. Nach erfolgreicher Prüfung wird die WebSocket-Verbindung aufgebaut und dem Client eine leere Kanal-Liste zugeordnet.
+
 ### Nachrichtenformat
 Alle WebSocket-Nachrichten sind Objekte mit folgender Struktur:
 
@@ -581,6 +586,14 @@ Alle WebSocket-Nachrichten sind Objekte mit folgender Struktur:
 ```
 
 Nachrichten außerhalb dieses Schemas werden mit einer Fehlermeldung zurückgewiesen.
+
+#### Unterstützte Events
+
+- `subscribe` – Client abonniert einen Kanal. Server antwortet mit `{event:'subscribed',channel}`.
+- `unsubscribe` – Client verlässt einen Kanal. Server antwortet mit `{event:'unsubscribed',channel}`.
+- `publish` – Sendet Nutzdaten an alle Clients im angegebenen Kanal.
+
+Weitere Event-Typen können projektspezifische Daten transportieren, z.B. `hive-log` oder `workflow-status`.
 
 ### Kanalkonzept
 Clients können nach dem Verbindungsaufbau beliebige Kanäle abonnieren (`subscribe`) oder verlassen (`unsubscribe`). Ereignisse innerhalb eines Kanals werden an alle dort registrierten Clients verteilt. Beispiele sind `chat:room-123`, `notifications:<user>` oder `live-data:dashboard-A`.

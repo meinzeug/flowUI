@@ -109,28 +109,36 @@ async function createServer() {
   });
 
   wss.on('connection', ws => {
+    ws.channels = new Set();
     ws.on('message', data => {
       let msg;
       try {
         msg = JSON.parse(data);
-      } catch (err) {
-        ws.send(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }));
+      } catch {
+        ws.send(JSON.stringify({ event: 'error', channel: null, payload: { message: 'invalid_json' } }));
         return;
       }
 
-      const { id, method, params = {} } = msg;
+      const { event, channel, payload } = msg;
+      if (typeof event !== 'string' || typeof channel !== 'string') {
+        ws.send(JSON.stringify({ event: 'error', channel: null, payload: { message: 'invalid_format' } }));
+        return;
+      }
 
-      if (method === 'tools/list') {
-        ws.send(JSON.stringify({ jsonrpc: '2.0', id, result: MCP_TOOLS }));
-      } else if (method === 'tools/call') {
-        const { tool } = params;
-        ws.send(JSON.stringify({ jsonrpc: '2.0', id, result: { tool, status: 'executed' } }));
-      } else if (method === 'tools/batch') {
-        const { calls = [] } = params;
-        const results = calls.map(c => ({ tool: c.tool, status: 'executed' }));
-        ws.send(JSON.stringify({ jsonrpc: '2.0', id, result: results }));
+      if (event === 'subscribe') {
+        ws.channels.add(channel);
+        ws.send(JSON.stringify({ event: 'subscribed', channel, payload: {} }));
+      } else if (event === 'unsubscribe') {
+        ws.channels.delete(channel);
+        ws.send(JSON.stringify({ event: 'unsubscribed', channel, payload: {} }));
+      } else if (event === 'publish') {
+        wss.clients.forEach(client => {
+          if (client.channels && client.channels.has(channel)) {
+            client.send(JSON.stringify({ event: 'message', channel, payload }));
+          }
+        });
       } else {
-        ws.send(JSON.stringify({ jsonrpc: '2.0', id, error: { code: -32601, message: 'Method not found' } }));
+        ws.send(JSON.stringify({ event: 'error', channel, payload: { message: 'unknown_event' } }));
       }
     });
   });

@@ -31,3 +31,9 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}-frontend:latest
+      - name: Build and push MCP image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./mcp
+          push: true
+          tags: ghcr.io/${{ github.repository }}-mcp:latest

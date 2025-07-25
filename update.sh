@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+
 APP_DIR="/opt/flowUI"
 REPO_URL="https://github.com/meinzeug/flowUI.git"
 LOGFILE="$HOME/flowui-update.log"
@@ -34,3 +35,73 @@ echo "\n### Restarting stack..."
 $SUDO docker compose up -d
 
 echo "\n### Update complete"
+=======
+# Colors for output
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+BLUE="\033[0;34m"
+YELLOW="\033[1;33m"
+RESET="\033[0m"
+
+info() { echo -e "${BLUE}$*${RESET}"; }
+success() { echo -e "${GREEN}$*${RESET}"; }
+warn() { echo -e "${YELLOW}$*${RESET}"; }
+fail() { echo -e "${RED}$*${RESET}"; }
+
+APP_DIR="$(cd "$(dirname "$0")" && pwd)"
+BACKUP_DIR="$APP_DIR/backups"
+TIMESTAMP="$(date +%Y%m%d%H%M%S)"
+BACKUP_FILE="$BACKUP_DIR/flowUI-${TIMESTAMP}.tar.gz"
+CURRENT_COMMIT="$(git rev-parse HEAD)"
+
+# Ports used for health checks (fallback to defaults)
+FRONTEND_PORT="$(grep -oP '^FRONTEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 8080)"
+BACKEND_PORT="$(grep -oP '^BACKEND_PORT=\K.*' "$APP_DIR/.env" 2>/dev/null || echo 3008)"
+
+create_backup() {
+  info "Creating backup at $BACKUP_FILE"
+  mkdir -p "$BACKUP_DIR"
+  git archive --format=tar HEAD | gzip > "$BACKUP_FILE"
+}
+
+create_nginx_conf() {
+  local conf="$APP_DIR/nginx/default.conf"
+  if [ ! -f "$conf" ]; then
+    info "Creating default NGINX configuration..."
+    cp "$APP_DIR/nginx/default.conf.template" "$conf"
+  fi
+}
+
+cleanup() { docker image prune -f >/dev/null; }
+
+rollback() {
+  warn "Rolling back to previous commit $CURRENT_COMMIT"
+  git reset --hard "$CURRENT_COMMIT"
+  docker compose up -d
+  fail "Rollback finished"
+}
+
+trap rollback ERR
+
+info "Updating repository..."
+create_backup
+git pull --ff-only
+
+create_nginx_conf
+
+info "Rebuilding containers..."
+docker compose build --pull --no-cache
+
+info "Restarting services..."
+docker compose up -d
+
+info "Performing health checks..."
+sleep 5
+curl -fs "http://localhost:${BACKEND_PORT}/health" >/dev/null
+curl -fs "http://localhost:${FRONTEND_PORT}" >/dev/null
+
+cleanup
+
+success "Update complete"
+trap - ERR
+

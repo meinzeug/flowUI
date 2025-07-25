@@ -136,10 +136,9 @@ info "Updating repository..."
 create_backup
 $SUDO git pull --ff-only
 
-# Optionally remove HTTPS port mapping if a host NGINX proxy handles TLS.
-# Set REMOVE_HTTPS_PORT=1 to delete the "443:443" line from docker-compose.yml.
-if [ "${REMOVE_HTTPS_PORT:-}" = "1" ]; then
-  info "Removing HTTPS port mapping as requested"
+# Remove legacy HTTPS port mapping if present
+if grep -q '"443:443"' docker-compose.yml 2>/dev/null; then
+  info "Removing obsolete HTTPS port mapping from docker-compose.yml"
   $SUDO sed -i '/"443:443"/d' docker-compose.yml
 fi
 

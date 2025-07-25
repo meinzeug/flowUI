@@ -2,7 +2,7 @@ FROM node:18-alpine as build
 WORKDIR /app
 # Copy frontend sources and configuration
 COPY frontend ./frontend
-COPY vite.config.ts ./
+COPY vite.config.js ./
 COPY index.html ./
 # Install dependencies and build the production bundle
 RUN npm --prefix frontend install \

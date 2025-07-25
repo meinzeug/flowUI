@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, onExitPr
     <div className="w-64 bg-slate-900/70 backdrop-blur-xl border-r border-slate-800 flex flex-col p-4">
       <div className="flex items-center gap-3 px-3 mb-10">
         <LogoIcon className="h-10 w-10" />
-        <h1 className="text-xl font-black text-white">Claude-Flow</h1>
+        <h1 className="text-xl font-black text-white">Flow Weaver</h1>
       </div>
 
       <nav className="flex-1">

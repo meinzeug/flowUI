@@ -38,7 +38,7 @@ const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, onSelectPro
     <div className="min-h-screen bg-[#050608] flex flex-col items-center justify-center p-8 text-white">
       <div className="text-center mb-12 animate-fade-in-up">
         <LogoIcon className="h-24 w-24 mx-auto mb-4" />
-        <h1 className="text-5xl font-black">Claude-Flow</h1>
+        <h1 className="text-5xl font-black">Flow Weaver</h1>
         <p className="text-slate-400 mt-2 text-lg">Your AI-Powered Development Orchestration Platform</p>
       </div>
 

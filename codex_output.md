@@ -1,0 +1,5 @@
+- install.sh updated to authenticate with GHCR using GHCR_USERNAME and GHCR_PAT from .env or interactive input
+- Added fallback to local docker builds when authentication or pull fails
+- docker-compose.yml updated with build contexts to allow local builds
+- Added .env.template with new GHCR credentials variables
+- README updated to document GHCR login and new environment variables

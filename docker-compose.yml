@@ -12,6 +12,8 @@ services:
 
   backend:
     image: ${BACKEND_IMAGE:-ghcr.io/meinzeug/flowui-backend:latest}
+    build:
+      context: ./backend
     depends_on:
       - postgres
     environment:
@@ -25,6 +27,9 @@ services:
 
   frontend:
     image: ${FRONTEND_IMAGE:-ghcr.io/meinzeug/flowui-frontend:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - backend
     environment:

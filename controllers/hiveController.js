@@ -22,8 +22,12 @@ async function listLogs(req, res, next) {
   try {
     await initDb();
     const pool = getPool();
+    const page = parseInt(req.query.page || '1', 10);
+    const limit = parseInt(req.query.limit || '50', 10);
+    const offset = (page - 1) * limit;
     const { rows } = await pool.query(
-      'SELECT id, timestamp, type, message FROM activity_log ORDER BY id DESC LIMIT 50'
+      'SELECT id, timestamp, type, message FROM activity_log ORDER BY id DESC LIMIT $1 OFFSET $2',
+      [limit, offset]
     );
     res.json(rows);
   } catch (err) {

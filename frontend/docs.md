@@ -86,7 +86,30 @@ Dieser Abschnitt beschreibt die wichtigsten wiederverwendbaren und Ansichts-Komp
 
 ---
 
-### 1.3. `Assistant.tsx`
+### 1.3. `ProjectList.tsx`
+
+- **Name & Pfad:** `ProjectList` (`/components/ProjectList.tsx`)
+- **Beschreibung:** Zeigt eine Liste von Projekten als Karten an.
+- **Props:**
+| Name | Typ | Beschreibung |
+|---|---|---|
+| `projects` | `Project[]` | Anzuzeigende Projekte |
+| `onSelect` | `(id: string) => void` | Klick-Handler für Projektkarten |
+
+### 1.4. `ProjectCreateModal.tsx`
+
+- **Name & Pfad:** `ProjectCreateModal` (`/components/ProjectCreateModal.tsx`)
+- **Beschreibung:** Modal zur Erstellung eines Projekts.
+- **Props:**
+| Name | Typ | Beschreibung |
+|---|---|---|
+| `isOpen` | `boolean` | Steuert Sichtbarkeit |
+| `onCreate` | `(name: string, desc: string, template: string) => void` | Callback zum Anlegen |
+| `onClose` | `() => void` | Schließt das Modal |
+
+---
+
+### 1.5. `Assistant.tsx`
 
 - **Name & Pfad:** `Assistant` (`/components/Assistant.tsx`)
 - **Beschreibung:** Die schwebende KI-Assistenten-Komponente, die sich unten rechts befindet. Sie verwaltet die Chat-UI, die Benutzereingabe (Text und Sprache) und den Zustand des Assistenten. Nutzt die Web Speech API für die Spracheingabe.

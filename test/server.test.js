@@ -5,6 +5,7 @@ const { startServer } = require('../server');
 const { WebSocket } = require('ws');
 
 process.env.JWT_SECRET = 'testsecret';
+process.env.NODE_ENV = 'test';
 
 async function start() {
   return startServer(0);
@@ -298,5 +299,53 @@ test('GET /api/projects lists projects', async () => {
   assert.ok(Array.isArray(data));
   assert.strictEqual(data.length, 1);
   assert.strictEqual(data[0].name, 'Proj1');
+  await new Promise(r => server.close(r));
+});
+
+test('GET /api/hive/logs supports pagination', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'pag', email: 'p@g.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+  for (let i = 0; i < 3; i++) {
+    await fetch(`http://localhost:${port}/api/hive/log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ message: 'm' + i })
+    });
+  }
+  const res = await fetch(`http://localhost:${port}/api/hive/logs?page=2&limit=1`);
+  const data = await res.json();
+  assert.strictEqual(data.length, 1);
+  await new Promise(r => server.close(r));
+});
+
+test('POST /api/workflows/:id/execute queues workflow', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'wf', email: 'wf@e.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+  const { getPool } = require('../db');
+  const pool = getPool();
+  const userId = (await pool.query('SELECT id FROM users WHERE username = $1', ['wf'])).rows[0].id;
+  const pId = (await pool.query('INSERT INTO projects (user_id, name) VALUES ($1,$2) RETURNING id', [userId, 'P'])).rows[0].id;
+  const wId = (await pool.query('INSERT INTO workflows (project_id, name, definition) VALUES ($1,$2,$3) RETURNING id', [pId, 'W', '{}'])).rows[0].id;
+  const res = await fetch(`http://localhost:${port}/api/workflows/${wId}/execute`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.queued, true);
+  const last = (await pool.query('SELECT last_run FROM workflows WHERE id = $1', [wId])).rows[0].last_run;
+  assert.ok(last);
   await new Promise(r => server.close(r));
 });

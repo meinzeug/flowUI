@@ -1,9 +1,9 @@
 # To-Do
 
 ## Open
-- Set up CI/CD pipeline for automated tests.
 
 ## Done
+- Set up CI/CD pipeline for automated tests.
 - Added Docker infrastructure and install/update scripts.
 - Documented milestones and installation process.
 - Implemented database connection and health check in MCP server.

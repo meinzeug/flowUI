@@ -1,1 +1,1 @@
-- Set up CI/CD pipeline to automatically run backend and frontend tests on each commit.
+- Implement continuous deployment pipeline after tests pass.

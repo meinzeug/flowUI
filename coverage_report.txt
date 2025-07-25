@@ -3,88 +3,116 @@
 > NODE_ENV=test node --test --experimental-test-coverage
 
 TAP version 13
+# Subtest: server fails to start without JWT_SECRET
+ok 1 - server fails to start without JWT_SECRET
+  ---
+  duration_ms: 423.611523
+  ...
 # MCP server listening on 0
 # MCP server listening on 0
 # Subtest: GET /health returns ok
-ok 1 - GET /health returns ok
-  duration_ms: 211.401819
+ok 2 - GET /health returns ok
+  ---
+  duration_ms: 560.265651
+  ...
 # MCP server listening on 0
 # Subtest: GET /tools/list returns tool catalog
-ok 2 - GET /tools/list returns tool catalog
+ok 3 - GET /tools/list returns tool catalog
   ---
-  duration_ms: 6.546797
-
+  duration_ms: 18.382963
   ...
 # MCP server listening on 0
 # Subtest: GET /tools/info/:name returns tool details
-ok 3 - GET /tools/info/:name returns tool details
+ok 4 - GET /tools/info/:name returns tool details
   ---
-  duration_ms: 3.702443
-
+  duration_ms: 10.511908
+  ...
+# MCP server listening on 0
+# Subtest: POST /api/auth/register creates user
+ok 5 - POST /api/auth/register creates user
+  ---
+  duration_ms: 137.470559
   ...
 # MCP server listening on 0
 # Subtest: POST /api/auth/login authenticates user
-ok 4 - POST /api/auth/login authenticates user
+ok 6 - POST /api/auth/login authenticates user
   ---
-
-  duration_ms: 16.43222
+  duration_ms: 214.645474
+  ...
+# MCP server listening on 0
+# Subtest: POST /api/auth/login rejects invalid credentials
+ok 7 - POST /api/auth/login rejects invalid credentials
+  ---
+  duration_ms: 188.448296
   ...
 # MCP server listening on 0
 # Subtest: WebSocket JSON-RPC methods work
-ok 5 - WebSocket JSON-RPC methods work
+ok 8 - WebSocket JSON-RPC methods work
   ---
-
-  duration_ms: 10.423283
+  duration_ms: 23.250068
   ...
 # MCP server listening on 0
 # Subtest: session save and load persist data
-ok 6 - session save and load persist data
+ok 9 - session save and load persist data
   ---
-
-  duration_ms: 20.920913
+  duration_ms: 39.556878
   ...
 # MCP server listening on 0
 # Subtest: memory store and query
-ok 7 - memory store and query
+ok 10 - memory store and query
   ---
-
-  duration_ms: 34.690033
+  duration_ms: 23.53109
   ...
 # MCP server listening on 0
 # Subtest: GET /session/list returns saved sessions
-ok 8 - GET /session/list returns saved sessions
+ok 11 - GET /session/list returns saved sessions
   ---
-
-  duration_ms: 14.196211
-
+  duration_ms: 15.79083
   ...
+# MCP server listening on 0
+# Subtest: session export and import
+ok 12 - session export and import
+  ---
+  duration_ms: 42.275319
+  ...
+# MCP server listening on 0
 # Subtest: POST /tools/call logs execution
-ok 9 - POST /tools/call logs execution
+ok 13 - POST /tools/call logs execution
   ---
-
-  duration_ms: 5.562395
+  duration_ms: 13.695711
   ...
-1..9
-# tests 9
+# MCP server listening on 0
+# Subtest: POST /tools/batch executes multiple tools
+ok 14 - POST /tools/batch executes multiple tools
+  ---
+  duration_ms: 12.698089
+  ...
+# Subtest: GET /metrics/training returns metrics
+ok 15 - GET /metrics/training returns metrics
+  ---
+  duration_ms: 13.184105
+  ...
+1..15
+# tests 15
 # suites 0
-# pass 9
+# pass 15
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-
-# duration_ms 695.314547
+# duration_ms 2319.148922
 # start of coverage report
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # file                | line % | branch % | funcs % | uncovered lines
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # knexfile.cjs        | 100.00 |   100.00 |  100.00 | 
-# server.js           |  81.36 |    47.92 |  100.00 | 36-43 59-61 75-76 87-88 102 113-114 130-131 137-138 147-148 151-152 161-162 168-169 179-180 194-198 201-202 219-220
+# server.js           |   5.25 |    50.00 |    0.00 | 19-343
+# server.js           |  77.84 |    43.42 |  100.00 | 17-18 60-76 92-94 108-109 120-121 135 146-147 153-154 163-164 170-171 181-186 192-193 198-199 207-208 216-217 223-224 233-234 237-238 247-248 260-261 272-273 279-280 290-291 305-309 312-313 324-325 342-343
 # test/server.test.js | 100.00 |   100.00 |  100.00 | 
 # tools.js            | 100.00 |   100.00 |  100.00 | 
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# all files           |  91.80 |    64.79 |  100.00 |
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# all files           |  62.59 |    61.40 |   95.08 |
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # end of coverage report
 
 > claude-flow-gui@0.0.0 coverage
@@ -94,39 +122,56 @@ ok 9 - POST /tools/call logs execution
  RUN  v3.2.4 /workspace/flowUI/frontend
       Coverage enabled with v8
 
+stdout | WebSocketService.integration.test.ts
+[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
 
- ✓ WebSocketService.test.ts (1 test) 23ms
- ✓ components/FlowEditor.test.tsx (1 test) 75ms
- ✓ components/views/DashboardView.test.tsx (1 test) 44ms
+stdout | WebSocketService.integration.test.ts
+Server listening on port 0
 
- Test Files  3 passed (3)
-      Tests  3 passed (3)
-   Start at  01:22:50
-   Duration  1.72s (transform 190ms, setup 0ms, collect 661ms, tests 142ms, environment 1.23s, prepare 224ms)
+ ✓ WebSocketService.integration.test.ts (3 tests) 1529ms
+   ✓ WebSocketService integration > receives hive log events  325ms
+ ✓ components/views/RegisterView.test.tsx (1 test) 268ms
+ ✓ components/views/LoginView.test.tsx (1 test) 278ms
+ ✓ components/views/WorkflowsView.test.tsx (2 tests) 643ms
+   ✓ WorkflowsView > renders export button  365ms
+ ✓ components/FlowEditor.test.tsx (1 test) 185ms
+ ✓ components/ServerStatus.test.tsx (1 test) 97ms
+ ✓ components/views/MemoryView.test.tsx (1 test) 239ms
+ ✓ components/views/DashboardView.test.tsx (1 test) 89ms
+ ✓ components/views/AdminView.test.tsx (1 test) 71ms
+ ✓ WebSocketService.test.ts (3 tests) 14ms
+
+ Test Files  10 passed (10)
+      Tests  15 passed (15)
+   Start at  13:34:36
+   Duration  10.62s (transform 1.29s, setup 0ms, collect 5.51s, tests 3.41s, environment 12.14s, prepare 2.70s)
 
  % Coverage report from v8
 -------------------|---------|----------|---------|---------|-------------------
 File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------|---------|----------|---------|---------|-------------------
-All files          |    6.58 |    60.27 |   35.78 |    6.58 |                   
- frontend          |    3.33 |    73.33 |      75 |    3.33 |                   
-  App.tsx          |       0 |      100 |     100 |       0 | 3-1066            
-  ...ketService.ts |   78.84 |    72.72 |      80 |   78.84 | ...44,50-52,57-61 
+All files          |   18.42 |    76.47 |   41.97 |   18.42 |                   
+ frontend          |    6.24 |     77.5 |   91.66 |    6.24 |                   
+  App.tsx          |       0 |      100 |     100 |       0 | 3-1105            
+  ...ketService.ts |   90.62 |    77.77 |     100 |   90.62 | ...79,112-114,116 
   constants.ts     |       0 |        0 |       0 |       0 | 1-477             
-  index.tsx        |       0 |      100 |     100 |       0 | 2-17              
+  index.tsx        |       0 |      100 |     100 |       0 | 2-19              
   types.ts         |     100 |      100 |     100 |     100 |                   
- ...end/components |   13.91 |       65 |   21.15 |   13.91 |                   
+ ...end/components |   17.93 |    82.35 |   29.62 |   17.93 |                   
   Assistant.tsx    |       0 |        0 |       0 |       0 | 1-262             
   ...ndPalette.tsx |       0 |      100 |     100 |       0 | 2-111             
-  FlowEditor.tsx   |     100 |     62.5 |     100 |     100 | 18-19,30          
-  Header.tsx       |       0 |      100 |     100 |       0 | 3-42              
+  FlowEditor.tsx   |     100 |    91.66 |     100 |     100 | 30                
+  Header.tsx       |       0 |      100 |     100 |       0 | 3-44              
   ...ueryModal.tsx |       0 |        0 |       0 |       0 | 1-84              
-  Icons.tsx        |   23.66 |      100 |     2.7 |   23.66 | ...42-244,248-250 
-  Sidebar.tsx      |       0 |      100 |     100 |       0 | 5-158             
+  Icons.tsx        |   35.26 |      100 |   13.15 |   35.26 | ...48-250,254-256 
+  ServerStatus.tsx |     100 |    83.33 |     100 |     100 | 14                
+  Sidebar.tsx      |       0 |      100 |     100 |       0 | 5-164             
   Toast.tsx        |       0 |      100 |     100 |       0 | 2-74              
   UI.tsx           |   40.74 |       60 |      50 |   40.74 | 51-66,69-72,81-96 
- ...mponents/views |    6.19 |    54.05 |      50 |    6.19 |                   
+ ...mponents/views |   22.56 |    75.78 |   41.17 |   22.56 |                   
   ...pmentView.tsx |       0 |        0 |       0 |       0 | 1-206             
+  AdminView.tsx    |     100 |      100 |     100 |     100 |                   
   ApiKeysView.tsx  |       0 |      100 |     100 |       0 | 2-114             
   ...tingsView.tsx |       0 |        0 |       0 |       0 | 1-149             
   DAAView.tsx      |       0 |      100 |     100 |       0 | 5-424             
@@ -134,15 +179,18 @@ All files          |    6.58 |    60.27 |   35.78 |    6.58 |
   GitHubView.tsx   |       0 |      100 |     100 |       0 | 2-178             
   ...jectModal.tsx |       0 |      100 |     100 |       0 | 2-242             
   ...tionsView.tsx |       0 |      100 |     100 |       0 | 4-90              
+  LoginView.tsx    |     100 |      100 |     100 |     100 |                   
   MCPToolsView.tsx |       0 |      100 |     100 |       0 | 2-52              
-  MemoryView.tsx   |       0 |      100 |     100 |       0 | 2-319             
-  NeuralView.tsx   |       0 |      100 |     100 |       0 | 2-213             
+  MemoryView.tsx   |   92.55 |     87.5 |   38.09 |   92.55 | ...05,275,289-291 
+  NeuralView.tsx   |       0 |      100 |     100 |       0 | 2-235             
   NexusView.tsx    |       0 |        0 |       0 |       0 | 1-276             
   ...tSelector.tsx |       0 |      100 |     100 |       0 | 2-113             
+  RegisterView.tsx |     100 |      100 |     100 |     100 |                   
   SettingsView.tsx |       0 |      100 |     100 |       0 | 2-121             
   SystemView.tsx   |       0 |      100 |     100 |       0 | 4-104             
-  ...flowsView.tsx |       0 |      100 |     100 |       0 | 4-213             
+  ...flowsView.tsx |    48.9 |    85.71 |    9.09 |    48.9 | ...09,225-229,258 
   ...spaceView.tsx |       0 |      100 |     100 |       0 | 2-124             
- frontend/hooks    |       0 |        0 |       0 |       0 |                   
+ frontend/hooks    |   81.18 |    66.66 |   54.54 |   81.18 |                   
+  useAuth.tsx      |   89.13 |    70.58 |      60 |   89.13 | ...,77,97,101-104 
   useToolList.ts   |       0 |        0 |       0 |       0 | 1-13              
 -------------------|---------|----------|---------|---------|-------------------

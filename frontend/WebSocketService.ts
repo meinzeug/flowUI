@@ -24,7 +24,8 @@ class WebSocketService {
         } else {
             const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
             const host = window.location.host;
-            this.url = `${protocol}://${host}/api`;
+            // Use trailing slash so NGINX location /api/ matches
+            this.url = `${protocol}://${host}/api/`;
         }
         
         this.connect();

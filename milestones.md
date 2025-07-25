@@ -162,3 +162,12 @@ The following sprints track short term progress inside the larger milestones.
 - [x] **Tooling:** CLI zum Exportieren und Löschen von Hive-Logs. (@backend-agent)
 - [x] **Test:** Unit-Tests für wsConnections. (@qa-agent)
 - [x] **Doc:** Produktionsdeploy-Anleitung im README. (@doku-agent)
+
+### Sprint Aug-22-2025
+*Start:* 2025-08-22  \
+*End:* 2025-08-24  \
+*Lead:* Codex Team
+- [x] **Feature:** REST-Endpunkte f\u00fcr Projekte implementiert. (@backend-agent)
+- [ ] **Feature:** Workflow-Ausf\u00fchrungs-API mit Queue. (@backend-agent)
+- [ ] **Bugfix:** Hive-Log-API Pagination. (@backend-agent)
+- [ ] **Doc:** API-Dokumentation erg\u00e4nzt. (@doku-agent)

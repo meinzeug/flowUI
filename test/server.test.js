@@ -256,3 +256,47 @@ test('WebSocket connection rejects invalid token', async () => {
   await new Promise(res => ws.on('error', res));
   await new Promise(r => server.close(r));
 });
+
+test('POST /api/projects creates project', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'proj', email: 'p@p.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+  const res = await fetch(`http://localhost:${port}/api/projects`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ name: 'Project A', description: 'test' })
+  });
+  const data = await res.json();
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.name, 'Project A');
+  await new Promise(r => server.close(r));
+});
+
+test('GET /api/projects lists projects', async () => {
+  const server = await start();
+  const port = server.address().port;
+  const reg = await fetch(`http://localhost:${port}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'listp', email: 'l@p.com', password: 'p' })
+  });
+  const { token } = await reg.json();
+  await fetch(`http://localhost:${port}/api/projects`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ name: 'Proj1' })
+  });
+  const res = await fetch(`http://localhost:${port}/api/projects`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  assert.ok(Array.isArray(data));
+  assert.strictEqual(data.length, 1);
+  assert.strictEqual(data[0].name, 'Proj1');
+  await new Promise(r => server.close(r));
+});

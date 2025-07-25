@@ -75,11 +75,24 @@ create_backup() {
   $SUDO bash -c "git archive --format=tar HEAD | gzip > \"$BACKUP_FILE\""
 }
 
-create_nginx_conf() {
+update_nginx_conf() {
   local conf="$APP_DIR/nginx/default.conf"
-  if [ ! -f "$conf" ]; then
-    info "Creating default NGINX configuration..."
-    $SUDO cp "$APP_DIR/nginx/default.conf.template" "$conf"
+  local tmpl="$APP_DIR/nginx/default.conf.template"
+  local config="$APP_DIR/install.json"
+  local domain=""
+
+  if [ -f "$config" ]; then
+    domain=$(grep -oP '"domain"\s*:\s*"\K[^"]+' "$config" || true)
+  fi
+
+  if [ -n "$domain" ]; then
+    info "Updating NGINX configuration for $domain"
+    $SUDO sed "s/DOMAIN_PLACEHOLDER/$domain/g" "$tmpl" | $SUDO tee "$conf" >/dev/null
+  else
+    if [ ! -f "$conf" ]; then
+      info "Creating default NGINX configuration..."
+      $SUDO cp "$tmpl" "$conf"
+    fi
   fi
 }
 
@@ -107,7 +120,7 @@ if [ "${REMOVE_HTTPS_PORT:-}" = "1" ]; then
   $SUDO sed -i '/"443:443"/d' docker-compose.yml
 fi
 
-create_nginx_conf
+update_nginx_conf
 
 info "Rebuilding containers..."
 $SUDO docker compose down

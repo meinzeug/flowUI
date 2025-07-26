@@ -1,8 +1,5 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import { AuthProvider } from './hooks/useAuth';
 import DebugApiView from './components/views/DebugApiView';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
@@ -17,15 +14,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/debug-api" element={<DebugApiView />} />
-        <Route
-          path="*"
-          element={
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-          }
-        />
+        <Route path="/" element={<DebugApiView />} />
+        {/* Optional: andere Routen blockieren oder anzeigen */}
+        {/* <Route path="*" element={<Navigate to="/" />} /> */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

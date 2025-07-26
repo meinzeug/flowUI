@@ -46,11 +46,11 @@ This document outlines the roadmap for building **Flow Weaver**, a web-based GUI
 *Target:* 2025-04-01  \
 *Lead:* Eve
 **Goal:** Extend the application with real-time monitoring and advanced visualization.
-- [ ] Live monitoring of hive activity via WebSocket events.
+- [x] Live monitoring of hive activity via WebSocket events.
  - [x] Dashboard for neural network training metrics.
 - [x] Memory search interface with query suggestions.
 - [ ] Visualization of agent resource usage on canvas.
-- [ ] Export/import workflow graphs as JSON templates.
+- [x] Export/import workflow graphs as JSON templates.
 - [x] Export/import workflow graphs as JSON templates.
 
 ## Milestone 6 - CI/CD and Deployment

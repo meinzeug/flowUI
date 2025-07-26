@@ -8,6 +8,7 @@ This repository contains a React/TypeScript frontend, a Node.js/Express backend 
 - Run backend and MCP tests via `JWT_SECRET=test npm test` at repo root.
 - Run frontend tests with `npm --prefix frontend test`.
 - Build frontend with `npm --prefix frontend run build`.
+- Build MCP with `npm --prefix mcp run build`.
 
 ## Tasks
 1. Keep this file and module specific `AGENTS.md` files updated.

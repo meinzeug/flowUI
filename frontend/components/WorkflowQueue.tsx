@@ -25,6 +25,17 @@ const WorkflowQueue: React.FC = () => {
 
   if (queue.length === 0) return null;
 
+  const colorForStatus = (status: string) => {
+    switch (status) {
+      case 'finished':
+        return 'bg-green-500';
+      case 'cancelled':
+        return 'bg-red-500';
+      default:
+        return 'bg-cyan-500';
+    }
+  };
+
   return (
     <Card>
       <h3 className="text-lg font-bold text-white mb-2">Running Workflows</h3>
@@ -34,6 +45,7 @@ const WorkflowQueue: React.FC = () => {
             <div className="flex justify-between text-sm text-slate-300">
               <span>{item.name}</span>
               <div className="flex items-center gap-2">
+                <span className="capitalize" data-testid="status-label">{item.status}</span>
                 <span>{Math.round(item.progress)}%</span>
                 {item.status === 'running' || item.status === 'queued' ? (
                   <button
@@ -48,7 +60,7 @@ const WorkflowQueue: React.FC = () => {
               </div>
             </div>
             <div className="bg-slate-700 rounded h-2 overflow-hidden">
-              <div className="bg-cyan-500 h-full" style={{ width: `${item.progress}%` }}></div>
+              <div className={`h-full ${colorForStatus(item.status)}`} style={{ width: `${item.progress}%` }}></div>
             </div>
           </div>
         ))}

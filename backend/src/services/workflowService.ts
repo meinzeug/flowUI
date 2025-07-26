@@ -28,8 +28,28 @@ export interface QueueItemWithWorkflow extends QueueItem {
   name: string;
 }
 
+export interface QueueItemDetail extends QueueItemWithWorkflow {
+  user_id: number;
+}
+
 export async function getQueueItem(id: number): Promise<QueueItem | undefined> {
   return db('workflow_queue').where({ id }).first();
+}
+
+export async function getQueueItemDetail(id: number): Promise<QueueItemDetail | undefined> {
+  return db('workflow_queue')
+    .join('workflows', 'workflow_queue.workflow_id', 'workflows.id')
+    .where('workflow_queue.id', id)
+    .select(
+      'workflow_queue.id',
+      'workflow_queue.workflow_id',
+      'workflow_queue.status',
+      'workflow_queue.progress',
+      'workflow_queue.created_at',
+      'workflows.name',
+      'workflows.user_id'
+    )
+    .first();
 }
 
 export async function markCancelled(id: number): Promise<void> {
@@ -119,5 +139,6 @@ export default {
   markRun,
   listQueue,
   getQueueItem,
+  getQueueItemDetail,
   markCancelled
 };

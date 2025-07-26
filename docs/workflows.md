@@ -31,6 +31,14 @@ Queues a workflow for execution.
 ## GET /api/workflows/queue
 Returns the current workflow queue for the authenticated user.
 
+## GET /api/workflows/queue/:id
+Returns details for a single queue item.
+
+### Response
+```json
+{ "id": 1, "workflow_id": "uuid", "name": "Workflow", "status": "queued", "progress": 0, "created_at": "2025-09-10T12:00:00Z" }
+```
+
 ## POST /api/workflows/queue/:id/cancel
 Cancels a queued or running workflow job.
 

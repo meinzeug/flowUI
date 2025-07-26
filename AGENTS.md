@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 15)
-1. Endpoint für Details einzelner Workflow-Queue-Einträge implementieren und Tests erweitern.
-2. Frontend-Queue um Statusanzeige "cancelled" mit entsprechender Farbmarkierung ergänzen.
-3. Dokumentation in docs/workflows.md und frontend/docs.md um den neuen Detail-Endpunkt und UI-Hinweise erweitern.
+## Nächste Aufgaben (Sprint 16)
+1. Workflow-Queue um Log-Ausgabe erweitern: Backend-Endpunkt `/api/workflows/queue/:id/logs` implementieren und testen.
+2. WebSocket-Benachrichtigungen für Workflow-Fortschritt und Abschluss ausbauen und im Frontend live anzeigen.
+3. Dokumentation der neuen Log-API und WebSocket-Events in `docs/workflows.md` und `frontend/docs.md` ergänzen.

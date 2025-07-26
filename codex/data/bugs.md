@@ -9,3 +9,4 @@
 - Migrations werden jetzt automatisch beim Start ausgeführt, Tabellen sind somit stets vorhanden.
 - Hive-Log-API lieferte immer nur die letzten 50 Einträge ohne Pagination. **(resolved)**
 - Database migrations were split across services causing startup failure. Unified directories fixed this.
+- Modal overlay background missing because Tailwind purge removed classes. Safelisted and added fallback CSS.

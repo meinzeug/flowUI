@@ -3,3 +3,8 @@
 2. WebSocket-Benachrichtigungen für Workflow-Fortschritt und Abschluss ausbauen und im Frontend live anzeigen.
 3. Dokumentation der neuen Log-API und WebSocket-Events in `docs/workflows.md` und `frontend/docs.md` ergänzen.
 4. Fehlende MCP-Migrationen rekonstruiert und README ergänzt. Container startet nun ohne Fehler.
+
+
+### Authentifizierungs-Update
+Der globale `fetch`-Wrapper liest den JWT nun bei jedem Aufruf aus
+`localStorage` und fügt ihn automatisch als `Authorization`-Header ein.

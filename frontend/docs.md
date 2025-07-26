@@ -377,7 +377,9 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 - `POST /api/auth/register` – Benutzer registrieren. Benötigt `username`, `email` und `password`. Gibt bei Erfolg `{ token }` zurück.
 - `POST /api/auth/login` – Benutzer anmelden. Das Feld `username` akzeptiert auch eine E‑Mail-Adresse. Rückgabe `{ token }`.
 - `GET /api/profile` – Profil des angemeldeten Benutzers abrufen. `Authorization: Bearer <token>` erforderlich.
-  Der Token wird im Frontend automatisch in `localStorage` gespeichert und bei nachfolgenden Requests als `Authorization`-Header mitsendet.
+  Der Token wird im Frontend in `localStorage` gespeichert. Eine globale `fetch`-
+  Erweiterung liest den gespeicherten Wert bei jedem Request aus und sendet ihn
+  als `Authorization`-Header mit.
 
 ### Workflow Management
 - `GET /api/workflows` – Liste aller Workflows.

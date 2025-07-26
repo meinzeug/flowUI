@@ -405,3 +405,8 @@ Der Status `cancelled` wird dabei rot hervorgehoben.
 ### Tools
 - `GET /api/tools/list` – Liste aller verfügbaren Tools
 
+
+### Debug API
+- **Route:** `/debug-api`
+- **Beschreibung:** Manuelle Testseite, um beliebige API-Requests abzusetzen. Eingabe von URL, HTTP-Methode, Headern und Body möglich. Nach dem Absenden werden Request- und Response-Daten inklusive Statuscode und Headern angezeigt. Nur für Debug-Zwecke verwenden.
+- **Komponente:** `DebugApiView` unter `frontend/components/views/DebugApiView.tsx`.

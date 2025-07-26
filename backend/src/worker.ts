@@ -8,7 +8,7 @@ const MCP_URL = process.env.MCP_WS_URL || 'ws://mcp:3008';
 const JWT_SECRET = process.env.JWT_SECRET || 'devsecret';
 
 async function executeWorkflow(id: string) {
-  const wf = workflowService.get(id);
+  const wf = await workflowService.get(id);
   if (!wf) return;
   const ws = new WebSocket(MCP_URL);
   await new Promise((resolve, reject) => {

@@ -144,7 +144,14 @@ const App: React.FC = () => {
     return showRegister ? <RegisterView onSwitch={() => setShowRegister(false)} /> : <LoginView onSwitch={() => setShowRegister(true)} />;
   }
 
-  const [projects, setProjects] = useState<Project[]>(MOCK_PROJECTS);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then(res => res.json())
+      .then(setProjects)
+      .catch(() => setProjects([]));
+  }, []);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
@@ -242,28 +249,20 @@ const App: React.FC = () => {
     addToast(`Switched to project: ${project?.name}`, 'info');
   };
 
-  const handleCreateProject = (name: string, description: string, template: Project['template']) => {
-    const newProjectBase: Omit<Project, 'id' | 'name' | 'description' | 'template' | 'assistantSettings'> = {
-        hives: [],
-        files: [{ id: 'file-init', name: 'src', type: 'directory', children: [] }],
-        memory: [],
-        settings: MOCK_PROJECTS[0].settings,
-        roadmap: [],
-        daaAgents: [],
-        workflows: [],
-        systemServices: MOCK_PROJECTS[0].systemServices,
-        integrations: [],
-        apiKeys: MOCK_PROJECTS[0].apiKeys,
-        consensusTopics: [],
-    };
-
-    let newProject: Project = {
-        ...newProjectBase,
-        id: `proj-${name.toLowerCase().replace(/\s+/g, '-')}`,
-        name,
-        description,
-        template,
-        assistantSettings: MOCK_PROJECTS[0].assistantSettings,
+  const handleCreateProject = async (name: string, description: string, template: Project['template']) => {
+    const res = await fetch('/api/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description })
+    });
+    if (!res.ok) return;
+    const created = await res.json();
+    const newProject: Project = {
+      ...MOCK_PROJECTS[0],
+      id: `proj-${created.id}`,
+      name: created.name,
+      description: created.description,
+      template,
     };
     
     if (template === 'Web App') {

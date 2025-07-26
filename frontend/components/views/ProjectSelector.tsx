@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Project } from '../../types';
 import { Button } from '../UI';
 import { LogoIcon, PlusIcon } from '../Icons';
+import { useAuth } from '../../hooks/useAuth';
 import ProjectList from '../ProjectList';
 import ProjectCreateModal from '../ProjectCreateModal';
 
@@ -22,12 +23,24 @@ interface ProjectSelectorProps {
 
 const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, onSelectProject, onCreateProject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
   const handleCreate = (name: string, desc: string, template: TemplateType) => {
     onCreateProject(name, desc, template);
   };
 
   return (
     <div className="min-h-screen bg-[#050608] flex flex-col items-center justify-center p-8 text-white">
+      <div className="absolute top-4 right-4 text-sm">
+        <button onClick={() => setMenuOpen(v => !v)} className="px-3 py-2 bg-slate-800 rounded-lg border border-slate-700">
+          {user?.username}
+        </button>
+        {menuOpen && (
+          <div className="mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-xl">
+            <button className="block px-4 py-2 w-full text-left hover:bg-slate-700" onClick={logout}>Logout</button>
+          </div>
+        )}
+      </div>
       <div className="text-center mb-12 animate-fade-in-up">
         <LogoIcon className="h-24 w-24 mx-auto mb-4" />
         <h1 className="text-5xl font-black">Flow Weaver</h1>

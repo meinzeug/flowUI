@@ -7,3 +7,4 @@
  
 - Workflow queue worker implemented using WebSocket to MCP.
 Added secure /profile endpoint using JWT middleware to provide user info.
+- Sprint9: migrations for users/projects/workflows; workflows persisted

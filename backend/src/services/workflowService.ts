@@ -39,9 +39,10 @@ export interface WorkflowLog {
   created_at: string;
 }
 
-// Utility to safely parse JSON steps
-function parseSteps(raw: string | null | undefined): WorkflowStep[] {
-  if (!raw || raw.trim() === '') return [];
+// Utility to safely parse JSON steps or accept already parsed arrays
+function parseSteps(raw: unknown): WorkflowStep[] {
+  if (Array.isArray(raw)) return raw;
+  if (typeof raw !== 'string' || raw.trim() === '') return [];
   try {
     return JSON.parse(raw);
   } catch {

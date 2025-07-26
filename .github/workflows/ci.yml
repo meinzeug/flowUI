@@ -1,6 +1,5 @@
-
-
 name: CI
+
 on:
   push:
   pull_request:
@@ -11,50 +10,53 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: |
             backend/package-lock.json
             frontend/package-lock.json
-          - name: Regenerate frontend lockfile
-        working-directory: frontend
-        run: npm install --package-lock-only
+
+      # Regenerate lockfile for backend to ensure sync with package.json
       - name: Regenerate backend lockfile
         working-directory: backend
         run: npm install --package-lock-only
-      - name: Regenerate mcp lockfile
-        working-directory: mcp
-        run: npm install --package-lock-only
 
       - name: Install backend deps
-        run: |
-          cd backend
-          npm ci
+        working-directory: backend
+        run: npm ci
+
       - name: Run backend tests
-        run: |
-          cd backend
-          npm test
+        working-directory: backend
+        run: npm test
+
       - name: Backend coverage
-        run: |
-          cd backend
-          npm run coverage > ../coverage_report.txt
+        working-directory: backend
+        run: npm run coverage > ../coverage_report.txt
+
+      # Regenerate lockfile for frontend to ensure sync with package.json
+      - name: Regenerate frontend lockfile
+        working-directory: frontend
+        run: npm install --package-lock-only
+
       - name: Install frontend deps
-        run: |
-          cd frontend
-          npm ci
+        working-directory: frontend
+        run: npm ci
+
       - name: Run frontend tests
-        run: |
-          cd frontend
-          npm test
+        working-directory: frontend
+        run: npm test
+
       - name: Frontend coverage
-        run: |
-          cd frontend
-          npm run coverage >> ../coverage_report.txt
+        working-directory: frontend
+        run: npm run coverage >> ../coverage_report.txt
+
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:

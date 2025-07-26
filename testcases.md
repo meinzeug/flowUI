@@ -51,3 +51,6 @@
 11. **Workflow Queue Detail**
    - `GET /api/workflows/queue/:id` mit Token
    - Erwartet Details des Queue-Eintrags
+12. **Workflow Queue Logs**
+   - `GET /api/workflows/queue/:id/logs` mit Token
+   - Erwartet Liste der Logeinträge

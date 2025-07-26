@@ -213,3 +213,67 @@ test('queue item detail endpoint', async () => {
   await once(server, 'close');
   await db.destroy();
 });
+
+test('queue logs endpoint', async () => {
+  const mcp = new WebSocketServer({ port: 0 });
+  const mcpPort = (mcp.address() as any).port;
+  mcp.on('connection', ws => {
+    ws.on('message', msg => {
+      const data = JSON.parse(msg.toString());
+      if (data.event === 'tools/batch') {
+        ws.send(JSON.stringify({ event: 'batchResult', result: 'hello\nworld' }));
+      }
+    });
+  });
+  process.env.MCP_WS_URL = `ws://localhost:${mcpPort}`;
+
+  const server = await startServer();
+  const port = (server.address() as any).port;
+  const token = await register(port);
+
+  const create = await fetch(`http://localhost:${port}/workflows`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ name: 'wf', description: '', steps: [{ id: 's', name: 'cmd', command: 'echo' }] })
+  });
+  const wf = await create.json();
+
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
+  await once(ws, 'open');
+  ws.send(JSON.stringify({ event: 'subscribe', channel: 'workflow' }));
+  await once(ws, 'message');
+
+  const done = new Promise(resolve => {
+    ws.on('message', data => {
+      const msg = JSON.parse(data.toString());
+      if (msg.event === 'workflowProgress' && msg.payload.status === 'finished') resolve(null);
+    });
+  });
+
+  await fetch(`http://localhost:${port}/workflows/${wf.id}/execute`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  await done;
+
+  const qres = await fetch(`http://localhost:${port}/workflows/queue`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const queue = await qres.json();
+  const queueId = queue[0].id;
+
+  const logsRes = await fetch(`http://localhost:${port}/workflows/queue/${queueId}/logs`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const logs = await logsRes.json();
+  assert.strictEqual(logs.length, 2);
+  assert.strictEqual(logs[0].message, 'hello');
+
+  ws.close();
+  await once(ws, 'close');
+  server.close();
+  await once(server, 'close');
+  mcp.close();
+  await db.destroy();
+});

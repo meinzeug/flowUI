@@ -391,9 +391,14 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 - `GET /api/workflows/queue` – Status der Workflow-Queue abrufen.
 - `GET /api/workflows/queue/:id` – Details eines Queue-Eintrags abrufen.
 - `POST /api/workflows/queue/:id/cancel` – Laufenden oder geplanten Workflow abbrechen.
+- `GET /api/workflows/queue/:id/logs` – Log-Ausgabe eines Queue-Eintrags abrufen.
 
 Im Queue-Panel werden die Einträge mit einer farbigen Fortschrittsleiste angezeigt.
 Der Status `cancelled` wird dabei rot hervorgehoben.
+
+Über den WebSocket-Kanal `workflow` werden zwei Event-Typen gesendet:
+- `workflowProgress` – enthält `{ id, queueId, status, progress }`.
+- `workflowLog` – sendet `{ queueId, message }` für jede neue Logzeile.
 
 ### Projektverwaltung
 - `GET /api/projects` – Liste der Projekte des angemeldeten Nutzers

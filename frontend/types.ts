@@ -172,6 +172,13 @@ export interface WorkflowQueueItem {
     created_at: string;
 }
 
+export interface WorkflowLogEntry {
+    id: number;
+    queue_id: number;
+    message: string;
+    created_at: string;
+}
+
 // Command Palette
 export type CommandType = 'navigation' | 'action' | 'external';
 export interface Command {

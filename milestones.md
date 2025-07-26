@@ -212,3 +212,5 @@ Implemented workflow queue endpoint with frontend progress view and added integr
 Implemented workflow cancellation endpoint with frontend stop button and documented workflow events.
 ### Sprint 15 Summary
 Implemented queue detail endpoint with tests and updated WorkflowQueue UI with cancelled status.
+### Sprint 16 Summary
+Implemented workflow log endpoint with WebSocket updates and frontend viewer.

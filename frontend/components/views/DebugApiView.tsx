@@ -45,7 +45,7 @@ const DebugApiView: React.FC = () => {
 
   return (
     <div className="p-4 space-y-4 animate-fade-in-up">
-      <h1 className="text-2xl font-bold text-white">API Debugger <span className="text-sm text-red-500">nur für Testzwecke!</span></h1>
+      <h1 className="text-2xl font-bold text-white">API Debugger <span className="text-sm text-red-500">Nur für Entwicklungs- und Testzwecke</span></h1>
       <div className="flex flex-col gap-2 max-w-xl">
         <input className="p-2 rounded bg-slate-800 border border-slate-700" value={url} onChange={e => setUrl(e.target.value)} placeholder="URL" />
         <select className="p-2 rounded bg-slate-800 border border-slate-700" value={method} onChange={e => setMethod(e.target.value)}>

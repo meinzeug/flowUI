@@ -9,9 +9,10 @@ export interface AuthRequest extends Request {
 }
 
 export function verifyToken(req: AuthRequest, res: Response, next: NextFunction) {
-  const auth = req.headers['authorization'];
-  if (!auth) return res.status(401).json({ error: 'missing_auth' });
-  const token = auth.split(' ')[1];
+  const authHeader = (req.headers['authorization'] || req.headers['Authorization']) as string | undefined;
+  console.log('Authorization header:', authHeader);
+  if (!authHeader) return res.status(401).json({ error: 'missing_auth' });
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
   if (!token) return res.status(401).json({ error: 'missing_auth' });
   try {
     const payload = jwt.verify(token, JWT_SECRET) as any;

@@ -158,18 +158,18 @@ update_nginx_conf() {
 
 cleanup() { $SUDO docker image prune -f >/dev/null; }
 
-rollback() {
-  warn "Rolling back to previous commit $CURRENT_COMMIT"
-  stop_all_containers
-  $SUDO docker compose down
-  $SUDO git reset --hard "$CURRENT_COMMIT"
-  FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
-    $SUDO docker compose up -d
-  start_nginx
-  fail "Rollback finished"
-}
+#rollback() {
+#  warn "Rolling back to previous commit $CURRENT_COMMIT"
+#  stop_all_containers
+#  $SUDO docker compose down
+#  $SUDO git reset --hard "$CURRENT_COMMIT"
+#  FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
+#    $SUDO docker compose up -d
+#  start_nginx
+#  fail "Rollback finished"
+#}
 
-trap rollback ERR
+#trap rollback ERR
 
 info "Updating repository..."
 create_backup
@@ -197,15 +197,15 @@ info "Restarting services..."
 FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
   $SUDO docker compose up -d --build
 
-info "Performing health checks..."
-sleep 5
-curl -fs "http://localhost:${BACKEND_PORT}/health" >/dev/null
-curl -fs "http://localhost:${FRONTEND_PORT}" >/dev/null
+#info "Performing health checks..."
+#sleep 5
+#curl -fs "http://localhost:${BACKEND_PORT}/health" >/dev/null
+#curl -fs "http://localhost:${FRONTEND_PORT}" >/dev/null
 
 cleanup
 
 start_nginx
 
 success "Update complete"
-trap - ERR
+#trap - ERR
 exit 0

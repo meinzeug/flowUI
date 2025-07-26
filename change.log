@@ -1,3 +1,5 @@
+
+2025-09-09: Added workflow queue endpoint, frontend queue view with progress and migration fixes.
 v0.2.0-alpha
 2025-09-07: Completed project API CRUD, added frontend delete UI and login/register error handling. Optimized backend tests with shared DB module.
 2025-09-06: Added database migrations, project endpoints and workflow persistence.

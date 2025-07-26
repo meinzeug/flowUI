@@ -385,6 +385,7 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 - `PUT /api/workflows/:id` – Workflow aktualisieren.
 - `DELETE /api/workflows/:id` – Workflow löschen.
 - `POST /api/workflows/:id/execute` – Workflow zur Ausführung in die Queue stellen.
+- `GET /api/workflows/queue` – Status der Workflow-Queue abrufen.
 
 ### Projektverwaltung
 - `GET /api/projects` – Liste der Projekte des angemeldeten Nutzers

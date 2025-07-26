@@ -4,7 +4,6 @@ exports.up = function(knex) {
     table.string('username').notNullable().unique();
     table.string('email').notNullable().unique();
     table.string('password_hash').notNullable();
-    table.string('role').notNullable().defaultTo('user');
     table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };

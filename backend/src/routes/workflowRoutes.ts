@@ -18,6 +18,12 @@ router.post('/', verifyToken, async (req: AuthRequest, res) => {
   res.status(201).json(wf);
 });
 
+router.get('/queue', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const queue = await workflowService.listQueue(req.userId);
+  res.json(queue);
+});
+
 router.get('/:id', verifyToken, async (req: AuthRequest, res) => {
   if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
   const wf = await workflowService.get(req.params.id);

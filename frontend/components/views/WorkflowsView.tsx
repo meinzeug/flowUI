@@ -6,6 +6,7 @@ import { Project, Workflow, ActivityLogEntry, WorkflowStep, HoDQueryContext } fr
 import { Card, Button, Modal } from '../UI';
 import { PlusIcon, TerminalIcon, XIcon, HeadOfDevIcon } from '../Icons';
 import FlowEditor, { GraphData } from '../FlowEditor';
+import WorkflowQueue from '../WorkflowQueue';
 
 const CreateWorkflowModal: React.FC<{
     isOpen: boolean;
@@ -220,6 +221,8 @@ const WorkflowsView: React.FC<{
                     Create Workflow
                 </Button>
             </div>
+
+            <WorkflowQueue />
             
             {project.workflows.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -24,6 +24,10 @@ export interface QueueItem {
   created_at: string;
 }
 
+export interface QueueItemWithWorkflow extends QueueItem {
+  name: string;
+}
+
 export async function list(userId: number): Promise<Workflow[]> {
   return db('workflows').where({ user_id: userId }).orderBy('created_at', 'desc');
 }
@@ -79,4 +83,19 @@ export async function markRun(id: string): Promise<void> {
   await db('workflows').where({ id }).update({ last_run: db.fn.now() });
 }
 
-export default { list, get, create, update, remove, enqueue, dequeue, markProgress, markFinished, markRun };
+export async function listQueue(userId: number): Promise<QueueItemWithWorkflow[]> {
+  return db('workflow_queue')
+    .join('workflows', 'workflow_queue.workflow_id', 'workflows.id')
+    .where('workflows.user_id', userId)
+    .orderBy('workflow_queue.created_at')
+    .select(
+      'workflow_queue.id',
+      'workflow_queue.workflow_id',
+      'workflow_queue.status',
+      'workflow_queue.progress',
+      'workflow_queue.created_at',
+      'workflows.name'
+    );
+}
+
+export default { list, get, create, update, remove, enqueue, dequeue, markProgress, markFinished, markRun, listQueue };

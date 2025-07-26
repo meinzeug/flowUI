@@ -205,3 +205,6 @@ Added migrations with persistent workflows, project API and frontend integration
 
 ### Sprint 12 Summary
 Fixed missing workflow_queue table by running migrations automatically on backend startup and in tests.
+
+### Sprint 13 Summary
+Implemented workflow queue endpoint with frontend progress view and added integration tests.

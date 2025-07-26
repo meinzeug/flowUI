@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 13)
-1. Endpoint `/workflows/queue` implementieren und Queue-Status zurückgeben.
-2. Frontend-Ansicht zum Anzeigen laufender Workflows mit Fortschrittsbalken.
-3. Integrationstest für Workflow-Ausführung inklusive WebSocket-Ereignisse.
+## Nächste Aufgaben (Sprint 14)
+1. Endpoint zum Abbrechen laufender Workflow-Jobs implementieren und Queue-Einträge aktualisieren.
+2. Frontend-Button in der Workflow-Queue zum Stoppen einzelner Workflows hinzufügen.
+3. Dokumentation der Workflow-Ereignisse in flowdoc.md erweitern und API-Spezifikation anpassen.

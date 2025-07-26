@@ -5,8 +5,7 @@
 
 ### Debug-Tools
 Die Route `/debug-api` bietet eine einfache Testseite für API-Requests.
-Sie ist **nicht geschützt** und kann ohne Login aufgerufen werden.
-Nur für Entwicklungs- und Testzwecke nutzen!
+Nur für Entwicklungszwecke nutzen!
 
 ### Authentifizierungs-Update
 Der globale `fetch`-Wrapper liest den JWT nun bei jedem Aufruf aus

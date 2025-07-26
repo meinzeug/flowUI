@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import { createServer } from 'http';
 import healthRoutes from './routes/healthRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
@@ -10,6 +11,7 @@ import workflowRoutes from './routes/workflowRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import mcpProxy from './routes/mcpProxy.js';
 import { startWorker } from './worker.js';
+import { initWs } from './ws.js';
 
 dotenv.config();
 
@@ -29,8 +31,10 @@ app.use('/mcp', mcpProxy);
 const PORT = Number(process.env.BACKEND_PORT) || 4000;
 
 if (process.env.NODE_ENV !== 'test') {
+  const server = createServer(app);
+  initWs(server);
   startWorker();
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Backend listening on ${PORT}`);
   });
 }

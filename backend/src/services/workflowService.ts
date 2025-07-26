@@ -16,7 +16,13 @@ export interface Workflow {
   lastRun: string | null;
 }
 
-const queue: string[] = [];
+export interface QueueItem {
+  id: number;
+  workflow_id: string;
+  status: string;
+  progress: number;
+  created_at: string;
+}
 
 export async function list(userId: number): Promise<Workflow[]> {
   return db('workflows').where({ user_id: userId }).orderBy('created_at', 'desc');
@@ -42,17 +48,35 @@ export async function remove(id: string): Promise<boolean> {
   return count > 0;
 }
 
-export function enqueue(id: string): boolean {
-  queue.push(id);
-  return true;
+export async function enqueue(id: string): Promise<QueueItem> {
+  const [item] = await db('workflow_queue')
+    .insert({ workflow_id: id })
+    .returning('*');
+  return item as QueueItem;
 }
 
-export function dequeue(): string | undefined {
-  return queue.shift();
+export async function dequeue(): Promise<QueueItem | undefined> {
+  const item = await db('workflow_queue')
+    .where({ status: 'queued' })
+    .orderBy('created_at')
+    .first();
+  if (item) {
+    await db('workflow_queue').where({ id: item.id }).update({ status: 'running' });
+    return item as QueueItem;
+  }
+  return undefined;
+}
+
+export async function markProgress(id: number, progress: number): Promise<void> {
+  await db('workflow_queue').where({ id }).update({ progress });
+}
+
+export async function markFinished(id: number): Promise<void> {
+  await db('workflow_queue').where({ id }).update({ status: 'finished', progress: 100 });
 }
 
 export async function markRun(id: string): Promise<void> {
   await db('workflows').where({ id }).update({ last_run: db.fn.now() });
 }
 
-export default { list, get, create, update, remove, enqueue, dequeue, markRun };
+export default { list, get, create, update, remove, enqueue, dequeue, markProgress, markFinished, markRun };

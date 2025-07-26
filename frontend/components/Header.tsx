@@ -7,13 +7,15 @@ interface HeaderProps {
   projectName: string;
   onOpenCommandPalette: () => void;
   onOpenSettings: () => void;
+  onEditProject: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ projectName, onOpenCommandPalette, onOpenSettings }) => {
+const Header: React.FC<HeaderProps> = ({ projectName, onOpenCommandPalette, onOpenSettings, onEditProject }) => {
   return (
     <header className="flex-shrink-0 bg-slate-900/50 backdrop-blur-lg border-b border-slate-800 px-8 py-4 flex items-center justify-between">
-      <div>
+      <div className="flex items-center gap-3">
         <h2 className="text-2xl font-bold text-white">{projectName}</h2>
+        <button onClick={onEditProject} className="text-sm text-slate-400 hover:text-cyan-400">Edit</button>
       </div>
       <div className="flex items-center gap-4">
         <ServerStatus />

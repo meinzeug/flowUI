@@ -1,9 +1,11 @@
 import { Router } from 'express';
+import toolsService from '../services/toolsService.js';
 
 const router = Router();
 
-router.all('*', (_req, res) => {
-  res.status(501).json({ error: 'not_implemented' });
+router.get('/list', async (_req, res) => {
+  const list = await toolsService.list();
+  res.json(list);
 });
 
 export default router;

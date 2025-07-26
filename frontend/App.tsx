@@ -28,6 +28,7 @@ import { AgentIcon, TerminalIcon, ChevronDownIcon, DashboardIcon, WorkspaceIcon,
 import InitiateProjectModal from './components/views/InitiateProjectModal';
 import Assistant from './components/Assistant';
 import HoDQueryModal from './components/HoDQueryModal';
+import ProjectEditModal from './components/ProjectEditModal';
 import { wsService } from './WebSocketService';
 import { GoogleGenAI, Type } from "@google/genai";
 import LoginView from './components/views/LoginView';
@@ -157,6 +158,7 @@ const App: React.FC = () => {
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [isSpawnModalOpen, setIsSpawnModalOpen] = useState(false);
   const [isInitiateModalOpen, setIsInitiateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [isActivityLogOpen, setIsActivityLogOpen] = useState(true);
@@ -552,6 +554,20 @@ const App: React.FC = () => {
         setProjects(projects.map(p => p.id === updatedProject.id ? updatedProject : p));
         addLog('Assistant settings updated.', 'success', true);
     };
+
+  const handleUpdateProjectDetails = async (name: string, description: string) => {
+    if (!activeProject) return;
+    const id = Number(activeProject.id.replace('proj-', ''));
+    await fetch(`/api/projects/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description })
+    });
+    const updatedProject = { ...activeProject, name, description };
+    setActiveProject(updatedProject);
+    setProjects(projects.map(p => p.id === updatedProject.id ? updatedProject : p));
+    addLog('Project details updated.', 'success', true);
+  };
 
   const handleCreateWorkflow = (workflowData: Omit<Workflow, 'id' | 'lastRun'>) => {
     if (!activeProject) return;
@@ -1075,7 +1091,7 @@ const App: React.FC = () => {
     <div className="flex h-screen bg-[#050608] text-[#E0E0E0]">
       <Sidebar currentView={currentView} setCurrentView={setCurrentView} onExitProject={handleExitProject} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header projectName={activeProject.name} onOpenCommandPalette={() => setIsCommandPaletteOpen(true)} onOpenSettings={() => setCurrentView('assistant-settings')} />
+        <Header projectName={activeProject.name} onOpenCommandPalette={() => setIsCommandPaletteOpen(true)} onOpenSettings={() => setCurrentView('assistant-settings')} onEditProject={() => setIsEditModalOpen(true)} />
         <main className={`flex-1 p-8 overflow-y-auto transition-all duration-300 ${isActivityLogOpen ? 'mb-48' : 'mb-12'}`}>
           {renderView()}
         </main>
@@ -1100,13 +1116,19 @@ const App: React.FC = () => {
        <SpawnHiveModal isOpen={isSpawnModalOpen} onClose={() => setIsSpawnModalOpen(false)} onSpawn={handleSpawnHive} />
        <InitiateProjectModal isOpen={isInitiateModalOpen} onClose={() => setIsInitiateModalOpen(false)} onInitiate={handleInitiateAutonomousProject} addLog={addLog} />
        <CommandPalette isOpen={isCommandPaletteOpen} onClose={() => setIsCommandPaletteOpen(false)} commands={commands} />
-       <HoDQueryModal 
-        isOpen={isHodQueryModalOpen} 
-        onClose={() => setIsHodQueryModalOpen(false)} 
-        context={hodQueryContext} 
+      <HoDQueryModal
+        isOpen={isHodQueryModalOpen}
+        onClose={() => setIsHodQueryModalOpen(false)}
+        context={hodQueryContext}
         onQuery={handleProcessHodContextualQuery}
         response={hodQueryResponse}
         status={hodQueryStatus}
+      />
+      <ProjectEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        project={activeProject}
+        onSave={handleUpdateProjectDetails}
       />
     </div>
   );

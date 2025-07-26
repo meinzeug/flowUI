@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 11)
-1. Tools-API implementieren und im Frontend Tool-Liste per REST laden.
-2. Projektbearbeitung im UI ermöglichen (Name & Beschreibung ändern).
-3. Workflow-Queue persistieren und Fortschritt über WebSocket melden.
+## Nächste Aufgaben (Sprint 12)
+1. Frontend an WebSocket-"workflow" Kanal anbinden und Fortschritt visualisieren.
+2. Unit-Tests für Tools-API und Workflow-Queue implementieren.
+3. Dokumentation der neuen WebSocket-Events ergänzen und Deploy-Log aktualisieren.

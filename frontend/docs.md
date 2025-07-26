@@ -393,3 +393,6 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 - `PUT /api/projects/:id` – Projekt aktualisieren `{ name?, description? }`
 - `DELETE /api/projects/:id` – Projekt löschen
 
+### Tools
+- `GET /api/tools/list` – Liste aller verfügbaren Tools
+

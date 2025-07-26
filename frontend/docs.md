@@ -370,3 +370,14 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 - `lg`: 1024px
 - `xl`: 1280px
 - `2xl`: 1536px
+
+## 5. REST API Endpoints
+
+### Workflow Management
+- `GET /api/workflows` – Liste aller Workflows.
+- `POST /api/workflows` – Neuen Workflow anlegen. Body: `{ name, description, steps }`.
+- `GET /api/workflows/:id` – Details eines Workflows abrufen.
+- `PUT /api/workflows/:id` – Workflow aktualisieren.
+- `DELETE /api/workflows/:id` – Workflow löschen.
+- `POST /api/workflows/:id/execute` – Workflow zur Ausführung in die Queue stellen.
+

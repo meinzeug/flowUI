@@ -39,6 +39,17 @@ export interface WorkflowLog {
   created_at: string;
 }
 
+// Utility to safely parse JSON steps
+function parseSteps(raw: string | null | undefined): WorkflowStep[] {
+  if (!raw || raw.trim() === '') return [];
+  try {
+    return JSON.parse(raw);
+  } catch {
+    console.warn('Failed to parse steps JSON, returning empty array');
+    return [];
+  }
+}
+
 export async function getQueueItem(id: number): Promise<QueueItem | undefined> {
   return db('workflow_queue').where({ id }).first();
 }
@@ -65,30 +76,66 @@ export async function markCancelled(id: number): Promise<void> {
 
 export async function list(userId: number): Promise<Workflow[]> {
   const items = await db('workflows').where({ user_id: userId }).orderBy('created_at', 'desc');
-  return items.map((i: any) => ({ ...i, lastRun: i.last_run, steps: JSON.parse(i.steps) }));
+  return items.map((i: any) => ({
+    ...i,
+    lastRun: i.last_run,
+    steps: parseSteps(i.steps),
+  }));
 }
 
 export async function get(id: string): Promise<Workflow | undefined> {
   const wf = await db('workflows').where({ id }).first();
-  return wf ? { ...wf, lastRun: wf.last_run, steps: JSON.parse(wf.steps) } as Workflow : undefined;
+  return wf
+    ? ({
+        ...wf,
+        lastRun: wf.last_run,
+        steps: parseSteps(wf.steps),
+      } as Workflow)
+    : undefined;
 }
 
-export async function create(userId: number, data: Omit<Workflow, 'id' | 'user_id' | 'lastRun'>): Promise<Workflow> {
-  const workflow: Workflow = { ...data, id: uuidv4(), user_id: userId, lastRun: null };
-  const insertData: any = { ...workflow, last_run: workflow.lastRun, steps: JSON.stringify(workflow.steps) };
+export async function create(
+  userId: number,
+  data: Omit<Workflow, 'id' | 'user_id' | 'lastRun'>
+): Promise<Workflow> {
+  const workflow: Workflow = {
+    ...data,
+    steps: data.steps ?? [],
+    id: uuidv4(),
+    user_id: userId,
+    lastRun: null,
+  };
+  const insertData: any = {
+    ...workflow,
+    last_run: workflow.lastRun,
+    steps: JSON.stringify(workflow.steps),
+  };
   delete insertData.lastRun;
-  const [created] = await db('workflows')
-    .insert(insertData)
-    .returning('*');
-  return { ...created, lastRun: created.last_run, steps: JSON.parse(created.steps) } as Workflow;
+  const [created] = await db('workflows').insert(insertData).returning('*');
+  return {
+    ...created,
+    lastRun: created.last_run,
+    steps: parseSteps(created.steps),
+  } as Workflow;
 }
 
-export async function update(id: string, data: Partial<Omit<Workflow, 'id' | 'user_id' | 'lastRun'>>): Promise<Workflow | undefined> {
-  const [wf] = await db('workflows')
-    .where({ id })
-    .update({ ...data, steps: data.steps ? JSON.stringify(data.steps) : undefined })
-    .returning('*');
-  return wf ? { ...wf, lastRun: wf.last_run, steps: JSON.parse(wf.steps) } as Workflow : undefined;
+export async function update(
+  id: string,
+  data: Partial<Omit<Workflow, 'id' | 'user_id' | 'lastRun'>>
+): Promise<Workflow | undefined> {
+  const updateFields: any = {};
+  if (data.name !== undefined) updateFields.name = data.name;
+  if (data.description !== undefined) updateFields.description = data.description;
+  if (data.steps !== undefined) updateFields.steps = JSON.stringify(data.steps);
+
+  const [wf] = await db('workflows').where({ id }).update(updateFields).returning('*');
+  return wf
+    ? ({
+        ...wf,
+        lastRun: wf.last_run,
+        steps: parseSteps(wf.steps),
+      } as Workflow)
+    : undefined;
 }
 
 export async function remove(id: string): Promise<boolean> {
@@ -97,9 +144,7 @@ export async function remove(id: string): Promise<boolean> {
 }
 
 export async function enqueue(id: string): Promise<QueueItem> {
-  const [item] = await db('workflow_queue')
-    .insert({ workflow_id: id })
-    .returning('*');
+  const [item] = await db('workflow_queue').insert({ workflow_id: id }).returning('*');
   return item as QueueItem;
 }
 
@@ -169,5 +214,5 @@ export default {
   getQueueItemDetail,
   markCancelled,
   addLog,
-  getLogs
+  getLogs,
 };

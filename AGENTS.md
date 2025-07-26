@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 12)
-1. Frontend an WebSocket-"workflow" Kanal anbinden und Fortschritt visualisieren.
-2. Unit-Tests für Tools-API und Workflow-Queue implementieren.
-3. Dokumentation der neuen WebSocket-Events ergänzen und Deploy-Log aktualisieren.
+## Nächste Aufgaben (Sprint 13)
+1. Endpoint `/workflows/queue` implementieren und Queue-Status zurückgeben.
+2. Frontend-Ansicht zum Anzeigen laufender Workflows mit Fortschrittsbalken.
+3. Integrationstest für Workflow-Ausführung inklusive WebSocket-Ereignisse.

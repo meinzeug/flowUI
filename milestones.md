@@ -202,3 +202,6 @@ Implemented workflow CRUD API and queue worker communicating with MCP.
 Implemented secure profile endpoint and updated frontend.
 ### Sprint 9 Summary
 Added migrations with persistent workflows, project API and frontend integration.
+
+### Sprint 12 Summary
+Fixed missing workflow_queue table by running migrations automatically on backend startup and in tests.

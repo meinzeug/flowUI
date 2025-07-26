@@ -681,3 +681,4 @@ Der WebSocket-Proxy ist unter `/mcp` verfügbar und leitet intern an den MCP-Ser
 
 Die Workflow-Ausführung wird nun persistent in der Tabelle `workflow_queue` gespeichert.
 Der Worker entnimmt Einträge daraus und meldet den Fortschritt über den WebSocket-Kanal `workflow`.
+Beim Start führt der Server automatisch `knex`-Migrationen aus, sodass die Tabelle bei einer frischen Installation vorhanden ist.

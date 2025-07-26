@@ -18,6 +18,7 @@ const LoginView: React.FC<{ onSwitch: () => void }> = ({ onSwitch }) => {
       <div className="text-center">
         <LogoIcon className="h-16 w-16 mx-auto mb-2" />
         <h1 className="text-3xl font-black">Flow Weaver</h1>
+        <h2 className="text-3xl font-black">next generation coding</h2>
       </div>
       <Card className="w-full max-w-sm space-y-4">
         <h2 className="text-xl font-bold text-center">Login</h2>

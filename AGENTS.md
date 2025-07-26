@@ -6,6 +6,7 @@
 ### Debug-Tools
 Die Route `/debug-api` bietet eine einfache Testseite für API-Requests.
 Sie ist ausdrücklich **nicht** geschützt und kann ohne Login aufgerufen werden.
+Die Implementierung in `frontend/index.tsx` liegt daher außerhalb des `AuthProvider`.
 Nur für Entwicklungszwecke nutzen!
 
 ### Authentifizierungs-Update

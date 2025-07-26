@@ -672,3 +672,12 @@ curl http://localhost:4000/projects -H 'Authorization: Bearer <token>'
 ```
 
 Der WebSocket-Proxy ist unter `/mcp` verfügbar und leitet intern an den MCP-Service weiter.
+
+### Tools API
+
+- `GET /tools/list` – Gibt eine Liste der verfügbaren MCP-Tools zurück.
+
+### Workflow Queue
+
+Die Workflow-Ausführung wird nun persistent in der Tabelle `workflow_queue` gespeichert.
+Der Worker entnimmt Einträge daraus und meldet den Fortschritt über den WebSocket-Kanal `workflow`.

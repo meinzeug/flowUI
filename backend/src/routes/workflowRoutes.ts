@@ -44,7 +44,7 @@ router.post('/:id/execute', verifyToken, async (req: AuthRequest, res) => {
   if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
   const wf = await workflowService.get(req.params.id);
   if (!wf || wf.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
-  workflowService.enqueue(req.params.id);
+  await workflowService.enqueue(req.params.id);
   res.json({ queued: true });
 });
 

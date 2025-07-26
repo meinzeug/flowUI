@@ -140,14 +140,10 @@ const SpawnHiveModal: React.FC<{
 const App: React.FC = () => {
   const { token } = useAuth();
   const [showRegister, setShowRegister] = useState(false);
-
-  if (!token) {
-    return showRegister ? <RegisterView onSwitch={() => setShowRegister(false)} /> : <LoginView onSwitch={() => setShowRegister(true)} />;
-  }
-
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
+    if (!token) { setProjects([]); return; }
     const loadProjects = async () => {
       try {
         const res = await fetch('/api/projects');
@@ -163,7 +159,7 @@ const App: React.FC = () => {
       }
     };
     loadProjects();
-  }, []);
+  }, [token]);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
@@ -1093,6 +1089,14 @@ const App: React.FC = () => {
     }
     setActivityLog([]);
   };
+
+  if (!token) {
+    return showRegister ? (
+      <RegisterView onSwitch={() => setShowRegister(false)} />
+    ) : (
+      <LoginView onSwitch={() => setShowRegister(true)} />
+    );
+  }
 
   if (!activeProject) {
     return <ProjectSelector projects={projects} onSelectProject={handleSelectProject} onCreateProject={handleCreateProject} onDeleteProject={handleDeleteProject} />;

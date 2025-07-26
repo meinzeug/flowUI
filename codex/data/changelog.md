@@ -54,3 +54,4 @@ fix(ProjectCreateModal): add placeholder/testid to input for robust testing
 2025-07-26: Added /api/profile endpoint with JWT auth and updated frontend docs and tests.
 2025-09-10: Added queue item detail endpoint, frontend cancelled status color, updated docs.
 2025-09-15: Projektstruktur in /codex/data konsolidiert.
+2025-09-16: Removed Markdown files from repository root.

@@ -19,9 +19,10 @@ interface ProjectSelectorProps {
   projects: Project[];
   onSelectProject: (projectId: string) => void;
   onCreateProject: (name: string, description: string, template: TemplateType) => void;
+  onDeleteProject: (id: string) => void;
 }
 
-const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, onSelectProject, onCreateProject }) => {
+const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, onSelectProject, onCreateProject, onDeleteProject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useAuth();
@@ -56,7 +57,7 @@ const ProjectSelector: React.FC<ProjectSelectorProps> = ({ projects, onSelectPro
             </Button>
         </div>
         
-        <ProjectList projects={projects} onSelect={onSelectProject} />
+        <ProjectList projects={projects} onSelect={onSelectProject} onDelete={onDeleteProject} />
       </div>
 
       <ProjectCreateModal

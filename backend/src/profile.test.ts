@@ -2,6 +2,7 @@ import assert from 'assert';
 import { once } from 'events';
 import { test } from 'node:test';
 import app from './index.js';
+import db from './db.js';
 
 async function startServer() {
   const server = app.listen(0);
@@ -30,5 +31,5 @@ test('GET /profile returns user data', async () => {
   server.close();
   await once(server, 'close');
   assert.strictEqual(body.user.username, 'u1');
-  process.exit(0);
+  await db.destroy();
 });

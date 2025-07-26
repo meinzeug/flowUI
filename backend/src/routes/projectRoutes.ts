@@ -26,4 +26,20 @@ router.get('/:id', verifyToken, async (req: AuthRequest, res) => {
   res.json(project);
 });
 
+router.put('/:id', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const id = Number(req.params.id);
+  const project = await projectService.update(req.userId, id, req.body);
+  if (!project) return res.status(404).json({ error: 'not_found' });
+  res.json(project);
+});
+
+router.delete('/:id', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const id = Number(req.params.id);
+  const ok = await projectService.remove(req.userId, id);
+  if (!ok) return res.status(404).json({ error: 'not_found' });
+  res.json({ deleted: true });
+});
+
 export default router;

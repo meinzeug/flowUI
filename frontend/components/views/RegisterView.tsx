@@ -8,10 +8,12 @@ const RegisterView: React.FC<{ onSwitch: () => void }> = ({ onSwitch }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await register(username, email, password);
+    const ok = await register(username, email, password);
+    if (!ok) setError('Registration failed');
   };
 
   return (
@@ -44,6 +46,7 @@ const RegisterView: React.FC<{ onSwitch: () => void }> = ({ onSwitch }) => {
             onChange={e => setPassword(e.target.value)}
             className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white"
           />
+          {error && <p className="text-red-400 text-sm">{error}</p>}
           <Button type="submit" className="w-full">Register</Button>
         </form>
         <button onClick={onSwitch} className="text-sm text-cyan-400 w-full text-center">Back to Login</button>

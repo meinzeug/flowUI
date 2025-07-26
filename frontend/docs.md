@@ -390,4 +390,6 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 - `GET /api/projects` – Liste der Projekte des angemeldeten Nutzers
 - `POST /api/projects` – Neues Projekt erstellen `{ name, description }`
 - `GET /api/projects/:id` – Einzelnes Projekt abrufen
+- `PUT /api/projects/:id` – Projekt aktualisieren `{ name?, description? }`
+- `DELETE /api/projects/:id` – Projekt löschen
 

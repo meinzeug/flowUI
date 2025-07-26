@@ -1,15 +1,5 @@
-import knexModule from 'knex';
-import config from '../../knexfile.cjs';
+import db from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
-
-const knex = typeof (knexModule as any).default === 'function'
-  ? (knexModule as any).default
-  : (knexModule as any);
-
-const db = knex({
-  ...config,
-  connection: process.env.DATABASE_URL || (config as any).connection
-});
 
 export interface WorkflowStep {
   id: string;

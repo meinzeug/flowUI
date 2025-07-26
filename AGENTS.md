@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 10)
-1. Projekt-API komplettieren und Frontend-CRUD integrieren.
-2. Login-/Logout-Flows stabilisieren und UI-Fehler anzeigen.
-3. Backend-Testausführung optimieren, hängende Handles vermeiden.
+## Nächste Aufgaben (Sprint 11)
+1. Tools-API implementieren und im Frontend Tool-Liste per REST laden.
+2. Projektbearbeitung im UI ermöglichen (Name & Beschreibung ändern).
+3. Workflow-Queue persistieren und Fortschritt über WebSocket melden.

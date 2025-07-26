@@ -1,14 +1,4 @@
-import knexModule from 'knex';
-import config from '../../knexfile.cjs';
-
-const knex = typeof (knexModule as any).default === 'function'
-  ? (knexModule as any).default
-  : (knexModule as any);
-
-const db = knex({
-  ...config,
-  connection: process.env.DATABASE_URL || (config as any).connection
-});
+import db from '../db.js';
 
 export interface Project {
   id: number;
@@ -33,4 +23,17 @@ export async function get(userId: number, id: number): Promise<Project | undefin
   return db('projects').where({ id, user_id: userId }).first();
 }
 
-export default { create, list, get };
+export async function update(userId: number, id: number, data: { name?: string; description?: string }): Promise<Project | undefined> {
+  const [p] = await db('projects')
+    .where({ id, user_id: userId })
+    .update(data)
+    .returning('*');
+  return p as Project | undefined;
+}
+
+export async function remove(userId: number, id: number): Promise<boolean> {
+  const count = await db('projects').where({ id, user_id: userId }).del();
+  return count > 0;
+}
+
+export default { create, list, get, update, remove };

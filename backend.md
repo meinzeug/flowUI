@@ -635,6 +635,7 @@ Workflows können über `POST /api/workflows/:id/execute` in eine In-Memory-Queu
 - `PUT /api/workflows/:id` – Workflow aktualisieren
 - `DELETE /api/workflows/:id` – Workflow löschen
 - `POST /api/workflows/:id/execute` – Workflow in die Queue einreihen
+- `GET /api/workflows/queue` – Aktuellen Status der Workflow-Queue abrufen
 
 ## Backend Setup
 

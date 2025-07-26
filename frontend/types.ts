@@ -163,6 +163,15 @@ export interface Workflow {
     lastRun: string | null;
 }
 
+export interface WorkflowQueueItem {
+    id: number;
+    workflow_id: string;
+    name: string;
+    status: string;
+    progress: number;
+    created_at: string;
+}
+
 // Command Palette
 export type CommandType = 'navigation' | 'action' | 'external';
 export interface Command {

@@ -4,3 +4,4 @@
 2025-07-26, a4280db, pending
 2025-09-06: Added workflow and project migrations
 2025-09-08: Backend now runs knex migrations on startup, compose updated
+2025-09-09: Added queue endpoint and frontend view

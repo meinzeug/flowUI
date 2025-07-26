@@ -3,12 +3,19 @@ import { once } from 'events';
 import { test } from 'node:test';
 import app from './index.js';
 import db from './db.js';
+import { initWs } from './ws.js';
+import { startWorker } from './worker.js';
+import { WebSocketServer, WebSocket } from 'ws';
+import { createServer } from 'http';
 
 async function startServer() {
   await db.migrate.latest();
-  const server = app.listen(0);
-  await once(server, 'listening');
-  return server;
+  const httpServer = createServer(app);
+  initWs(httpServer);
+  startWorker();
+  httpServer.listen(0);
+  await once(httpServer, 'listening');
+  return httpServer;
 }
 
 async function register(port:number) {
@@ -57,5 +64,57 @@ test('workflow CRUD', async () => {
 
   server.close();
   await once(server, 'close');
+  await db.destroy();
+});
+
+test('workflow execute queue and ws', async () => {
+  const mcp = new WebSocketServer({ port: 0 });
+  const mcpPort = (mcp.address() as any).port;
+  mcp.on('connection', ws => {
+    ws.on('message', msg => {
+      const data = JSON.parse(msg.toString());
+      if (data.event === 'tools/batch') {
+        ws.send('done');
+      }
+    });
+  });
+  process.env.MCP_WS_URL = `ws://localhost:${mcpPort}`;
+
+  const server = await startServer();
+  const port = (server.address() as any).port;
+  const token = await register(port);
+
+  const create = await fetch(`http://localhost:${port}/workflows`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ name: 'wf', description: '', steps: [{ id: 's', name: 'cmd', command: 'echo' }] })
+  });
+  const wf = await create.json();
+
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
+  await once(ws, 'open');
+  ws.send(JSON.stringify({ event: 'subscribe', channel: 'workflow' }));
+  await once(ws, 'message');
+
+  await fetch(`http://localhost:${port}/workflows/${wf.id}/execute`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const qres = await fetch(`http://localhost:${port}/workflows/queue`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const queue = await qres.json();
+  assert.ok(queue.length === 1);
+  assert.strictEqual(queue[0].status, 'queued');
+
+  const msg: any = JSON.parse((await once(ws, 'message'))[0].toString());
+  assert.strictEqual(msg.event, 'workflowProgress');
+
+  ws.close();
+  await once(ws, 'close');
+  server.close();
+  await once(server, 'close');
+  mcp.close();
   await db.destroy();
 });

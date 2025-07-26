@@ -2,6 +2,9 @@
 
 Flow Weaver ist eine anspruchsvolle Hybrid-IDE für Claude-Flow. Sie verbindet strategische Projektplanung mit prozeduraler KI-Orchestrierung und überbrückt damit die Distanz zwischen *Was* und *Wie* der Softwareentwicklung.
 
+Die gesammelte Projektdokumentation befindet sich nun im Verzeichnis `/codex/data/`.
+
+
 ## Installation auf Ubuntu
 
 ### Schnelle Installation

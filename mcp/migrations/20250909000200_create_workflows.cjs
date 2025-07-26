@@ -1,7 +1,11 @@
 exports.up = function(knex) {
   return knex.schema.createTable('workflows', table => {
     table.uuid('id').primary();
-    table.integer('user_id').references('id').inTable('users').onDelete('CASCADE');
+    table.integer('user_id')
+      .references('id')
+      .inTable('users')
+      .onDelete('CASCADE')
+      .index();
     table.string('name').notNullable();
     table.text('description');
     table.jsonb('steps').notNullable();

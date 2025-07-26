@@ -27,13 +27,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const originalFetch = window.fetch;
     window.fetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
       const headers = new Headers(init.headers || {});
-      if (token) headers.set('Authorization', `Bearer ${token}`);
+      const stored = localStorage.getItem('token');
+      if (stored) headers.set('Authorization', `Bearer ${stored}`);
       return originalFetch(input, { ...init, headers });
     };
     return () => {
       window.fetch = originalFetch;
     };
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     wsService.setAuthToken(token);

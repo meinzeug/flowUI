@@ -3,11 +3,6 @@
 2. WebSocket-Benachrichtigungen für Workflow-Fortschritt und Abschluss ausbauen und im Frontend live anzeigen.
 3. Dokumentation der neuen Log-API und WebSocket-Events in `docs/workflows.md` und `frontend/docs.md` ergänzen.
 
-### Debug-Tools
-Die Route `/debug-api` bietet eine einfache Testseite für API-Requests.
-Sie ist ausdrücklich **nicht** geschützt und kann ohne Login aufgerufen werden.
-Die Implementierung in `frontend/index.tsx` liegt daher außerhalb des `AuthProvider`.
-Nur für Entwicklungszwecke nutzen!
 
 ### Authentifizierungs-Update
 Der globale `fetch`-Wrapper liest den JWT nun bei jedem Aufruf aus

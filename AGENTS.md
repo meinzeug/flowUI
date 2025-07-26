@@ -10,6 +10,5 @@ This repository contains a React/TypeScript frontend, a Node.js/Express backend 
 - Build frontend with `npm --prefix frontend run build`.
 
 ## Tasks
-1. Ensure TailwindCSS styling works in the frontend.
-2. Keep this file and module specific `AGENTS.md` files updated.
-3. Improve test coverage based on `codex/data/tests.md`.
+1. Keep this file and module specific `AGENTS.md` files updated.
+2. Improve test coverage based on `codex/data/tests.md`.

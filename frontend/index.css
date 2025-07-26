@@ -35,6 +35,11 @@ body {
 .shadow-indigo-lg { box-shadow: 0 0 25px rgba(99, 102, 241, 0.3); }
 .shadow-fuchsia-lg { box-shadow: 0 0 25px rgba(219, 39, 119, 0.3); }
 
+/* Utility Fixes */
+.bg-black\/80 { background-color: rgba(0,0,0,0.8); }
+.bg-black\/50 { background-color: rgba(0,0,0,0.5); }
+.backdrop-blur-sm { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+
 /* Custom Animations */
 @keyframes fade-in-up {
   from {

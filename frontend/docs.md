@@ -321,6 +321,14 @@ Die Anwendung kommuniziert mit der Gemini API über das `@google/genai` SDK. Die
   ```
 - **Response-Schema:** Entspricht dem `responseSchema` im Request.
 
+### 3.4. Benutzerverwaltung
+
+- `GET /api/users` – Gibt eine Liste aller Benutzer zurück. Erfordert ein JWT mit der Rolle `admin`.
+  Beispiel:
+  ```json
+  [{"id":1,"username":"admin","email":"admin@example.com","role":"admin"}]
+  ```
+
 ---
 
 ## 4. Styles & Design Tokens

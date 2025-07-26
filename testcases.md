@@ -5,6 +5,8 @@
    - Login with the same credentials via `POST /api/auth/login`
    - Access protected endpoint `/api/profile` using returned JWT
    - Expect user info in response
+   - Non-admin user requesting `/api/users` returns `403`
+   - Admin user can retrieve user list via `/api/users`
 
 2. **Docker Build Validation**
    - Run `docker build` for `backend/Dockerfile`

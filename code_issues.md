@@ -6,5 +6,5 @@
 - No automated workflow to publish Docker images. **(resolved)**
 
 - `frontend/docs.md` enthält keine Beschreibung der WebSocket-Nutzung. Login und Tool-Listen verwenden jedoch `WebSocketService`, wodurch eine fehlende Dokumentation zu Verbindungsfehlern wie 404-Handshakes führt. **(resolved)**
-- Fehlt echtes Migrationsframework, Tabellen werden zur Laufzeit erzeugt.
+- Migrations werden jetzt automatisch beim Start ausgeführt, Tabellen sind somit stets vorhanden.
 - Hive-Log-API lieferte immer nur die letzten 50 Einträge ohne Pagination. **(resolved)**

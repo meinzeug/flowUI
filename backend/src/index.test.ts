@@ -5,6 +5,7 @@ import app from './index.js';
 import db from './db.js';
 
 export async function startServer() {
+  await db.migrate.latest();
   const server = app.listen(0);
   await once(server, 'listening');
   return server;

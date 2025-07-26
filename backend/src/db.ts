@@ -14,4 +14,8 @@ export function close() {
   return db.destroy();
 }
 
+export function migrate() {
+  return db.migrate.latest();
+}
+
 export default db;

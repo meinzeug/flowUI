@@ -280,6 +280,17 @@ const App: React.FC = () => {
     addLog(`New project "${name}" created from '${template}' template.`, 'success', true);
   };
 
+  const handleDeleteProject = async (id: string) => {
+    const numId = Number(id.replace('proj-', ''));
+    const res = await fetch(`/api/projects/${numId}`, { method: 'DELETE' });
+    if (res.ok) {
+      setProjects(prev => prev.filter(p => p.id !== id));
+      if (activeProject?.id === id) {
+        setActiveProject(null);
+      }
+    }
+  };
+
   const handleInitiateAutonomousProject = (
     name: string,
     description: string,
@@ -1057,7 +1068,7 @@ const App: React.FC = () => {
   };
 
   if (!activeProject) {
-    return <ProjectSelector projects={projects} onSelectProject={handleSelectProject} onCreateProject={handleCreateProject} />;
+    return <ProjectSelector projects={projects} onSelectProject={handleSelectProject} onCreateProject={handleCreateProject} onDeleteProject={handleDeleteProject} />;
   }
 
   return (

@@ -1,4 +1,5 @@
 v0.2.0-alpha
+2025-09-07: Completed project API CRUD, added frontend delete UI and login/register error handling. Optimized backend tests with shared DB module.
 2025-09-06: Added database migrations, project endpoints and workflow persistence.
 DEPRECATION: Vollständige Entfernung der von Gemini generierten, nicht-funktionalen WebSocket-Platzhalterimplementierung.
 2025-08-22: Added project CRUD API and documentation.

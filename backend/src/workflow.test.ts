@@ -2,6 +2,7 @@ import assert from 'assert';
 import { once } from 'events';
 import { test } from 'node:test';
 import app from './index.js';
+import db from './db.js';
 
 async function startServer() {
   const server = app.listen(0);
@@ -55,5 +56,5 @@ test('workflow CRUD', async () => {
 
   server.close();
   await once(server, 'close');
-  process.exit(0);
+  await db.destroy();
 });

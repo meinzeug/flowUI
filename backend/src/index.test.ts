@@ -2,6 +2,7 @@ import assert from 'assert';
 import { once } from 'events';
 import { test } from 'node:test';
 import app from './index.js';
+import db from './db.js';
 
 export async function startServer() {
   const server = app.listen(0);
@@ -17,4 +18,5 @@ test('GET /health', async () => {
   assert.deepStrictEqual(data, { status: 'ok' });
   server.close();
   await once(server, 'close');
+  await db.destroy();
 });

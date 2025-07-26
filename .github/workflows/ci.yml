@@ -1,3 +1,5 @@
+
+
 name: CI
 on:
   push:
@@ -19,6 +21,16 @@ jobs:
           cache-dependency-path: |
             backend/package-lock.json
             frontend/package-lock.json
+          - name: Regenerate frontend lockfile
+        working-directory: frontend
+        run: npm install --package-lock-only
+      - name: Regenerate backend lockfile
+        working-directory: backend
+        run: npm install --package-lock-only
+      - name: Regenerate mcp lockfile
+        working-directory: mcp
+        run: npm install --package-lock-only
+
       - name: Install backend deps
         run: |
           cd backend

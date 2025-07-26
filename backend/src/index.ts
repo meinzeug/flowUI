@@ -16,6 +16,11 @@ import { initWs } from './ws.js';
 
 dotenv.config();
 
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET not set');
+  process.exit(1);
+}
+
 const app = express();
 app.use(express.json());
 app.use(cors());

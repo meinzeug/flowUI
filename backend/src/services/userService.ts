@@ -10,8 +10,12 @@ export async function findByUsername(username: string): Promise<User | undefined
   return db('users').where({ username }).first();
 }
 
+export async function findByEmail(email: string): Promise<User | undefined> {
+  return db('users').where({ email }).first();
+}
+
 export async function findById(id: number): Promise<User | undefined> {
   return db('users').where({ id }).first();
 }
 
-export default { create, findByUsername, findById };
+export default { create, findByUsername, findByEmail, findById };

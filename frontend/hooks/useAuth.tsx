@@ -28,7 +28,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.fetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
       const headers = new Headers(init.headers || {});
       const stored = localStorage.getItem('token');
-      if (stored) headers.set('Authorization', `Bearer ${stored}`);
+      if (stored) {
+        console.log('Attaching token to request', stored);
+        headers.set('Authorization', `Bearer ${stored}`);
+      }
       return originalFetch(input, { ...init, headers });
     };
     return () => {
@@ -44,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const fetchProfile = async () => {
       if (!token) { setUser(null); return; }
       try {
+        console.log('Fetching profile with token', token);
         const res = await fetch('/api/profile');
         if (res.ok) {
           const data = await res.json();
@@ -66,6 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     if (res.ok) {
       const data = await res.json();
+      console.log('Received token', data.token);
       localStorage.setItem('token', data.token);
       setToken(data.token);
       return true;

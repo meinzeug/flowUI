@@ -194,3 +194,5 @@ Removed legacy Gemini WebSocket code and documented new channel-based protocol.
 Implemented worker queue and new WebSocket client with heartbeat.
 ### Sprint 4 Summary
 Introduced REST backend with auth proxy and adjusted deployment scripts.
+### Sprint 5 Summary
+Added role-based authentication with persistent database storage and admin user listing.

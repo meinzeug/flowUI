@@ -5,18 +5,22 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts"
+    "dev": "ts-node src/server.ts",
+    "test": "node --test"
   },
   "dependencies": {
     "express": "^4.21.2",
     "bcrypt": "^6.0.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.5",
+    "pg-mem": "^3.0.5"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
     "typescript": "^5.2.0",
     "@types/express": "^4.17.17",
     "@types/bcrypt": "^5.0.0",
-    "@types/jsonwebtoken": "^9.0.2"
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/pg": "^8.10.2"
   }
 }

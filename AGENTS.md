@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 5)
-1. Rollen- und Berechtigungssystem für Benutzer einführen.
-2. Persistente Datenbank für Benutzer und Sessions integrieren.
-3. End-to-End-Tests für REST- und MCP-Server erweitern.
+## Nächste Aufgaben (Sprint 6)
+1. Worker zur Verarbeitung der Workflow-Queue implementieren und an MCP anbinden.
+2. CRUD-Endpunkte für Workflows im REST-Backend ergänzen.
+3. Dokumentation der neuen Endpunkte in `backend.md` und `frontend/docs.md` erweitern.

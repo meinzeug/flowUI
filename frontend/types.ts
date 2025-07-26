@@ -3,6 +3,7 @@ export interface User {
   username: string;
   email: string;
   created_at: string;
+  role: string;
 }
 
 export interface Project {

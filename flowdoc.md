@@ -329,6 +329,7 @@ npx claude-flow@alpha fault tolerance --strategy retry-with-learning
 npx claude-flow@alpha bottleneck analyze --auto-optimize
 ?? Advanced Memory Architecture
 SQLite Persistence: Robust .swarm/memory.db storage with 12 specialized tables
+PostgreSQL Tables: `users`, `projects`, `workflows` and `workflow_queue` manage persistent job state
 Cross-Session Persistence: Remember context across Claude Code sessions
 Namespace Management: Organized memory with hierarchical access
 Enhanced Schema: Agent interactions, training data, performance metrics, and more

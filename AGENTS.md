@@ -2,6 +2,8 @@
 1. Workflow-Queue um Log-Ausgabe erweitern: Backend-Endpunkt `/api/workflows/queue/:id/logs` implementieren und testen.
 2. WebSocket-Benachrichtigungen für Workflow-Fortschritt und Abschluss ausbauen und im Frontend live anzeigen.
 3. Dokumentation der neuen Log-API und WebSocket-Events in `docs/workflows.md` und `frontend/docs.md` ergänzen.
+4. Fehlende MCP-Migrationen rekonstruiert und README ergänzt. Container startet nun ohne Fehler.
+
 
 
 ### Authentifizierungs-Update

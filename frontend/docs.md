@@ -408,5 +408,5 @@ Der Status `cancelled` wird dabei rot hervorgehoben.
 
 ### Debug API
 - **Route:** `/debug-api`
-- **Beschreibung:** Manuelle Testseite, um beliebige API-Requests abzusetzen. Eingabe von URL, HTTP-Methode, Headern und Body möglich. Nach dem Absenden werden Request- und Response-Daten inklusive Statuscode und Headern angezeigt. **Zugriff ohne Login möglich, nur für Entwicklungs- und Testzwecke nutzen.**
+- **Beschreibung:** Manuelle Testseite, um beliebige API-Requests abzusetzen. Eingabe von URL, HTTP-Methode, Headern und Body möglich. Nach dem Absenden werden Request- und Response-Daten inklusive Statuscode und Headern angezeigt. **Zugriff ohne Login möglich, nur für Entwicklungs- und Testzwecke nutzen.** Die Route liegt bewusst außerhalb des `AuthProvider` in `frontend/index.tsx` und ist damit öffentlich.
 - **Komponente:** `DebugApiView` unter `frontend/components/views/DebugApiView.tsx`.

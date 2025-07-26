@@ -210,3 +210,4 @@ start_nginx
 
 success "Update complete"
 trap - ERR
+exit 0

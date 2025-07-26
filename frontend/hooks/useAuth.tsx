@@ -67,11 +67,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await res.json();
       localStorage.setItem('token', data.token);
       setToken(data.token);
-      const prof = await fetch('/api/profile');
-      if (prof.ok) {
-        const pData = await prof.json();
-        setUser(pData.user);
-      }
       return true;
     }
     return false;
@@ -87,11 +82,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await res.json();
       localStorage.setItem('token', data.token);
       setToken(data.token);
-      const prof = await fetch('/api/profile');
-      if (prof.ok) {
-        const pData = await prof.json();
-        setUser(pData.user);
-      }
       return true;
     }
     return false;

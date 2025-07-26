@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:css": "postcss index.css -o dist/index.css",
+    "build": "npm run build:css && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "coverage": "vitest run --coverage"
@@ -18,10 +19,15 @@
     "recharts": "^3.1.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^22.14.0",
     "@vitest/coverage-v8": "^3.2.4",
+    "autoprefixer": "^10.4.21",
     "jsdom": "^26.1.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^4.1.11",
     "typescript": "~5.7.2",
     "vite": "^6.2.0",
     "vitest": "^3.2.4"

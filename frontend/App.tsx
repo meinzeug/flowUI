@@ -148,10 +148,21 @@ const App: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    fetch('/api/projects')
-      .then(res => res.json())
-      .then(setProjects)
-      .catch(() => setProjects([]));
+    const loadProjects = async () => {
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) setProjects(data);
+          else setProjects([]);
+        } else {
+          setProjects([]);
+        }
+      } catch {
+        setProjects([]);
+      }
+    };
+    loadProjects();
   }, []);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [currentView, setCurrentView] = useState<View>('dashboard');

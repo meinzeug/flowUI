@@ -658,8 +658,12 @@ npm run dev
 curl http://localhost:4000/health
 curl -X POST http://localhost:4000/auth/register -H 'Content-Type: application/json' \
      -d '{"username":"u","email":"e@example.com","password":"p"}'
+curl -X POST http://localhost:4000/auth/login -H 'Content-Type: application/json' \
+     -d '{"username":"u","password":"p"}'
 curl http://localhost:4000/profile -H 'Authorization: Bearer <token>'
 ```
+
+Der Login-Endpunkt akzeptiert im Feld `username` auch eine E-Mail-Adresse. Bei der Registrierung werden Benutzername und E-Mail auf Einzigartigkeit geprüft. Passwörter werden mit `bcrypt` gehasht gespeichert.
 
 ### Projektendpunkte
 

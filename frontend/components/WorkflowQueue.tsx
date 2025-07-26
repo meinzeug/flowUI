@@ -72,7 +72,10 @@ const WorkflowQueue: React.FC = () => {
                     setOpenId(item.id);
                     if (!logs[item.id]) {
                       const res = await fetch(`/api/workflows/queue/${item.id}/logs`);
-                      if (res.ok) setLogs(l => ({ ...l, [item.id]: await res.json() }));
+                      if (res.ok) {
+                        const data = await res.json();
+                        setLogs(l => ({ ...l, [item.id]: data }));
+                      }
                     }
                   }}
                 >

@@ -14,18 +14,14 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/debug-api" element={<DebugApiView />} />
-        <Route
-          path="*"
-          element={
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/debug-api" element={<DebugApiView />} />
+          <Route path="*" element={<App />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );

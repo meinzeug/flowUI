@@ -18,7 +18,9 @@ jobs:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
       - name: Run update script on server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} 'bash -s' < update.sh
+             ssh -o StrictHostKeyChecking=no \
+              ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "curl -fsSL https://raw.githubusercontent.com/meinzeug/flowUI/main/update.sh | bash"
       - name: Record deploy success
         if: success()
         run: echo "$(date +%Y-%m-%d), ${{ github.event.workflow_run.head_sha }}, success" >> deploy_log.md

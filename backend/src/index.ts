@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import healthRoutes from './routes/healthRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 import toolsRoutes from './routes/toolsRoutes.js';
 import workflowRoutes from './routes/workflowRoutes.js';
 import mcpProxy from './routes/mcpProxy.js';
@@ -18,6 +19,7 @@ app.use(morgan('dev'));
 
 app.use('/health', healthRoutes);
 app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes);
 app.use('/tools', toolsRoutes);
 app.use('/workflows', workflowRoutes);
 app.use('/mcp', mcpProxy);

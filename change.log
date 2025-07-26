@@ -44,3 +44,4 @@ FE-SAVELOAD: 7a8df9c 2025-07-24 session list + tool call persistence
 fix(ProjectCreateModal): add placeholder/testid to input for robust testing
 2025-07-26: Split REST API and MCP service into separate TypeScript projects, added Dockerfiles, compose updates and docs.
 2025-07-26: Added workflow CRUD endpoints, queue worker execution and updated docs
+2025-07-26: Added /api/profile endpoint with JWT auth and updated frontend docs and tests.

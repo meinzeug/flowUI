@@ -20,4 +20,8 @@ export async function findByUsername(username: string): Promise<User | undefined
   return db('users').where({ username }).first();
 }
 
-export default { create, findByUsername };
+export async function findById(id: number): Promise<User | undefined> {
+  return db('users').where({ id }).first();
+}
+
+export default { create, findByUsername, findById };

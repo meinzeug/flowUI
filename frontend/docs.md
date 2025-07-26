@@ -373,6 +373,11 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 
 ## 5. REST API Endpoints
 
+### Auth / Profile
+- `POST /api/auth/register` – Benutzer registrieren, Rückgabe `{ token }`.
+- `POST /api/auth/login` – Benutzer anmelden, Rückgabe `{ token }`.
+- `GET /api/profile` – Profil des angemeldeten Benutzers abrufen. `Authorization: Bearer <token>` erforderlich.
+
 ### Workflow Management
 - `GET /api/workflows` – Liste aller Workflows.
 - `POST /api/workflows` – Neuen Workflow anlegen. Body: `{ name, description, steps }`.

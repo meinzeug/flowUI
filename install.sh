@@ -194,14 +194,14 @@ fi
 # Create service environment files for local development
 if [ ! -f backend/.env ]; then
   echo "### Creating backend/.env"
-  cp backend/.env.example backend/.env
+  $SUDO cp backend/.env.example backend/.env
   $SUDO sed -i "s#JWT_SECRET=.*#JWT_SECRET=${JWT_SECRET}#" backend/.env
   $SUDO sed -i "s#DATABASE_URL=.*#DATABASE_URL=${DATABASE_URL_VALUE}#" backend/.env
 fi
 
 if [ ! -f mcp/.env ]; then
   echo "### Creating mcp/.env"
-  cp mcp/.env.example mcp/.env
+  $SUDO cp mcp/.env.example mcp/.env
   $SUDO sed -i "s#JWT_SECRET=.*#JWT_SECRET=${JWT_SECRET}#" mcp/.env
 fi
 

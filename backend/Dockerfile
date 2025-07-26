@@ -1,8 +1,9 @@
 FROM node:20-alpine
 WORKDIR /app
-COPY package.json package-lock.json* tsconfig.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY tsconfig.json knexfile.cjs ./
 COPY src ./src
-RUN npx tsc
+RUN npm run build
 EXPOSE 4000
-CMD ["node", "dist/server.js"]
+CMD ["node","dist/index.js"]

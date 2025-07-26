@@ -5,6 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'devsecret';
 
 export interface AuthRequest extends Request {
   user?: string;
+  userId?: number;
 }
 
 export function verifyToken(req: AuthRequest, res: Response, next: NextFunction) {
@@ -15,6 +16,7 @@ export function verifyToken(req: AuthRequest, res: Response, next: NextFunction)
   try {
     const payload = jwt.verify(token, JWT_SECRET) as any;
     req.user = payload.user;
+    req.userId = payload.id;
     next();
   } catch {
     res.status(401).json({ error: 'invalid_token' });

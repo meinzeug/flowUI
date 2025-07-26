@@ -660,4 +660,15 @@ curl -X POST http://localhost:4000/auth/register -H 'Content-Type: application/j
 curl http://localhost:4000/profile -H 'Authorization: Bearer <token>'
 ```
 
+### Projektendpunkte
+
+```
+curl -X POST http://localhost:4000/projects \
+     -H 'Authorization: Bearer <token>' \
+     -H 'Content-Type: application/json' \
+     -d '{"name":"My Project","description":"desc"}'
+
+curl http://localhost:4000/projects -H 'Authorization: Bearer <token>'
+```
+
 Der WebSocket-Proxy ist unter `/mcp` verfügbar und leitet intern an den MCP-Service weiter.

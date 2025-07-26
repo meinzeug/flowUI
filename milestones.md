@@ -200,3 +200,5 @@ Added role-based authentication with persistent database storage and admin user 
 Implemented workflow CRUD API and queue worker communicating with MCP.
 ### Sprint 8 Summary
 Implemented secure profile endpoint and updated frontend.
+### Sprint 9 Summary
+Added migrations with persistent workflows, project API and frontend integration.

@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 9)
-1. PostgreSQL-Migrationen aufsetzen und Workflows persistent speichern.
-2. Frontend an Workflow-Endpunkte anbinden (Listen, erstellen, ausführen).
-3. Unit-Tests für Profil-Endpunkt und Workflow-CRUD erweitern.
+## Nächste Aufgaben (Sprint 10)
+1. Projekt-API komplettieren und Frontend-CRUD integrieren.
+2. Login-/Logout-Flows stabilisieren und UI-Fehler anzeigen.
+3. Backend-Testausführung optimieren, hängende Handles vermeiden.

@@ -14,8 +14,7 @@ test('GET /health', async () => {
   const port = (server.address() as any).port;
   const res = await fetch(`http://localhost:${port}/health`);
   const data = await res.json();
-  server.close();
-  await once(server, "close");
   assert.deepStrictEqual(data, { status: 'ok' });
-  process.exit(0);
+  server.close();
+  await once(server, 'close');
 });

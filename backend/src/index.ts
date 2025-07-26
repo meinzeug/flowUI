@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import toolsRoutes from './routes/toolsRoutes.js';
 import workflowRoutes from './routes/workflowRoutes.js';
+import projectRoutes from './routes/projectRoutes.js';
 import mcpProxy from './routes/mcpProxy.js';
 import { startWorker } from './worker.js';
 
@@ -22,6 +23,7 @@ app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/tools', toolsRoutes);
 app.use('/workflows', workflowRoutes);
+app.use('/projects', projectRoutes);
 app.use('/mcp', mcpProxy);
 
 const PORT = Number(process.env.BACKEND_PORT) || 4000;

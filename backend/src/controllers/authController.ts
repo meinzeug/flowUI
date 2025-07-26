@@ -14,7 +14,7 @@ export async function register(req: Request, res: Response) {
   if (exists) return res.status(400).json({ error: 'user_exists' });
   const hash = await bcrypt.hash(password, 10);
   const user = await userService.create({ username, email, password_hash: hash });
-  const token = jwt.sign({ user: user.username }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ user: user.username, id: user.id }, JWT_SECRET, { expiresIn: '1h' });
   res.json({ token });
 }
 
@@ -27,6 +27,6 @@ export async function login(req: Request, res: Response) {
   if (!user) return res.status(401).json({ error: 'invalid_credentials' });
   const valid = await bcrypt.compare(password, user.password_hash);
   if (!valid) return res.status(401).json({ error: 'invalid_credentials' });
-  const token = jwt.sign({ user: user.username }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ user: user.username, id: user.id }, JWT_SECRET, { expiresIn: '1h' });
   res.json({ token });
 }

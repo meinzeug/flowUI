@@ -33,7 +33,14 @@ const ProjectCreateModal: React.FC<Props> = ({ isOpen, templates, onCreate, onCl
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-2">Project Name</label>
-          <input className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none" value={name} onChange={e => setName(e.target.value)} />
+          <input
+            type="text"
+            placeholder="Project name"
+            data-testid="project-name-input"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none"
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>

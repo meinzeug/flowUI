@@ -10,3 +10,4 @@ Added secure /profile endpoint using JWT middleware to provide user info.
 - Sprint9: migrations for users/projects/workflows; workflows persisted
 
 - Sprint13: unified migrations across backend and mcp; added queue listing endpoint and frontend view.
+- Workflow logs API with WebSocket updates added for monitoring.

@@ -1,3 +1,5 @@
+
+2025-09-18: Updated documentation and AGENTS instructions.
 2025-09-12: Added workflow log API, WebSocket events and frontend log viewer.
 2025-09-10: Added workflow cancel endpoint with frontend button and documented events.
 

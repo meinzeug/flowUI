@@ -48,3 +48,6 @@
    - `GET /api/workflows` liefert den neuen Workflow
    - `PUT /api/workflows/:id` ändert Namen
    - `DELETE /api/workflows/:id` entfernt ihn
+11. **Workflow Queue Detail**
+   - `GET /api/workflows/queue/:id` mit Token
+   - Erwartet Details des Queue-Eintrags

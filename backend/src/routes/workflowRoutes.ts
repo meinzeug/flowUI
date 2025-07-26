@@ -25,6 +25,14 @@ router.get('/queue', verifyToken, async (req: AuthRequest, res) => {
   res.json(queue);
 });
 
+router.get('/queue/:queueId', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const item = await workflowService.getQueueItemDetail(Number(req.params.queueId));
+  if (!item || item.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  const { user_id, ...rest } = item;
+  res.json(rest);
+});
+
 router.post('/queue/:queueId/cancel', verifyToken, async (req: AuthRequest, res) => {
   if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
   const item = await workflowService.getQueueItem(Number(req.params.queueId));

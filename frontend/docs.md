@@ -386,7 +386,11 @@ Es werden die Standard-Breakpoints von Tailwind CSS verwendet:
 - `DELETE /api/workflows/:id` – Workflow löschen.
 - `POST /api/workflows/:id/execute` – Workflow zur Ausführung in die Queue stellen.
 - `GET /api/workflows/queue` – Status der Workflow-Queue abrufen.
+- `GET /api/workflows/queue/:id` – Details eines Queue-Eintrags abrufen.
 - `POST /api/workflows/queue/:id/cancel` – Laufenden oder geplanten Workflow abbrechen.
+
+Im Queue-Panel werden die Einträge mit einer farbigen Fortschrittsleiste angezeigt.
+Der Status `cancelled` wird dabei rot hervorgehoben.
 
 ### Projektverwaltung
 - `GET /api/projects` – Liste der Projekte des angemeldeten Nutzers

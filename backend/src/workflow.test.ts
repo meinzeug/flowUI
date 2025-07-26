@@ -177,3 +177,39 @@ test('cancel running workflow', async () => {
   mcp.close();
   await db.destroy();
 });
+
+test('queue item detail endpoint', async () => {
+  const server = await startServer();
+  const port = (server.address() as any).port;
+  const token = await register(port);
+
+  const create = await fetch(`http://localhost:${port}/workflows`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ name: 'wf', description: '', steps: [] })
+  });
+  const wf = await create.json();
+
+  await fetch(`http://localhost:${port}/workflows/${wf.id}/execute`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const qres = await fetch(`http://localhost:${port}/workflows/queue`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const queue = await qres.json();
+  const queueId = queue[0].id;
+
+  const detailRes = await fetch(`http://localhost:${port}/workflows/queue/${queueId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  assert.strictEqual(detailRes.status, 200);
+  const detail = await detailRes.json();
+  assert.strictEqual(detail.id, queueId);
+  assert.strictEqual(detail.workflow_id, wf.id);
+
+  server.close();
+  await once(server, 'close');
+  await db.destroy();
+});

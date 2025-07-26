@@ -51,3 +51,4 @@ fix(ProjectCreateModal): add placeholder/testid to input for robust testing
 2025-07-26: Split REST API and MCP service into separate TypeScript projects, added Dockerfiles, compose updates and docs.
 2025-07-26: Added workflow CRUD endpoints, queue worker execution and updated docs
 2025-07-26: Added /api/profile endpoint with JWT auth and updated frontend docs and tests.
+2025-09-10: Added queue item detail endpoint, frontend cancelled status color, updated docs.

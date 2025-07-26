@@ -57,22 +57,29 @@ export async function markCancelled(id: number): Promise<void> {
 }
 
 export async function list(userId: number): Promise<Workflow[]> {
-  return db('workflows').where({ user_id: userId }).orderBy('created_at', 'desc');
+  const items = await db('workflows').where({ user_id: userId }).orderBy('created_at', 'desc');
+  return items.map((i: any) => ({ ...i, lastRun: i.last_run, steps: JSON.parse(i.steps) }));
 }
 
 export async function get(id: string): Promise<Workflow | undefined> {
-  return db('workflows').where({ id }).first();
+  const wf = await db('workflows').where({ id }).first();
+  return wf ? { ...wf, lastRun: wf.last_run, steps: JSON.parse(wf.steps) } as Workflow : undefined;
 }
 
 export async function create(userId: number, data: Omit<Workflow, 'id' | 'user_id' | 'lastRun'>): Promise<Workflow> {
   const workflow: Workflow = { ...data, id: uuidv4(), user_id: userId, lastRun: null };
-  const [created] = await db('workflows').insert({ ...workflow, steps: JSON.stringify(workflow.steps) }).returning('*');
-  return { ...created, steps: JSON.parse(created.steps) } as Workflow;
+  const [created] = await db('workflows')
+    .insert({ ...workflow, last_run: workflow.lastRun, steps: JSON.stringify(workflow.steps) })
+    .returning('*');
+  return { ...created, lastRun: created.last_run, steps: JSON.parse(created.steps) } as Workflow;
 }
 
 export async function update(id: string, data: Partial<Omit<Workflow, 'id' | 'user_id' | 'lastRun'>>): Promise<Workflow | undefined> {
-  const [wf] = await db('workflows').where({ id }).update({ ...data, steps: data.steps ? JSON.stringify(data.steps) : undefined }).returning('*');
-  return wf ? { ...wf, steps: JSON.parse(wf.steps) } as Workflow : undefined;
+  const [wf] = await db('workflows')
+    .where({ id })
+    .update({ ...data, steps: data.steps ? JSON.stringify(data.steps) : undefined })
+    .returning('*');
+  return wf ? { ...wf, lastRun: wf.last_run, steps: JSON.parse(wf.steps) } as Workflow : undefined;
 }
 
 export async function remove(id: string): Promise<boolean> {

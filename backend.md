@@ -657,6 +657,7 @@ npm run dev
 curl http://localhost:4000/health
 curl -X POST http://localhost:4000/auth/register -H 'Content-Type: application/json' \
      -d '{"username":"u","email":"e@example.com","password":"p"}'
+curl http://localhost:4000/profile -H 'Authorization: Bearer <token>'
 ```
 
 Der WebSocket-Proxy ist unter `/mcp` verfügbar und leitet intern an den MCP-Service weiter.

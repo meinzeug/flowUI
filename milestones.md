@@ -198,3 +198,5 @@ Introduced REST backend with auth proxy and adjusted deployment scripts.
 Added role-based authentication with persistent database storage and admin user listing.
 ### Sprint 7 Summary
 Implemented workflow CRUD API and queue worker communicating with MCP.
+### Sprint 8 Summary
+Implemented secure profile endpoint and updated frontend.

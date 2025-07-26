@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 8)
-1. Persistenz für Workflows in PostgreSQL implementieren und Queue darauf anpassen.
-2. Frontend an die neuen Workflow-API-Endpunkte anbinden (Listen, erstellen, ausführen).
-3. Automatisierte Tests für Workflow-CRUD und Worker schreiben.
+## Nächste Aufgaben (Sprint 9)
+1. PostgreSQL-Migrationen aufsetzen und Workflows persistent speichern.
+2. Frontend an Workflow-Endpunkte anbinden (Listen, erstellen, ausführen).
+3. Unit-Tests für Profil-Endpunkt und Workflow-CRUD erweitern.

@@ -6,3 +6,4 @@
 - Backend roles implemented with users.role column
  
 - Workflow queue worker implemented using WebSocket to MCP.
+Added secure /profile endpoint using JWT middleware to provide user info.

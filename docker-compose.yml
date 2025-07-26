@@ -10,7 +10,6 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   mcp:
-    image: ${MCP_IMAGE:-ghcr.io/meinzeug/flowui-mcp:latest}
     build:
       context: ./mcp
     depends_on:
@@ -23,7 +22,6 @@ services:
     command: sh -c "npx knex --knexfile knexfile.cjs migrate:latest && npm start"
 
   backend:
-    image: ${BACKEND_IMAGE:-ghcr.io/meinzeug/flowui-backend:latest}
     build:
       context: ./backend
     depends_on:
@@ -37,7 +35,6 @@ services:
       - "${BACKEND_PORT:-4000}:4000"
 
   frontend:
-    image: ${FRONTEND_IMAGE:-ghcr.io/meinzeug/flowui-frontend:latest}
     build:
       context: .
       dockerfile: Dockerfile

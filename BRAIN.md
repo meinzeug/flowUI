@@ -4,3 +4,4 @@
 - Automatische Deployment-Pipeline zu einem Cloud-Anbieter geplant.
 - Migrations werden aktuell per SQL in initDb erstellt. Langfristig sollte ein dediziertes Tool wie Knex eingesetzt werden.
 - Backend roles implemented with users.role column
+ 

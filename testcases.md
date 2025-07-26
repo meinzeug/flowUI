@@ -42,3 +42,9 @@
    - Füge Workflow in Datenbank ein
    - Sende `POST /api/workflows/:id/execute` mit Token
    - Erwartet Antwort `{ queued: true }`
+10. **Workflow CRUD API**
+   - `POST /api/workflows` mit gültigen Daten
+   - Erwartet Response mit Workflow-ID
+   - `GET /api/workflows` liefert den neuen Workflow
+   - `PUT /api/workflows/:id` ändert Namen
+   - `DELETE /api/workflows/:id` entfernt ihn

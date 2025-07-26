@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 7)
-1. Worker zur Verarbeitung der Workflow-Queue implementieren und an MCP anbinden.
-2. CRUD-Endpunkte für Workflows im REST-Backend ergänzen.
-3. Dokumentation der neuen Endpunkte in `backend.md` und `frontend/docs.md` erweitern.
+## Nächste Aufgaben (Sprint 8)
+1. Persistenz für Workflows in PostgreSQL implementieren und Queue darauf anpassen.
+2. Frontend an die neuen Workflow-API-Endpunkte anbinden (Listen, erstellen, ausführen).
+3. Automatisierte Tests für Workflow-CRUD und Worker schreiben.

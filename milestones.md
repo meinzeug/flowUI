@@ -196,3 +196,5 @@ Implemented worker queue and new WebSocket client with heartbeat.
 Introduced REST backend with auth proxy and adjusted deployment scripts.
 ### Sprint 5 Summary
 Added role-based authentication with persistent database storage and admin user listing.
+### Sprint 7 Summary
+Implemented workflow CRUD API and queue worker communicating with MCP.

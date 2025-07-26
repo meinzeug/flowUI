@@ -625,7 +625,16 @@ Graceful Degradation (würdevoller Leistungsabfall): Wenn ein abhängiger Dienst
 
 Durch die Kombination einer robusten Überwachungsstrategie mit diesen Fehlertoleranzmustern wird ein Backend-System geschaffen, das nicht nur leistungsstark, sondern auch widerstandsfähig und zuverlässig im Angesicht der unvermeidlichen Ausfälle in einer verteilten Umgebung ist.
 ## Workflow Queue und Worker
-Der Server stellt einen REST-Endpunkt `POST /queue/enqueue` bereit. Clients übermitteln dort die Ziel-`channel` sowie frei wählbare Nutzdaten. Die Aufgaben werden in einer In-Memory-Queue gespeichert und von einem Worker-Prozess in regelmäßigen Abständen abgearbeitet. Nach Abschluss sendet der Worker das Ergebnis als `{event:'message', channel, payload}` über die WebSocket-Verbindung an alle Abonnenten des Kanals.
+Workflows können über `POST /api/workflows/:id/execute` in eine In-Memory-Queue eingereiht werden. Ein Hintergrund-Worker verarbeitet die Queue und kommuniziert über WebSocket mit dem MCP-Server. Nach erfolgreicher Ausführung wird das Feld `lastRun` des Workflows aktualisiert.
+
+### Workflow CRUD Endpunkte
+
+- `GET /api/workflows` – Liste aller Workflows
+- `POST /api/workflows` – Neuen Workflow anlegen (`{ name, description, steps }`)
+- `GET /api/workflows/:id` – Details eines Workflows
+- `PUT /api/workflows/:id` – Workflow aktualisieren
+- `DELETE /api/workflows/:id` – Workflow löschen
+- `POST /api/workflows/:id/execute` – Workflow in die Queue einreihen
 
 ## Backend Setup
 

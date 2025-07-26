@@ -5,3 +5,4 @@
 - Migrations werden aktuell per SQL in initDb erstellt. Langfristig sollte ein dediziertes Tool wie Knex eingesetzt werden.
 - Backend roles implemented with users.role column
  
+- Workflow queue worker implemented using WebSocket to MCP.

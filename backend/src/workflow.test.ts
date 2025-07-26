@@ -28,6 +28,26 @@ async function register(port:number) {
   return data.token;
 }
 
+test('create workflow with empty body returns 400', async () => {
+  const server = await startServer();
+  const port = (server.address() as any).port;
+  const token = await register(port);
+
+  const res = await fetch(`http://localhost:${port}/workflows`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: ''
+  });
+
+  assert.strictEqual(res.status, 400);
+  const body = await res.json();
+  assert.strictEqual(body.error, 'invalid_json');
+
+  server.close();
+  await once(server, 'close');
+  await db.destroy();
+});
+
 test('workflow CRUD', async () => {
   const server = await startServer();
   const port = (server.address() as any).port;

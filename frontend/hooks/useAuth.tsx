@@ -41,17 +41,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!token) { setUser(null); return; }
+      if (!token) {
+        setUser(null);
+        return;
+      }
       try {
         const res = await fetch('/api/profile');
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
         } else {
-          setUser(null);
+          logout();
         }
       } catch {
-        setUser(null);
+        logout();
       }
     };
     fetchProfile();
@@ -69,6 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(data.token);
       return true;
     }
+    logout();
     return false;
   };
 
@@ -84,6 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(data.token);
       return true;
     }
+    logout();
     return false;
   };
 

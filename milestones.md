@@ -208,3 +208,5 @@ Fixed missing workflow_queue table by running migrations automatically on backen
 
 ### Sprint 13 Summary
 Implemented workflow queue endpoint with frontend progress view and added integration tests.
+### Sprint 14 Summary
+Implemented workflow cancellation endpoint with frontend stop button and documented workflow events.

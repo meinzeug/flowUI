@@ -33,7 +33,19 @@ const WorkflowQueue: React.FC = () => {
           <div key={item.id} className="space-y-1">
             <div className="flex justify-between text-sm text-slate-300">
               <span>{item.name}</span>
-              <span>{Math.round(item.progress)}%</span>
+              <div className="flex items-center gap-2">
+                <span>{Math.round(item.progress)}%</span>
+                {item.status === 'running' || item.status === 'queued' ? (
+                  <button
+                    className="text-red-400 hover:text-red-300"
+                    onClick={async () => {
+                      await fetch(`/api/workflows/queue/${item.id}/cancel`, { method: 'POST' });
+                    }}
+                  >
+                    Stop
+                  </button>
+                ) : null}
+              </div>
             </div>
             <div className="bg-slate-700 rounded h-2 overflow-hidden">
               <div className="bg-cyan-500 h-full" style={{ width: `${item.progress}%` }}></div>

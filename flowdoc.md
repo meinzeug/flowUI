@@ -352,6 +352,16 @@ npx claude-flow@alpha github pr-manager --help
 
 # Workflow orchestration
 npx claude-flow@alpha workflow create --name "Development Pipeline" --parallel
+## Workflow Events
+During execution the backend broadcasts workflow events over the `workflow` WebSocket channel.
+Each message has event name `workflowProgress` with payload:
+
+```json
+{ "id": "<workflowId>", "queueId": <queueItemId>, "status": "running|finished|cancelled", "progress": <number> }
+```
+
+The new endpoint `POST /api/workflows/queue/:id/cancel` updates the queue entry and sends a `workflowProgress` message with status `cancelled`.
+
 ?? Advanced Usage Examples
 ??? Full-Stack Development
 # Deploy complete development swarm
@@ -381,19 +391,19 @@ npx claude-flow@alpha hive-mind spawn "security audit and compliance review" --c
 ??? Alpha Architecture Overview
 ?? Hive-Mind Coordination Layer
 +---------------------------------------------------------+
-¦                    ?? Queen Agent                       ¦
-¦              (Master Coordinator)                      ¦
-+---------------------------------------------------------¦
-¦  ??? Architect ¦ ?? Coder ¦ ?? Tester ¦ ?? Research ¦ ??? Security ¦
-¦      Agent    ¦   Agent  ¦   Agent   ¦    Agent    ¦    Agent    ¦
-+---------------------------------------------------------¦
-¦           ?? Neural Pattern Recognition Layer           ¦
-+---------------------------------------------------------¦
-¦              ?? Distributed Memory System               ¦
-+---------------------------------------------------------¦
-¦            ? 87 MCP Tools Integration Layer            ¦
-+---------------------------------------------------------¦
-¦              ??? Claude Code Integration                 ¦
+Â¦                    ?? Queen Agent                       Â¦
+Â¦              (Master Coordinator)                      Â¦
++---------------------------------------------------------Â¦
+Â¦  ??? Architect Â¦ ?? Coder Â¦ ?? Tester Â¦ ?? Research Â¦ ??? Security Â¦
+Â¦      Agent    Â¦   Agent  Â¦   Agent   Â¦    Agent    Â¦    Agent    Â¦
++---------------------------------------------------------Â¦
+Â¦           ?? Neural Pattern Recognition Layer           Â¦
++---------------------------------------------------------Â¦
+Â¦              ?? Distributed Memory System               Â¦
++---------------------------------------------------------Â¦
+Â¦            ? 87 MCP Tools Integration Layer            Â¦
++---------------------------------------------------------Â¦
+Â¦              ??? Claude Code Integration                 Â¦
 +---------------------------------------------------------+
 ?? Coordination Strategies
 Hierarchical: Queen-led with specialized worker agents
@@ -584,15 +594,15 @@ Neural threat detection and prevention
 Auto-approved MCP permissions for trusted tools
 ??? Defense-in-Depth Architecture
 +---------------------------------------------------------+
-¦                 ?? Security Gateway                     ¦
-+---------------------------------------------------------¦
-¦     ??? Hook Validation ¦ ?? Permission Layer            ¦
-+---------------------------------------------------------¦
-¦          ?? Threat Detection & Response                 ¦
-+---------------------------------------------------------¦
-¦     ?? Encrypted Communication ¦ ?? Audit Logging       ¦
-+---------------------------------------------------------¦
-¦            ?? Isolated Agent Sandboxes                  ¦
+Â¦                 ?? Security Gateway                     Â¦
++---------------------------------------------------------Â¦
+Â¦     ??? Hook Validation Â¦ ?? Permission Layer            Â¦
++---------------------------------------------------------Â¦
+Â¦          ?? Threat Detection & Response                 Â¦
++---------------------------------------------------------Â¦
+Â¦     ?? Encrypted Communication Â¦ ?? Audit Logging       Â¦
++---------------------------------------------------------Â¦
+Â¦            ?? Isolated Agent Sandboxes                  Â¦
 +---------------------------------------------------------+
 ? Security Best Practices
 Regular security scans with npx claude-flow security scan

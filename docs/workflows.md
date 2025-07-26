@@ -28,4 +28,15 @@ Queues a workflow for execution.
 { "queued": true }
 ```
 
+## GET /api/workflows/queue
+Returns the current workflow queue for the authenticated user.
+
+## POST /api/workflows/queue/:id/cancel
+Cancels a queued or running workflow job.
+
+### Response
+```json
+{ "cancelled": true }
+```
+
 Authentication via Bearer token required for all endpoints.

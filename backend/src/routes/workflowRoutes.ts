@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import workflowService from '../services/workflowService.js';
+import { cancelJob } from '../worker.js';
 import { verifyToken, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
@@ -22,6 +23,16 @@ router.get('/queue', verifyToken, async (req: AuthRequest, res) => {
   if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
   const queue = await workflowService.listQueue(req.userId);
   res.json(queue);
+});
+
+router.post('/queue/:queueId/cancel', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const item = await workflowService.getQueueItem(Number(req.params.queueId));
+  if (!item) return res.status(404).json({ error: 'not_found' });
+  const wf = await workflowService.get(item.workflow_id);
+  if (!wf || wf.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  await cancelJob(item.id);
+  res.json({ cancelled: true });
 });
 
 router.get('/:id', verifyToken, async (req: AuthRequest, res) => {

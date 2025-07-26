@@ -28,6 +28,14 @@ export interface QueueItemWithWorkflow extends QueueItem {
   name: string;
 }
 
+export async function getQueueItem(id: number): Promise<QueueItem | undefined> {
+  return db('workflow_queue').where({ id }).first();
+}
+
+export async function markCancelled(id: number): Promise<void> {
+  await db('workflow_queue').where({ id }).update({ status: 'cancelled' });
+}
+
 export async function list(userId: number): Promise<Workflow[]> {
   return db('workflows').where({ user_id: userId }).orderBy('created_at', 'desc');
 }
@@ -98,4 +106,18 @@ export async function listQueue(userId: number): Promise<QueueItemWithWorkflow[]
     );
 }
 
-export default { list, get, create, update, remove, enqueue, dequeue, markProgress, markFinished, markRun, listQueue };
+export default {
+  list,
+  get,
+  create,
+  update,
+  remove,
+  enqueue,
+  dequeue,
+  markProgress,
+  markFinished,
+  markRun,
+  listQueue,
+  getQueueItem,
+  markCancelled
+};

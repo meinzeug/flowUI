@@ -1,3 +1,4 @@
+2025-09-10: Added workflow cancel endpoint with frontend button and documented events.
 
 2025-09-09: Added workflow queue endpoint, frontend queue view with progress and migration fixes.
 v0.2.0-alpha

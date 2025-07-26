@@ -663,6 +663,10 @@ curl -X POST http://localhost:4000/auth/login -H 'Content-Type: application/json
 curl http://localhost:4000/profile -H 'Authorization: Bearer <token>'
 ```
 
+Die Middleware `verifyToken` prüft den Header `Authorization` und legt die
+Benutzer-ID unter `req.userId` ab. Bei fehlendem oder ungültigem Token
+antwortet der Server mit `401 Unauthorized`.
+
 Der Login-Endpunkt akzeptiert im Feld `username` auch eine E-Mail-Adresse. Bei der Registrierung werden Benutzername und E-Mail auf Einzigartigkeit geprüft. Passwörter werden mit `bcrypt` gehasht gespeichert.
 
 ### Projektendpunkte

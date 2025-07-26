@@ -33,6 +33,15 @@ router.get('/queue/:queueId', verifyToken, async (req: AuthRequest, res) => {
   res.json(rest);
 });
 
+router.get('/queue/:queueId/logs', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const id = Number(req.params.queueId);
+  const item = await workflowService.getQueueItemDetail(id);
+  if (!item || item.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  const logs = await workflowService.getLogs(id);
+  res.json(logs);
+});
+
 router.post('/queue/:queueId/cancel', verifyToken, async (req: AuthRequest, res) => {
   if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
   const item = await workflowService.getQueueItem(Number(req.params.queueId));

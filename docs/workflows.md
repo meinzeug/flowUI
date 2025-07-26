@@ -47,4 +47,14 @@ Cancels a queued or running workflow job.
 { "cancelled": true }
 ```
 
+## GET /api/workflows/queue/:id/logs
+Returns log lines for a queue item.
+
+### Response
+```json
+[
+  { "id": 1, "queue_id": 1, "message": "hello", "created_at": "2025-09-10T12:00:00Z" }
+]
+```
+
 Authentication via Bearer token required for all endpoints.

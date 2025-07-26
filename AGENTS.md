@@ -1,8 +1,7 @@
-## Nächste Aufgaben (Sprint 16)
-1. Workflow-Queue um Log-Ausgabe erweitern: Backend-Endpunkt `/api/workflows/queue/:id/logs` implementieren und testen.
-2. WebSocket-Benachrichtigungen für Workflow-Fortschritt und Abschluss ausbauen und im Frontend live anzeigen.
-3. Dokumentation der neuen Log-API und WebSocket-Events in `docs/workflows.md` und `frontend/docs.md` ergänzen.
-
+## Nächste Aufgaben (Sprint 17)
+1. Endpoint zum Löschen der Workflow-Logs implementieren (`POST /api/workflows/queue/:id/logs/clear`) und testen.
+2. Log-API um Paginierung erweitern und Frontend-Komponente entsprechend anpassen.
+3. Eine Workflow-History-Ansicht im Frontend erstellen, welche abgeschlossene Runs mit Status und Logdownload anzeigt.
 
 ### Authentifizierungs-Update
 Der globale `fetch`-Wrapper liest den JWT nun bei jedem Aufruf aus

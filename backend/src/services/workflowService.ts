@@ -32,6 +32,13 @@ export interface QueueItemDetail extends QueueItemWithWorkflow {
   user_id: number;
 }
 
+export interface WorkflowLog {
+  id: number;
+  queue_id: number;
+  message: string;
+  created_at: string;
+}
+
 export async function getQueueItem(id: number): Promise<QueueItem | undefined> {
   return db('workflow_queue').where({ id }).first();
 }
@@ -68,8 +75,10 @@ export async function get(id: string): Promise<Workflow | undefined> {
 
 export async function create(userId: number, data: Omit<Workflow, 'id' | 'user_id' | 'lastRun'>): Promise<Workflow> {
   const workflow: Workflow = { ...data, id: uuidv4(), user_id: userId, lastRun: null };
+  const insertData: any = { ...workflow, last_run: workflow.lastRun, steps: JSON.stringify(workflow.steps) };
+  delete insertData.lastRun;
   const [created] = await db('workflows')
-    .insert({ ...workflow, last_run: workflow.lastRun, steps: JSON.stringify(workflow.steps) })
+    .insert(insertData)
     .returning('*');
   return { ...created, lastRun: created.last_run, steps: JSON.parse(created.steps) } as Workflow;
 }
@@ -118,6 +127,17 @@ export async function markRun(id: string): Promise<void> {
   await db('workflows').where({ id }).update({ last_run: db.fn.now() });
 }
 
+export async function addLog(queueId: number, message: string): Promise<void> {
+  await db('workflow_logs').insert({ queue_id: queueId, message });
+}
+
+export async function getLogs(queueId: number): Promise<WorkflowLog[]> {
+  return db('workflow_logs')
+    .where({ queue_id: queueId })
+    .orderBy('id')
+    .select('id', 'queue_id', 'message', 'created_at');
+}
+
 export async function listQueue(userId: number): Promise<QueueItemWithWorkflow[]> {
   return db('workflow_queue')
     .join('workflows', 'workflow_queue.workflow_id', 'workflows.id')
@@ -147,5 +167,7 @@ export default {
   listQueue,
   getQueueItem,
   getQueueItemDetail,
-  markCancelled
+  markCancelled,
+  addLog,
+  getLogs
 };

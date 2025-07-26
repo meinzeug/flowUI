@@ -26,12 +26,23 @@ async function executeWorkflow(item: QueueItem) {
   ws.send(JSON.stringify({ event: 'tools/batch', args }));
   broadcast('workflow', 'workflowProgress', { id, queueId: item.id, status: 'running', progress: 0 });
   await new Promise<void>((resolve) => {
-    ws.once('message', () => {
-      workflowService.markRun(id);
-      workflowService.markFinished(item.id);
-      broadcast('workflow', 'workflowProgress', { id, queueId: item.id, status: 'finished', progress: 100 });
-      ws.close();
-      resolve();
+    ws.on('message', async (data) => {
+      let msg: any;
+      try { msg = JSON.parse(data.toString()); } catch { return; }
+      if (msg.event === 'batchResult') {
+        const lines = String(msg.result).split(/\r?\n/);
+        for (const line of lines) {
+          if (line.trim()) {
+            await workflowService.addLog(item.id, line);
+            broadcast('workflow', 'workflowLog', { queueId: item.id, message: line });
+          }
+        }
+        await workflowService.markRun(id);
+        await workflowService.markFinished(item.id);
+        broadcast('workflow', 'workflowProgress', { id, queueId: item.id, status: 'finished', progress: 100 });
+        ws.close();
+        resolve();
+      }
     });
     ws.once('close', () => resolve());
   });

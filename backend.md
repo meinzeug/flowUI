@@ -626,3 +626,28 @@ Graceful Degradation (würdevoller Leistungsabfall): Wenn ein abhängiger Dienst
 Durch die Kombination einer robusten Überwachungsstrategie mit diesen Fehlertoleranzmustern wird ein Backend-System geschaffen, das nicht nur leistungsstark, sondern auch widerstandsfähig und zuverlässig im Angesicht der unvermeidlichen Ausfälle in einer verteilten Umgebung ist.
 ## Workflow Queue und Worker
 Der Server stellt einen REST-Endpunkt `POST /queue/enqueue` bereit. Clients übermitteln dort die Ziel-`channel` sowie frei wählbare Nutzdaten. Die Aufgaben werden in einer In-Memory-Queue gespeichert und von einem Worker-Prozess in regelmäßigen Abständen abgearbeitet. Nach Abschluss sendet der Worker das Ergebnis als `{event:'message', channel, payload}` über die WebSocket-Verbindung an alle Abonnenten des Kanals.
+
+## Backend Setup
+
+Das REST-Backend ist ein eigenständiger Node.js/Express-Server im Verzeichnis `backend`. Die wichtigsten Umgebungsvariablen sind:
+
+- `BACKEND_PORT` – Port, auf dem der Server lauscht (Standard 4000)
+- `DATABASE_URL` – PostgreSQL-Verbindungszeichenfolge
+- `JWT_SECRET` – Geheimnis zur Signierung der JWTs
+
+### Start im Entwicklermodus
+
+```bash
+npm install
+npm run dev
+```
+
+### Beispielanfragen
+
+```bash
+curl http://localhost:4000/health
+curl -X POST http://localhost:4000/auth/register -H 'Content-Type: application/json' \
+     -d '{"username":"u","email":"e@example.com","password":"p"}'
+```
+
+Der WebSocket-Proxy ist unter `/mcp` verfügbar und leitet intern an den MCP-Service weiter.

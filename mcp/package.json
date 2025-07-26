@@ -1,21 +1,22 @@
 {
-  "name": "claude-flow-backend",
+  "name": "flowui-mcp",
   "version": "0.1.0",
   "type": "module",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "NODE_ENV=test node --test",
-    "coverage": "NODE_ENV=test node --test --experimental-test-coverage",
-    "migrate": "npx knex --knexfile knexfile.cjs migrate:latest"
+    "dev": "ts-node-dev src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "dependencies": {
-    "bcrypt": "^6.0.0",
-    "express": "^4.19.2",
+    "dotenv": "^16.3.1",
     "jsonwebtoken": "^9.0.2",
-    "knex": "^2.5.1",
-    "pg": "^8.11.5",
-    "pg-mem": "^3.0.5",
     "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/node": "^20.4.2",
+    "@types/ws": "^8.5.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.0"
   }
 }

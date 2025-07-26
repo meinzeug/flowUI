@@ -261,7 +261,8 @@ NGINX
 fi
 
 $SUDO nginx -t
-$SUDO systemctl reload nginx
+$SUDO systemctl stop nginx
+$SUDO systemctl start nginx
 
 echo "\n### Obtaining SSL certificate..."
 $SUDO certbot --nginx --redirect --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"

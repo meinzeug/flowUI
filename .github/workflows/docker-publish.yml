@@ -1,3 +1,10 @@
+      name: Generate lockfiles
+        run: |
+          cd backend     && npm install --package-lock-only
+          cd ../frontend && npm install --package-lock-only
+          cd ../mcp      && npm install --package-lock-only
+
+
 name: Publish Docker Images
 
 on:
@@ -12,13 +19,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      # Auto‑generate package-lock.json before Docker build
-      - name: Generate lockfiles
-        run: |
-          cd backend     && npm install --package-lock-only
-          cd ../frontend && npm install --package-lock-only
-          cd ../mcp      && npm install --package-lock-only
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 

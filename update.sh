@@ -190,14 +190,12 @@ update_nginx_conf
 info "Updating containers..."
 stop_all_containers
 $SUDO docker compose down
-if ! $SUDO docker compose pull; then
-  warn "Pull failed, building images locally..."
-  $SUDO docker compose build
-fi
+info "Building images locally..."
+$SUDO docker compose build --no-cache
 
 info "Restarting services..."
 FRONTEND_PORT="$FRONTEND_PORT" BACKEND_PORT="$BACKEND_PORT" \
-  $SUDO docker compose up -d
+  $SUDO docker compose up -d --build
 
 info "Performing health checks..."
 sleep 5

@@ -28,9 +28,11 @@ services:
       context: ./backend
     depends_on:
       - mcp
+      - postgres
     environment:
       MCP_PORT: 3008
       JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgres://flowuser:flowpass@postgres:5432/flowdb
     ports:
       - "${BACKEND_PORT:-4000}:4000"
 

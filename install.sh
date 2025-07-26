@@ -135,12 +135,25 @@ if [ ! -f .env ]; then
 FRONTEND_PORT=8080
 BACKEND_PORT=4000
 MCP_PORT=3008
+DATABASE_URL=postgres://flowuser:flowpass@postgres:5432/flowdb
 JWT_SECRET=$JWT_SECRET
 BACKEND_IMAGE=ghcr.io/${REPO_SLUG}-backend:latest
 MCP_IMAGE=ghcr.io/${REPO_SLUG}-mcp:latest
 FRONTEND_IMAGE=ghcr.io/${REPO_SLUG}-frontend:latest
 EENV
   echo "Generated JWT_SECRET stored in .env"
+else
+  JWT_SECRET=$(grep -oP '^JWT_SECRET=\K.*' .env 2>/dev/null || openssl rand -hex 32)
+  if ! grep -q '^JWT_SECRET=' .env; then
+    echo "JWT_SECRET=$JWT_SECRET" | $SUDO tee -a .env
+  fi
+fi
+
+DATABASE_URL_VALUE="postgres://flowuser:flowpass@postgres:5432/flowdb"
+if grep -q '^DATABASE_URL=' .env; then
+  $SUDO sed -i "s#^DATABASE_URL=.*#DATABASE_URL=${DATABASE_URL_VALUE}#" .env
+else
+  echo "DATABASE_URL=${DATABASE_URL_VALUE}" | $SUDO tee -a .env
 fi
 
 # Ensure image variables exist if .env was present
@@ -176,6 +189,20 @@ if grep -q '^BACKEND_PORT=' .env; then
   $SUDO sed -i "s#^BACKEND_PORT=.*#BACKEND_PORT=${BACKEND_PORT}#" .env
 else
   echo "BACKEND_PORT=${BACKEND_PORT}" | $SUDO tee -a .env
+fi
+
+# Create service environment files for local development
+if [ ! -f backend/.env ]; then
+  echo "### Creating backend/.env"
+  cp backend/.env.example backend/.env
+  $SUDO sed -i "s#JWT_SECRET=.*#JWT_SECRET=${JWT_SECRET}#" backend/.env
+  $SUDO sed -i "s#DATABASE_URL=.*#DATABASE_URL=${DATABASE_URL_VALUE}#" backend/.env
+fi
+
+if [ ! -f mcp/.env ]; then
+  echo "### Creating mcp/.env"
+  cp mcp/.env.example mcp/.env
+  $SUDO sed -i "s#JWT_SECRET=.*#JWT_SECRET=${JWT_SECRET}#" mcp/.env
 fi
 
 # Read GHCR credentials for private images

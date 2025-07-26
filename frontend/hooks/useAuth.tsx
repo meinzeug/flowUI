@@ -24,6 +24,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    const originalFetch = window.fetch;
+    window.fetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
+      const headers = new Headers(init.headers || {});
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      return originalFetch(input, { ...init, headers });
+    };
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, [token]);
+
+  useEffect(() => {
     wsService.setAuthToken(token);
   }, [token]);
 
@@ -43,18 +55,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
     fetchProfile();
-  }, [token]);
-
-  useEffect(() => {
-    const originalFetch = window.fetch;
-    window.fetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
-      const headers = new Headers(init.headers || {});
-      if (token) headers.set('Authorization', `Bearer ${token}`);
-      return originalFetch(input, { ...init, headers });
-    };
-    return () => {
-      window.fetch = originalFetch;
-    };
   }, [token]);
 
   const login = async (username: string, password: string) => {

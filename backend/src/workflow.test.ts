@@ -118,3 +118,62 @@ test('workflow execute queue and ws', async () => {
   mcp.close();
   await db.destroy();
 });
+
+test('cancel running workflow', async () => {
+  const mcp = new WebSocketServer({ port: 0 });
+  const mcpPort = (mcp.address() as any).port;
+  mcp.on('connection', ws => {
+    ws.on('message', msg => {
+      const data = JSON.parse(msg.toString());
+      if (data.event === 'tools/batch') {
+        setTimeout(() => ws.close(), 50);
+      }
+    });
+  });
+  process.env.MCP_WS_URL = `ws://localhost:${mcpPort}`;
+
+  const server = await startServer();
+  const port = (server.address() as any).port;
+  const token = await register(port);
+
+  const create = await fetch(`http://localhost:${port}/workflows`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ name: 'wf', description: '', steps: [{ id: 's', name: 'cmd', command: 'echo' }] })
+  });
+  const wf = await create.json();
+
+  const ws = new WebSocket(`ws://localhost:${port}/ws?token=${token}`);
+  await once(ws, 'open');
+  ws.send(JSON.stringify({ event: 'subscribe', channel: 'workflow' }));
+  await once(ws, 'message');
+
+  await fetch(`http://localhost:${port}/workflows/${wf.id}/execute`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const qres = await fetch(`http://localhost:${port}/workflows/queue`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const queue = await qres.json();
+  const queueId = queue[0].id;
+
+  await fetch(`http://localhost:${port}/workflows/queue/${queueId}/cancel`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const qres2 = await fetch(`http://localhost:${port}/workflows/queue`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const queue2 = await qres2.json();
+  assert.strictEqual(queue2[0].status, 'cancelled');
+
+  ws.close();
+  await once(ws, 'close');
+  server.close();
+  await once(server, 'close');
+  mcp.close();
+  await db.destroy();
+});

@@ -1,4 +1,4 @@
-## Nächste Aufgaben (Sprint 14)
-1. Endpoint zum Abbrechen laufender Workflow-Jobs implementieren und Queue-Einträge aktualisieren.
-2. Frontend-Button in der Workflow-Queue zum Stoppen einzelner Workflows hinzufügen.
-3. Dokumentation der Workflow-Ereignisse in flowdoc.md erweitern und API-Spezifikation anpassen.
+## Nächste Aufgaben (Sprint 15)
+1. Endpoint für Details einzelner Workflow-Queue-Einträge implementieren und Tests erweitern.
+2. Frontend-Queue um Statusanzeige "cancelled" mit entsprechender Farbmarkierung ergänzen.
+3. Dokumentation in docs/workflows.md und frontend/docs.md um den neuen Detail-Endpunkt und UI-Hinweise erweitern.

@@ -23,7 +23,7 @@ jobs:
             backend/package-lock.json
             frontend/package-lock.json
 
-      # Regenerate lockfile for backend to ensure sync with package.json
+      # ─── Backend ─────────────────────────────────────────────────
       - name: Regenerate backend lockfile
         working-directory: backend
         run: npm install --package-lock-only
@@ -36,11 +36,7 @@ jobs:
         working-directory: backend
         run: npm test
 
-      - name: Backend coverage
-        working-directory: backend
-        run: npm run coverage > ../coverage_report.txt
-
-      # Regenerate lockfile for frontend to ensure sync with package.json
+      # ─── Frontend ────────────────────────────────────────────────
       - name: Regenerate frontend lockfile
         working-directory: frontend
         run: npm install --package-lock-only
@@ -53,12 +49,10 @@ jobs:
         working-directory: frontend
         run: npm test
 
-      - name: Frontend coverage
-        working-directory: frontend
-        run: npm run coverage >> ../coverage_report.txt
-
-      - name: Upload coverage
+      - name: Upload test reports
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: coverage_report.txt
+          name: test-logs
+          path: |
+            backend/*.log
+            frontend/*.log

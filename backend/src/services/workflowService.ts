@@ -1,219 +1,105 @@
-import db from '../db.js';
-import { v4 as uuidv4 } from 'uuid';
+import { Router } from 'express';
+import workflowService from '../services/workflowService.js';
+import { cancelJob } from '../worker.js';
+import { verifyToken, AuthRequest } from '../middleware/auth.js';
 
-export interface WorkflowStep {
-  id: string;
-  name: string;
-  command: string;
-}
+const router = Router();
 
-export interface Workflow {
-  id: string;
-  user_id: number;
-  name: string;
-  description: string;
-  steps: WorkflowStep[];
-  lastRun: string | null;
-}
+// List workflows
+router.get('/', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const list = await workflowService.list(req.userId);
+  res.json(list);
+});
 
-export interface QueueItem {
-  id: number;
-  workflow_id: string;
-  status: string;
-  progress: number;
-  created_at: string;
-}
-
-export interface QueueItemWithWorkflow extends QueueItem {
-  name: string;
-}
-
-export interface QueueItemDetail extends QueueItemWithWorkflow {
-  user_id: number;
-}
-
-export interface WorkflowLog {
-  id: number;
-  queue_id: number;
-  message: string;
-  created_at: string;
-}
-
-// Utility to safely parse JSON steps or accept already parsed arrays
-function parseSteps(raw: unknown): WorkflowStep[] {
-  if (Array.isArray(raw)) return raw;
-  if (typeof raw !== 'string' || raw.trim() === '') return [];
-  try {
-    return JSON.parse(raw);
-  } catch {
-    console.warn('Failed to parse steps JSON, returning empty array');
-    return [];
+// Create workflow
+router.post('/', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  // Check for invalid JSON or empty body
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ error: 'invalid_json' });
   }
-}
-
-export async function getQueueItem(id: number): Promise<QueueItem | undefined> {
-  return db('workflow_queue').where({ id }).first();
-}
-
-export async function getQueueItemDetail(id: number): Promise<QueueItemDetail | undefined> {
-  return db('workflow_queue')
-    .join('workflows', 'workflow_queue.workflow_id', 'workflows.id')
-    .where('workflow_queue.id', id)
-    .select(
-      'workflow_queue.id',
-      'workflow_queue.workflow_id',
-      'workflow_queue.status',
-      'workflow_queue.progress',
-      'workflow_queue.created_at',
-      'workflows.name',
-      'workflows.user_id'
-    )
-    .first();
-}
-
-export async function markCancelled(id: number): Promise<void> {
-  await db('workflow_queue').where({ id }).update({ status: 'cancelled' });
-}
-
-export async function list(userId: number): Promise<Workflow[]> {
-  const items = await db('workflows').where({ user_id: userId }).orderBy('created_at', 'desc');
-  return items.map((i: any) => ({
-    ...i,
-    lastRun: i.last_run,
-    steps: parseSteps(i.steps),
-  }));
-}
-
-export async function get(id: string): Promise<Workflow | undefined> {
-  const wf = await db('workflows').where({ id }).first();
-  return wf
-    ? ({
-        ...wf,
-        lastRun: wf.last_run,
-        steps: parseSteps(wf.steps),
-      } as Workflow)
-    : undefined;
-}
-
-export async function create(
-  userId: number,
-  data: Omit<Workflow, 'id' | 'user_id' | 'lastRun'>
-): Promise<Workflow> {
-  const workflow: Workflow = {
-    ...data,
-    steps: data.steps ?? [],
-    id: uuidv4(),
-    user_id: userId,
-    lastRun: null,
-  };
-  const insertData: any = {
-    ...workflow,
-    last_run: workflow.lastRun,
-    steps: JSON.stringify(workflow.steps),
-  };
-  delete insertData.lastRun;
-  const [created] = await db('workflows').insert(insertData).returning('*');
-  return {
-    ...created,
-    lastRun: created.last_run,
-    steps: parseSteps(created.steps),
-  } as Workflow;
-}
-
-export async function update(
-  id: string,
-  data: Partial<Omit<Workflow, 'id' | 'user_id' | 'lastRun'>>
-): Promise<Workflow | undefined> {
-  const updateFields: any = {};
-  if (data.name !== undefined) updateFields.name = data.name;
-  if (data.description !== undefined) updateFields.description = data.description;
-  if (data.steps !== undefined) updateFields.steps = JSON.stringify(data.steps);
-
-  const [wf] = await db('workflows').where({ id }).update(updateFields).returning('*');
-  return wf
-    ? ({
-        ...wf,
-        lastRun: wf.last_run,
-        steps: parseSteps(wf.steps),
-      } as Workflow)
-    : undefined;
-}
-
-export async function remove(id: string): Promise<boolean> {
-  const count = await db('workflows').where({ id }).del();
-  return count > 0;
-}
-
-export async function enqueue(id: string): Promise<QueueItem> {
-  const [item] = await db('workflow_queue').insert({ workflow_id: id }).returning('*');
-  return item as QueueItem;
-}
-
-export async function dequeue(): Promise<QueueItem | undefined> {
-  const item = await db('workflow_queue')
-    .where({ status: 'queued' })
-    .orderBy('created_at')
-    .first();
-  if (item) {
-    await db('workflow_queue').where({ id: item.id }).update({ status: 'running' });
-    return item as QueueItem;
+  const { name, description, steps } = req.body;
+  if (!name || !steps) {
+    return res.status(400).json({ error: 'invalid_body' });
   }
-  return undefined;
-}
+  const wf = await workflowService.create(req.userId, { name, description, steps });
+  res.status(201).json(wf);
+});
 
-export async function markProgress(id: number, progress: number): Promise<void> {
-  await db('workflow_queue').where({ id }).update({ progress });
-}
+// List queue items
+router.get('/queue', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const queue = await workflowService.listQueue(req.userId);
+  res.json(queue);
+});
 
-export async function markFinished(id: number): Promise<void> {
-  await db('workflow_queue').where({ id }).update({ status: 'finished', progress: 100 });
-}
+// Get queue item detail
+router.get('/queue/:queueId', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const item = await workflowService.getQueueItemDetail(Number(req.params.queueId));
+  if (!item || item.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  const { user_id, ...rest } = item;
+  res.json(rest);
+});
 
-export async function markRun(id: string): Promise<void> {
-  await db('workflows').where({ id }).update({ last_run: db.fn.now() });
-}
+// Get logs for queue item
+router.get('/queue/:queueId/logs', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const id = Number(req.params.queueId);
+  const item = await workflowService.getQueueItemDetail(id);
+  if (!item || item.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  const logs = await workflowService.getLogs(id);
+  res.json(logs);
+});
 
-export async function addLog(queueId: number, message: string): Promise<void> {
-  await db('workflow_logs').insert({ queue_id: queueId, message });
-}
+// Cancel a queued workflow
+router.post('/queue/:queueId/cancel', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const item = await workflowService.getQueueItem(Number(req.params.queueId));
+  if (!item) return res.status(404).json({ error: 'not_found' });
+  const wf = await workflowService.get(item.workflow_id);
+  if (!wf || wf.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  await cancelJob(item.id);
+  res.json({ cancelled: true });
+});
 
-export async function getLogs(queueId: number): Promise<WorkflowLog[]> {
-  return db('workflow_logs')
-    .where({ queue_id: queueId })
-    .orderBy('id')
-    .select('id', 'queue_id', 'message', 'created_at');
-}
+// Get a single workflow
+router.get('/:id', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const wf = await workflowService.get(req.params.id);
+  if (!wf || wf.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  res.json(wf);
+});
 
-export async function listQueue(userId: number): Promise<QueueItemWithWorkflow[]> {
-  return db('workflow_queue')
-    .join('workflows', 'workflow_queue.workflow_id', 'workflows.id')
-    .where('workflows.user_id', userId)
-    .orderBy('workflow_queue.created_at')
-    .select(
-      'workflow_queue.id',
-      'workflow_queue.workflow_id',
-      'workflow_queue.status',
-      'workflow_queue.progress',
-      'workflow_queue.created_at',
-      'workflows.name'
-    );
-}
+// Update a workflow
+router.put('/:id', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  // Validate JSON body
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ error: 'invalid_json' });
+  }
+  const wf = await workflowService.update(req.params.id, req.body);
+  if (!wf || wf.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  res.json(wf);
+});
 
-export default {
-  list,
-  get,
-  create,
-  update,
-  remove,
-  enqueue,
-  dequeue,
-  markProgress,
-  markFinished,
-  markRun,
-  listQueue,
-  getQueueItem,
-  getQueueItemDetail,
-  markCancelled,
-  addLog,
-  getLogs,
-};
+// Delete a workflow
+router.delete('/:id', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const wf = await workflowService.get(req.params.id);
+  if (!wf || wf.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  await workflowService.remove(req.params.id);
+  res.json({ deleted: true });
+});
+
+// Execute a workflow (enqueue)
+router.post('/:id/execute', verifyToken, async (req: AuthRequest, res) => {
+  if (!req.userId) return res.status(401).json({ error: 'unauthorized' });
+  const wf = await workflowService.get(req.params.id);
+  if (!wf || wf.user_id !== req.userId) return res.status(404).json({ error: 'not_found' });
+  await workflowService.enqueue(req.params.id);
+  res.json({ queued: true });
+});
+
+export default router;
